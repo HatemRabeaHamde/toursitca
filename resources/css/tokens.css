@@ -1,0 +1,78 @@
+/* ============================================================
+   Shared design tokens for the public site (landing, experiences
+   listing, experience detail). One canonical :root block — colors,
+   radii, shadows, type scale, fonts — imported by every stylesheet
+   in this family so values never drift out of sync.
+   ============================================================ */
+:root {
+  /* ── Ink (neutrals) ──────────────────────────────────────── */
+  --ink:      #18140F;
+  --ink-70:   #6B6259;
+  --ink-40:   #A89F97;
+  --ink-20:   #CDC6BE;   /* dividers, placeholder borders */
+  --ink-15:   #EAE5DF;
+  --ink-06:   #F5F2EE;
+  --parch:    #FAF8F5;
+  --white:    #FFFFFF;
+
+  /* ── Clay — Moroccan terracotta (primary CTA) ────────────── */
+  /* WCAG AA: #8B5E48 on white = 5.1:1 ✓                       */
+  --clay:     #8B5E48;
+  --clay-dk:  #6F4535;
+  --clay-lt:  #F4EDE8;
+
+  /* ── Gold — Desert amber (star ratings, accents) ─────────── */
+  --gold:     #C8912A;
+  --gold-lt:  #FEF4DC;
+
+  /* ── Sage — Zellige teal (New / Deal badges, discount) ───── */
+  --sage:     #1E7A78;
+  --sage-lt:  #E3F3F2;
+
+  /* ── Availability status dots ────────────────────────────── */
+  --green:            #2E9E5B;   /* "Available" */
+  --green-lt:         #E6F6EE;
+  --status-amber:     #C97B1A;   /* "Few spots left" */
+  --status-amber-lt:  #FEF0DC;
+
+  /* ── Radii ───────────────────────────────────────────────── */
+  --r-xs:  4px;
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  20px;
+  --r-xl:  32px;
+  --r-2xl: 48px;
+
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --shadow-sm:    0 1px 3px rgba(24,20,15,.07),
+                  0 1px 2px rgba(24,20,15,.05);
+  --shadow-md:    0 4px 16px rgba(24,20,15,.10),
+                  0 2px 6px  rgba(24,20,15,.06);
+  --shadow-card:  0 2px 12px rgba(24,20,15,.07),
+                  0 1px 3px  rgba(24,20,15,.04);
+  --shadow-hover: 0 20px 56px rgba(24,20,15,.18),
+                  0 6px  16px rgba(24,20,15,.10);
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --ease: cubic-bezier(.4,0,.2,1);
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font:  'DM Sans', system-ui, sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+
+  /* Type scale — one consistent rhythm across the site.        */
+  --fs-eyebrow: 11px;   /* uppercase labels, breadcrumb, meta   */
+  --fs-xs:      12px;   /* counts, secondary meta               */
+  --fs-sm:      13px;   /* body-secondary, controls, tags       */
+  --fs-base:    14px;   /* inputs, primary body                 */
+  --fs-md:      17px;   /* card title                           */
+  --fs-lg:      23px;   /* card price (serif)                   */
+  --fs-xl:      38px;   /* page title (serif)                   */
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  /* Height of the site nav — used to offset sticky elements.   */
+  --xp-nav-h:  60px;
+
+  /* Form-control height — every field in the search strip shares it. */
+  --control-h: 44px;
+}
