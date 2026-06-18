@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>RihlaMa — All Experiences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════ */
+:root {
+  --ink:#18140F; --ink-70:#6B6259; --ink-40:#A89F97; --ink-20:#CDC6BE;
+  --ink-15:#EAE5DF; --ink-06:#F5F2EE;
+  --parch:#FAF8F5; --white:#FFFFFF;
+  --clay:#8B5E48; --clay-lt:#F4EDE8; --clay-dk:#6F4535;
+  --sage:#1E7A78; --sage-lt:#E3F3F2;
+  --gold:#C8912A; --gold-lt:#FEF4DC;
+  --green:#2E9E5B; --green-lt:#E6F6EE;
+  --status-amber:#C97B1A; --status-amber-lt:#FEF0DC;
+  --r-xs:4px; --r-sm:8px; --r-md:12px; --r-lg:18px; --r-xl:28px; --r-2xl:40px;
+  --shadow-sm:0 1px 3px rgba(24,20,15,.07),0 1px 2px rgba(24,20,15,.05);
+  --shadow-md:0 4px 16px rgba(24,20,15,.10),0 2px 6px rgba(24,20,15,.06);
+  --shadow-lg:0 12px 40px rgba(24,20,15,.13),0 4px 12px rgba(24,20,15,.07);
+  --shadow-hover:0 20px 56px rgba(24,20,15,.18),0 6px 16px rgba(24,20,15,.10);
+  --ease:cubic-bezier(.4,0,.2,1);
+  --font:'DM Sans',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+  --nav-h:64px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--parch);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{text-decoration:none;color:inherit}
+button,input,select{font-family:var(--font);border:none;outline:none;background:none;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--clay);outline-offset:2px}
+img{display:block;width:100%;object-fit:cover}
+ul{list-style:none}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav {
+  position:sticky; top:0; z-index:200;
+  height:var(--nav-h);
+  background:rgba(250,248,245,.96);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--ink-15);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px;
+}
+.nav-logo { font-family:var(--serif); font-size:22px; color:var(--ink); }
+.nav-logo em { font-style:italic; color:var(--clay); }
+.nav-links { display:flex; align-items:center; gap:32px; }
+.nav-links a { font-size:14px; font-weight:400; color:var(--ink-70); transition:color .2s; }
+.nav-links a:hover { color:var(--ink); }
+.nav-links a.active { color:var(--ink); font-weight:500; }
+.nav-right { display:flex; align-items:center; gap:12px; }
+.nav-login { font-size:14px; font-weight:400; color:var(--ink-70); padding:8px 16px; transition:color .2s; }
+.nav-login:hover { color:var(--ink); }
+.nav-signup { background:var(--clay); color:var(--white); font-size:13px; font-weight:500; padding:9px 22px; border-radius:50px; transition:background .2s,transform .15s; }
+.nav-signup:hover { background:var(--clay-dk); transform:translateY(-1px); }
+
+/* ═══════════════════════════════════════
+   PAGE HEADER STRIP
+═══════════════════════════════════════ */
+.page-header {
+  background:var(--white);
+  border-bottom:1px solid var(--ink-15);
+  padding:36px 48px 32px;
+  position:relative;
+  overflow:hidden;
+}
+.page-header::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 50% 120% at 100% 50%, rgba(155,110,88,.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+.ph-inner { position:relative; z-index:1; max-width:1320px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; }
+.ph-left {}
+.ph-breadcrumb { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.ph-breadcrumb a { font-size:12px; color:var(--ink-40); transition:color .2s; }
+.ph-breadcrumb a:hover { color:var(--clay); }
+.ph-breadcrumb span { font-size:12px; color:var(--ink-20); }
+.ph-title { font-family:var(--serif); font-size:38px; letter-spacing:-.5px; color:var(--ink); line-height:1.1; margin-bottom:6px; }
+.ph-title em { color:var(--clay); font-style:italic; }
+.ph-subtitle { font-size:13px; font-weight:300; color:var(--ink-40); }
+.ph-stats { display:flex; align-items:center; gap:24px; }
+.ph-stat { display:flex; align-items:center; gap:10px; background:var(--ink-06); border:1px solid var(--ink-15); border-radius:var(--r-lg); padding:10px 18px; }
+.ph-stat-num { font-family:var(--serif); font-size:20px; color:var(--ink); }
+.ph-stat-lbl { font-size:11px; font-weight:400; color:var(--ink-40); line-height:1.35; }
+.ph-stat-div { display:none; }
+
+/* ═══════════════════════════════════════
+   SEARCH BAR STRIP
+═══════════════════════════════════════ */
+.search-strip {
+  background:var(--white);
+  border-bottom:1px solid var(--ink-15);
+  padding:14px 48px;
+  position:sticky; top:var(--nav-h); z-index:100;
+}
+.ss-inner {
+  max-width:1320px; margin:0 auto;
+  display:flex; align-items:center; gap:12px;
+}
+.ss-search {
+  flex:1; display:flex; align-items:center; gap:10px;
+  background:var(--ink-06); border:1.5px solid var(--ink-15);
+  border-radius:var(--r-lg); padding:10px 16px;
+  transition:border-color .2s,background .2s;
+}
+.ss-search:focus-within { border-color:var(--clay); background:var(--white); }
+.ss-search svg { color:var(--ink-40); flex-shrink:0; }
+.ss-search input { flex:1; font-size:14px; color:var(--ink); background:none; }
+.ss-search input::placeholder { color:var(--ink-40); }
+.ss-sort {
+  display:flex; align-items:center; gap:8px;
+  background:var(--ink-06); border:1.5px solid var(--ink-15);
+  border-radius:var(--r-md); padding:10px 14px;
+  font-size:13px; color:var(--ink-70);
+  transition:border-color .2s;
+  cursor:pointer; white-space:nowrap;
+}
+.ss-sort:hover { border-color:var(--ink-40); }
+.ss-sort select { font-size:13px; color:var(--ink); background:none; cursor:pointer; padding-right:4px; }
+.ss-view-btns { display:flex; gap:2px; background:var(--ink-06); border:1.5px solid var(--ink-15); border-radius:var(--r-md); padding:4px; }
+.ss-view-btn { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--ink-40); transition:all .2s; }
+.ss-view-btn.active { background:var(--white); color:var(--ink); box-shadow:var(--shadow-sm); }
+.ss-view-btn:hover:not(.active) { color:var(--ink-70); }
+.ss-results { font-size:13px; color:var(--ink-40); white-space:nowrap; }
+
+/* Active filter chips */
+.active-filters {
+  max-width:1320px; margin:0 auto;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:10px 0 0;
+}
+.af-chip {
+  display:flex; align-items:center; gap:6px;
+  background:var(--clay-lt); border:1px solid rgba(155,110,88,.2);
+  border-radius:50px; padding:4px 12px 4px 10px;
+  font-size:12px; font-weight:500; color:var(--clay);
+  transition:all .2s;
+}
+.af-chip button { display:flex; align-items:center; color:var(--clay); opacity:.6; transition:opacity .2s; margin-left:2px; }
+.af-chip button:hover { opacity:1; }
+.af-clear { font-size:12px; color:var(--ink-40); padding:4px 8px; transition:color .2s; }
+.af-clear:hover { color:var(--clay); }
+
+/* ═══════════════════════════════════════
+   FILTERS TOGGLE BUTTON
+═══════════════════════════════════════ */
+.btn-toggle-filters {
+  display:flex; align-items:center; gap:7px;
+  background:var(--ink-06); border:1.5px solid var(--ink-15);
+  border-radius:var(--r-md); padding:10px 16px;
+  font-size:13px; font-weight:500; color:var(--ink-70);
+  white-space:nowrap; transition:all .2s; flex-shrink:0;
+}
+.btn-toggle-filters:hover { border-color:var(--clay); color:var(--clay); }
+.btn-toggle-filters.active { background:var(--clay-lt); border-color:var(--clay); color:var(--clay); }
+.btn-toggle-filters .tf-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--clay);
+  display:none;
+}
+.btn-toggle-filters.has-filters .tf-dot { display:block; }
+
+/* ═══════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════ */
+.page-body {
+  max-width:1320px; margin:0 auto;
+  display:grid; grid-template-columns:264px 1fr;
+  gap:32px; padding:32px 48px 80px;
+  align-items:start;
+  transition:grid-template-columns .35s var(--ease);
+}
+.page-body.filters-hidden {
+  grid-template-columns:0 1fr;
+  gap:0;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR FILTERS
+═══════════════════════════════════════ */
+.sidebar {
+  position:sticky; top:calc(var(--nav-h) + 68px);
+  max-height:calc(100vh - var(--nav-h) - 100px);
+  overflow-y:auto; overflow-x:hidden;
+  scrollbar-width:thin;
+  scrollbar-color:var(--ink-15) transparent;
+  transition:opacity .3s var(--ease), transform .35s var(--ease);
+  opacity:1; transform:translateX(0);
+  min-width:0;
+}
+.filters-hidden .sidebar {
+  opacity:0; pointer-events:none;
+  transform:translateX(-16px);
+  overflow:hidden;
+}
+.sidebar::-webkit-scrollbar { width:4px; }
+.sidebar::-webkit-scrollbar-track { background:transparent; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--ink-15); border-radius:4px; }
+
+.filter-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:20px;
+}
+.filter-title { font-size:13px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--ink-70); }
+.filter-reset { font-size:12px; color:var(--clay); transition:opacity .2s; }
+.filter-reset:hover { opacity:.7; }
+
+.filter-group { margin-bottom:28px; }
+.fg-label {
+  font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+  color:var(--ink-40); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;
+}
+.fg-label button { color:var(--ink-40); transition:transform .2s; }
+.fg-label button.collapsed { transform:rotate(-90deg); }
+
+/* Checkbox items */
+.filter-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 0; cursor:pointer; transition:all .15s;
+  border-radius:var(--r-sm);
+}
+.filter-item:hover .fi-name { color:var(--ink); }
+.fi-left { display:flex; align-items:center; gap:10px; }
+.fi-check {
+  width:17px; height:17px; border-radius:4px;
+  border:1.5px solid var(--ink-20); background:var(--white);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .15s;
+}
+.fi-check.checked { background:var(--clay); border-color:var(--clay); }
+.fi-check.checked svg { display:block; }
+.fi-check svg { display:none; }
+.fi-name { font-size:13px; color:var(--ink-70); transition:color .15s; user-select:none; }
+.fi-count {
+  font-size:11px; color:var(--ink-40);
+  background:var(--ink-06); border-radius:50px;
+  padding:1px 7px; min-width:24px; text-align:center;
+}
+
+/* Price range */
+.price-range-wrap { padding:4px 0; }
+.price-inputs { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.price-input-box { background:var(--ink-06); border:1.5px solid var(--ink-15); border-radius:var(--r-sm); padding:8px 10px; display:flex; align-items:center; gap:4px; transition:border-color .2s; }
+.price-input-box:focus-within { border-color:var(--clay); }
+.pi-cur { font-size:11px; color:var(--ink-40); }
+.pi-val { font-size:13px; color:var(--ink); width:100%; text-align:right; background:none; }
+.range-slider { width:100%; accent-color:var(--clay); cursor:pointer; }
+.price-chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+.price-chip {
+  font-size:12px; color:var(--ink-70); padding:5px 12px;
+  border:1.5px solid var(--ink-15); border-radius:50px;
+  transition:all .15s; cursor:pointer;
+}
+.price-chip:hover { border-color:var(--clay); color:var(--clay); }
+.price-chip.active { background:var(--clay-lt); border-color:var(--clay); color:var(--clay); font-weight:500; }
+
+/* Duration radio */
+.radio-item {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 0; cursor:pointer;
+}
+.radio-item:hover .ri-name { color:var(--ink); }
+.ri-dot {
+  width:17px; height:17px; border-radius:50%;
+  border:1.5px solid var(--ink-20); background:var(--white);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .15s;
+}
+.ri-dot.checked { border-color:var(--clay); }
+.ri-dot.checked::after { content:''; width:7px; height:7px; border-radius:50%; background:var(--clay); }
+.ri-name { font-size:13px; color:var(--ink-70); transition:color .15s; user-select:none; }
+
+/* Tags */
+.tag-cloud { display:flex; flex-wrap:wrap; gap:6px; }
+.tag-btn {
+  font-size:12px; color:var(--ink-70); padding:5px 12px;
+  border:1.5px solid var(--ink-15); border-radius:50px;
+  transition:all .15s; cursor:pointer; background:var(--white);
+}
+.tag-btn:hover { border-color:var(--ink-40); color:var(--ink); }
+.tag-btn.active { background:var(--ink); border-color:var(--ink); color:var(--white); }
+
+/* Rating filter */
+.rating-item { display:flex; align-items:center; gap:8px; padding:6px 0; cursor:pointer; }
+.rating-item:hover .ri-label { color:var(--ink); }
+.star-row { display:flex; gap:2px; }
+.star-row svg { color:var(--gold); }
+.star-row svg.empty { color:var(--ink-20); }
+.ri-label { font-size:12px; color:var(--ink-70); transition:color .15s; }
+
+/* Divider */
+.filter-divider { height:1px; background:var(--ink-15); margin:4px 0 28px; }
+
+/* ═══════════════════════════════════════
+   RESULTS AREA
+═══════════════════════════════════════ */
+.results-area {}
+
+/* Sort bar (inline above grid) */
+.results-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:24px;
+}
+.rb-count { font-size:14px; color:var(--ink-70); }
+.rb-count strong { color:var(--ink); font-weight:600; }
+.rb-tabs { display:flex; gap:4px; }
+.rb-tab {
+  font-size:13px; font-weight:400; color:var(--ink-40);
+  padding:6px 16px; border-radius:50px;
+  border:1.5px solid transparent;
+  transition:all .15s;
+}
+.rb-tab:hover { color:var(--ink-70); }
+.rb-tab.active { color:var(--ink); background:var(--white); border-color:var(--ink-15); font-weight:500; box-shadow:var(--shadow-sm); }
+
+/* ═══════════════════════════════════════
+   EXPERIENCE CARDS
+═══════════════════════════════════════ */
+.exp-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.exp-grid.list-view { grid-template-columns:1fr; }
+.exp-grid.list-view .exp-card { display:grid; grid-template-columns:300px 1fr; height:220px; }
+.exp-grid.list-view .ec-img-wrap { border-radius:var(--r-lg) 0 0 var(--r-lg); }
+.exp-grid.list-view .ec-body { padding:24px 28px; display:flex; flex-direction:column; justify-content:space-between; border-radius:0 var(--r-lg) var(--r-lg) 0; }
+.exp-grid.list-view .ec-img-wrap { border-radius:var(--r-lg) 0 0 var(--r-lg); }
+
+.exp-card {
+  background:var(--white);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  border:1px solid var(--ink-15);
+  transition:box-shadow .3s var(--ease), transform .3s var(--ease);
+  cursor:pointer;
+  position:relative;
+}
+.exp-card:hover { box-shadow:var(--shadow-hover); transform:translateY(-4px); }
+
+/* Card image */
+.ec-img-wrap {
+  position:relative;
+  height:220px;
+  overflow:hidden;
+  background:var(--ink-15);
+}
+.ec-img-wrap img { height:100%; transition:transform .5s var(--ease); }
+.exp-card:hover .ec-img-wrap img { transform:scale(1.05); }
+
+/* Badge */
+.ec-badge {
+  position:absolute; top:12px; left:12px; z-index:2;
+  font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+  padding:4px 10px; border-radius:50px;
+}
+.ec-badge.featured { background:var(--clay); color:var(--white); }
+.ec-badge.new { background:var(--sage); color:var(--white); }
+.ec-badge.deal { background:var(--gold); color:var(--white); }
+.ec-badge.popular { background:var(--ink); color:var(--white); }
+
+/* Availability dot */
+.ec-avail {
+  position:absolute; top:12px; right:12px; z-index:2;
+  font-size:10px; font-weight:500;
+  background:rgba(24,20,15,.75); color:var(--white);
+  backdrop-filter:blur(6px);
+  padding:4px 10px; border-radius:50px;
+  display:flex; align-items:center; gap:5px;
+}
+.ec-avail-dot { width:6px; height:6px; border-radius:50%; }
+.ec-avail-dot.green { background:var(--green); }
+.ec-avail-dot.amber { background:var(--status-amber); }
+
+/* Wishlist */
+.ec-wish {
+  position:absolute; bottom:12px; right:12px; z-index:2;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(250,248,245,.9); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s; color:var(--ink-40);
+  border:1px solid rgba(255,255,255,.5);
+}
+.ec-wish:hover { background:var(--white); color:var(--clay); transform:scale(1.1); }
+.ec-wish.liked { color:var(--clay); }
+.ec-wish.liked svg { fill:var(--clay); }
+
+/* Duration chip on image */
+.ec-duration {
+  position:absolute; bottom:12px; left:12px; z-index:2;
+  font-size:11px; font-weight:500; color:var(--white);
+  background:rgba(24,20,15,.65); backdrop-filter:blur(6px);
+  padding:4px 10px; border-radius:50px;
+  display:flex; align-items:center; gap:5px;
+}
+
+/* Card body */
+.ec-body { padding:18px 18px 16px; }
+.ec-location {
+  font-size:11px; font-weight:500; letter-spacing:.5px; text-transform:uppercase;
+  color:var(--clay); margin-bottom:6px;
+  display:flex; align-items:center; gap:4px;
+}
+.ec-name {
+  font-family:var(--serif); font-size:17px; line-height:1.3; letter-spacing:-.2px;
+  color:var(--ink); margin-bottom:10px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.ec-tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.ec-tag {
+  font-size:10px; font-weight:500; color:var(--ink-70);
+  background:var(--ink-06); border-radius:50px;
+  padding:3px 9px;
+}
+
+/* Rating */
+.ec-rating { display:flex; align-items:center; gap:6px; margin-bottom:14px; }
+.ec-stars { display:flex; gap:1px; }
+.ec-stars svg { width:12px; height:12px; }
+.ec-score { font-size:13px; font-weight:600; color:var(--ink); }
+.ec-reviews { font-size:11px; color:var(--ink-40); }
+
+/* Card footer */
+.ec-footer { border-top:1px solid var(--ink-06); padding-top:12px; display:flex; align-items:center; justify-content:space-between; }
+.ec-price-group { display:flex; flex-direction:column; gap:2px; }
+.ec-price-original { font-size:11px; color:var(--ink-40); text-decoration:line-through; }
+.ec-price-row { display:flex; align-items:baseline; gap:4px; }
+.ec-price-from { font-size:11px; color:var(--ink-40); }
+.ec-price { font-family:var(--serif); font-size:20px; color:var(--ink); letter-spacing:-.3px; }
+.ec-price-currency { font-size:12px; font-weight:500; color:var(--ink-70); }
+.ec-price-pp { font-size:10px; color:var(--ink-40); margin-top:1px; }
+.ec-discount { font-size:10px; font-weight:600; color:var(--sage); background:var(--sage-lt); border-radius:50px; padding:2px 7px; }
+.ec-cta {
+  background:var(--clay); color:var(--white);
+  font-size:12px; font-weight:500;
+  padding:9px 18px; border-radius:50px;
+  transition:background .2s, transform .15s;
+  flex-shrink:0;
+}
+.ec-cta:hover { background:var(--clay-dk); transform:translateY(-1px); }
+
+/* ═══════════════════════════════════════
+   LOAD MORE
+═══════════════════════════════════════ */
+.load-more-wrap {
+  grid-column:1/-1;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:20px 0 8px;
+}
+.load-more-btn {
+  font-size:14px; font-weight:500; color:var(--ink);
+  padding:13px 40px; border-radius:50px;
+  border:1.5px solid var(--ink-15); background:var(--white);
+  transition:all .2s; display:flex; align-items:center; gap:8px;
+}
+.load-more-btn:hover { border-color:var(--clay); color:var(--clay); box-shadow:var(--shadow-sm); }
+.load-more-prog { font-size:12px; color:var(--ink-40); }
+.load-more-bar { width:120px; height:2px; background:var(--ink-15); border-radius:4px; overflow:hidden; }
+.load-more-fill { height:100%; width:40%; background:var(--clay); border-radius:4px; }
+
+/* ═══════════════════════════════════════
+   POPULAR SEARCHES
+═══════════════════════════════════════ */
+.popular-searches {
+  border-top:1px solid var(--ink-15);
+  padding:20px 48px 0;
+  max-width:1320px; margin:0 auto;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.ps-label { font-size:12px; color:var(--ink-40); }
+.ps-chip {
+  font-size:12px; font-weight:400; color:var(--ink-70);
+  padding:5px 14px; border-radius:50px;
+  border:1.5px solid var(--ink-15); background:var(--white);
+  transition:all .15s; cursor:pointer;
+}
+.ps-chip:hover { border-color:var(--clay); color:var(--clay); background:var(--clay-lt); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background:var(--ink); color:var(--white);
+  padding:60px 48px 0;
+  margin-top:80px;
+}
+.footer-inner { max-width:1320px; margin:0 auto; }
+.footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; padding-bottom:48px; }
+.footer-brand-col .foot-logo { font-family:var(--serif); font-size:22px; color:var(--white); margin-bottom:12px; }
+.footer-brand-col .foot-logo em { color:var(--clay); font-style:italic; }
+.footer-brand-col p { font-size:13px; font-weight:300; color:rgba(255,255,255,.38); line-height:1.7; margin-bottom:20px; max-width:260px; }
+.foot-socials { display:flex; gap:10px; }
+.foot-social { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; font-size:13px; color:rgba(255,255,255,.4); transition:all .2s; }
+.foot-social:hover { background:var(--clay); color:var(--white); }
+.foot-col-title { font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.25); margin-bottom:16px; }
+.foot-col ul { display:flex; flex-direction:column; gap:10px; }
+.foot-col ul li a { font-size:13px; font-weight:300; color:rgba(255,255,255,.45); transition:color .2s; }
+.foot-col ul li a:hover { color:rgba(255,255,255,.85); }
+.footer-bottom { border-top:1px solid rgba(255,255,255,.07); padding:20px 0; display:flex; align-items:center; justify-content:space-between; }
+.fb-copy { font-size:12px; font-weight:300; color:rgba(255,255,255,.2); }
+.fb-links { display:flex; gap:20px; }
+.fb-links a { font-size:12px; color:rgba(255,255,255,.2); transition:color .2s; }
+.fb-links a:hover { color:rgba(255,255,255,.5); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1200px){
+  nav,.search-strip,.page-header,.popular-searches,.page-body,footer{padding-left:32px;padding-right:32px}
+  .page-body{grid-template-columns:220px 1fr;gap:24px;}
+  .page-body.filters-hidden{grid-template-columns:0 1fr;gap:0}
+  .exp-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:1024px){
+  .ph-inner{flex-direction:column;align-items:flex-start;gap:20px}
+  .page-body{grid-template-columns:1fr;padding-top:24px}
+  .page-body.filters-hidden{grid-template-columns:1fr}
+  .sidebar{position:relative;top:0;max-height:none}
+  .filters-hidden .sidebar{display:none}
+  .exp-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+}
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .page-header{padding:24px 20px 20px}
+  .ph-stats{flex-wrap:wrap;gap:10px}
+  .search-strip{padding:12px 20px}
+  .ss-view-btns{display:none}
+  .page-body{padding:20px 20px 60px}
+  .exp-grid{grid-template-columns:1fr}
+  .popular-searches{padding:16px 20px 0}
+  footer{padding:40px 20px 0}
+  .footer-grid{grid-template-columns:1fr}
+}
+
+/* ═══════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════ */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="experiences.html" class="nav-logo">Rihla<em>Ma</em></a>
+  <div class="nav-links">
+    <a href="experiences.html">Home</a>
+    <a href="#" class="active">Explore</a>
+    <a href="#">Categories</a>
+    <a href="#">Reviews</a>
+  </div>
+  <div class="nav-right">
+    <a href="auth-user.html" class="nav-login">Login</a>
+    <a href="auth-user.html" class="nav-signup">Sign up</a>
+  </div>
+</nav>
+
+<!-- ═══ PAGE HEADER ═══ -->
+<div class="page-header">
+  <div class="ph-inner">
+    <div class="ph-left">
+      <div class="ph-breadcrumb">
+        <a href="experiences.html">Home</a>
+        <span>›</span>
+        <a href="#">Explore</a>
+      </div>
+      <h1 class="ph-title">All <em>Experiences</em></h1>
+      <p class="ph-subtitle">Authentic, locally-curated travel experiences across Morocco</p>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-stat">
+        <div class="ph-stat-num">240+</div>
+        <div class="ph-stat-lbl">Experiences<br>available</div>
+      </div>
+      <div class="ph-stat">
+        <div class="ph-stat-num">18</div>
+        <div class="ph-stat-lbl">Destinations<br>covered</div>
+      </div>
+      <div class="ph-stat">
+        <div class="ph-stat-num">4.8★</div>
+        <div class="ph-stat-lbl">Average<br>rating</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SEARCH STRIP ═══ -->
+<div class="search-strip">
+  <div class="ss-inner">
+    <!-- Filters toggle -->
+    <button class="btn-toggle-filters active has-filters" id="toggleFiltersBtn" onclick="toggleFilters()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      <span id="toggleFiltersLabel">Filters</span>
+      <span class="tf-dot"></span>
+    </button>
+    <div class="ss-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search experiences, destinations, activities…" id="searchInput"/>
+    </div>
+    <div class="ss-sort">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <select id="sortSelect" onchange="handleSort(this.value)">
+        <option value="top">Top Rated</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="newest">Newest First</option>
+        <option value="popular">Most Popular</option>
+      </select>
+    </div>
+    <div class="ss-view-btns">
+      <button class="ss-view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="ss-view-btn" id="listViewBtn" onclick="setView('list')" title="List view">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </button>
+    </div>
+    <span class="ss-results" id="resultsCount">Showing <strong>12</strong> of 240</span>
+  </div>
+  <!-- Active filter chips -->
+  <div class="active-filters" id="activeFilters">
+    <div class="af-chip">
+      Desert
+      <button onclick="removeFilter(this.parentElement)" aria-label="Remove filter">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="af-chip">
+      Marrakesh
+      <button onclick="removeFilter(this.parentElement)" aria-label="Remove filter">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <button class="af-clear" onclick="clearAllFilters()">Clear all</button>
+  </div>
+</div>
+
+<!-- ═══ POPULAR SEARCHES ═══ -->
+<div class="popular-searches">
+  <span class="ps-label">Popular:</span>
+  <button class="ps-chip" onclick="setSearch(this.textContent)">Old Medina Tour</button>
+  <button class="ps-chip" onclick="setSearch(this.textContent)">Sahara Safari</button>
+  <button class="ps-chip" onclick="setSearch(this.textContent)">Atlantic Water Sports</button>
+  <button class="ps-chip" onclick="setSearch(this.textContent)">Cooking Class</button>
+  <button class="ps-chip" onclick="setSearch(this.textContent)">Chefchaouen Hike</button>
+</div>
+
+<!-- ═══ MAIN BODY ═══ -->
+<div class="page-body" id="pageBody">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="filter-header">
+      <span class="filter-title">Filters</span>
+      <button class="filter-reset" onclick="clearAllFilters()">Reset all</button>
+    </div>
+
+    <!-- Category -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Category
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <ul>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check checked"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Desert</span>
+          </div>
+          <span class="fi-count">12</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Medina & Culture</span>
+          </div>
+          <span class="fi-count">25</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Mountains</span>
+          </div>
+          <span class="fi-count">7</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Beach & Coast</span>
+          </div>
+          <span class="fi-count">10</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Food & Cooking</span>
+          </div>
+          <span class="fi-count">30</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Adventure</span>
+          </div>
+          <span class="fi-count">11</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Wellness & Spa</span>
+          </div>
+          <span class="fi-count">8</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <!-- Price Range -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Price Range
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="price-range-wrap">
+        <div class="price-inputs">
+          <div class="price-input-box">
+            <span class="pi-cur">MAD</span>
+            <input class="pi-val" type="number" value="0" min="0" max="5000"/>
+          </div>
+          <div class="price-input-box">
+            <span class="pi-cur">MAD</span>
+            <input class="pi-val" type="number" value="5000" min="0" max="5000"/>
+          </div>
+        </div>
+        <input type="range" class="range-slider" min="0" max="5000" value="2500"/>
+        <div class="price-chips">
+          <button class="price-chip" onclick="togglePriceChip(this)">Under 500</button>
+          <button class="price-chip active" onclick="togglePriceChip(this)">500–1,500</button>
+          <button class="price-chip" onclick="togglePriceChip(this)">1,500+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <!-- Duration -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Duration
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <ul>
+        <li class="radio-item" onclick="toggleRadio(this)">
+          <div class="ri-dot"></div>
+          <span class="ri-name">Any duration</span>
+        </li>
+        <li class="radio-item" onclick="toggleRadio(this)">
+          <div class="ri-dot checked"></div>
+          <span class="ri-name">Half day (under 4h)</span>
+        </li>
+        <li class="radio-item" onclick="toggleRadio(this)">
+          <div class="ri-dot"></div>
+          <span class="ri-name">Full day (4–8h)</span>
+        </li>
+        <li class="radio-item" onclick="toggleRadio(this)">
+          <div class="ri-dot"></div>
+          <span class="ri-name">Multi-day (2+ days)</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <!-- Rating -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Minimum Rating
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <ul>
+        <li class="rating-item" onclick="toggleRadio(this)">
+          <div class="ri-dot checked"></div>
+          <div class="star-row">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <span class="ri-label">& up</span>
+        </li>
+        <li class="rating-item" onclick="toggleRadio(this)">
+          <div class="ri-dot"></div>
+          <div class="star-row">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <span class="ri-label">& up</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <!-- Tags -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Tags
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="tag-cloud">
+        <button class="tag-btn active" onclick="toggleTag(this)">Family Friendly</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Photography</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Private Tour</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Group Tours</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Beginner Friendly</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Outdoor</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Indoor</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Night Experience</button>
+        <button class="tag-btn" onclick="toggleTag(this)">Small Group</button>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <!-- Destination -->
+    <div class="filter-group">
+      <div class="fg-label">
+        Destination
+        <button onclick="toggleGroup(this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <ul>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check checked"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Marrakesh</span>
+          </div>
+          <span class="fi-count">48</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Fez</span>
+          </div>
+          <span class="fi-count">32</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Chefchaouen</span>
+          </div>
+          <span class="fi-count">19</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Merzouga (Sahara)</span>
+          </div>
+          <span class="fi-count">22</span>
+        </li>
+        <li class="filter-item" onclick="toggleCheck(this)">
+          <div class="fi-left">
+            <div class="fi-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="fi-name">Essaouira</span>
+          </div>
+          <span class="fi-count">14</span>
+        </li>
+      </ul>
+    </div>
+
+  </aside>
+
+  <!-- RESULTS -->
+  <main>
+    <!-- Inline sort tabs -->
+    <div class="results-bar">
+      <p class="rb-count"><strong id="rb-num">12</strong> experiences found</p>
+      <div class="rb-tabs">
+        <button class="rb-tab active" onclick="setTab(this,'top')">Top Rated</button>
+        <button class="rb-tab" onclick="setTab(this,'popular')">Trending</button>
+        <button class="rb-tab" onclick="setTab(this,'new')">Just Added</button>
+      </div>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="exp-grid" id="expGrid">
+
+      <!-- Card 1 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?w=600&q=80" alt="Sahara Desert Camel Trek"/>
+          <span class="ec-badge featured">Featured</span>
+          <span class="ec-avail"><span class="ec-avail-dot amber"></span>3 spots left</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            2 Days
+          </span>
+          <button class="ec-wish liked" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Merzouga, Sahara
+          </p>
+          <h3 class="ec-name">Sahara Desert Camel Trek & Overnight Glamping</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Small Group</span>
+            <span class="ec-tag">Private Option</span>
+            <span class="ec-tag">Overnight</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.9</span>
+            <span class="ec-reviews">(634 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <span class="ec-price-original">MAD 8,841</span>
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">4,509</span>
+                <span class="ec-price-currency">MAD</span>
+                <span class="ec-discount">−49%</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" alt="Marrakesh Food Tour"/>
+          <span class="ec-badge new">New</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            3.5 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Marrakesh, Medina
+          </p>
+          <h3 class="ec-name">Secret Street Food Tour of the Old Medina</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Food & Drink</span>
+            <span class="ec-tag">Walking Tour</span>
+            <span class="ec-tag">Family OK</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#EAE5DF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.7</span>
+            <span class="ec-reviews">(218 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">320</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1548813395-bf9b4bb4e9c5?w=600&q=80" alt="Atlas Mountain Hike"/>
+          <span class="ec-badge popular">Popular</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            7 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            High Atlas Mountains
+          </p>
+          <h3 class="ec-name">Toubkal Summit Trek — Highest Peak in North Africa</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Adventure</span>
+            <span class="ec-tag">Hiking</span>
+            <span class="ec-tag">Beginner OK</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.9</span>
+            <span class="ec-reviews">(412 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">750</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=600&q=80" alt="Chefchaouen Blue City"/>
+          <span class="ec-badge featured">Featured</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            5 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Chefchaouen
+          </p>
+          <h3 class="ec-name">The Blue City Photography Walk & Local Lunch</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Photography</span>
+            <span class="ec-tag">Walking Tour</span>
+            <span class="ec-tag">Small Group</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#EAE5DF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.8</span>
+            <span class="ec-reviews">(301 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">480</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1504173010664-32509107de94?w=600&q=80" alt="Moroccan Cooking Class"/>
+          <span class="ec-badge deal">Deal</span>
+          <span class="ec-avail"><span class="ec-avail-dot amber"></span>5 spots left</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            4 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Marrakesh
+          </p>
+          <h3 class="ec-name">Riad Cooking Class — Tagine, Couscous & Mint Tea</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Cooking</span>
+            <span class="ec-tag">Riad</span>
+            <span class="ec-tag">Family Friendly</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">5.0</span>
+            <span class="ec-reviews">(89 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <span class="ec-price-original">MAD 680</span>
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">420</span>
+                <span class="ec-price-currency">MAD</span>
+                <span class="ec-discount">−38%</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1531761305006-73d4f2bac701?w=600&q=80" alt="Essaouira Surf"/>
+          <span class="ec-badge new">New</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            3 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Essaouira, Atlantic Coast
+          </p>
+          <h3 class="ec-name">Atlantic Surf Lesson for Beginners — All Equipment</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Water Sport</span>
+            <span class="ec-tag">Beginner</span>
+            <span class="ec-tag">Beach</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#EAE5DF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.6</span>
+            <span class="ec-reviews">(143 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">290</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1596178060810-72d4a5988e6e?w=600&q=80" alt="Fez Tanneries Tour"/>
+          <span class="ec-badge popular">Popular</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            4 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Fez, Old Medina
+          </p>
+          <h3 class="ec-name">Fez Leather Tanneries & Ancient Medina Walking Tour</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Culture</span>
+            <span class="ec-tag">Crafts</span>
+            <span class="ec-tag">Photography</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.9</span>
+            <span class="ec-reviews">(527 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">390</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?w=600&q=80" alt="Marrakesh Night Market"/>
+          <span class="ec-badge featured">Featured</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            3 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Djemaa el-Fna, Marrakesh
+          </p>
+          <h3 class="ec-name">Djemaa el-Fna Night Market — Storytellers & Performers</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Night Experience</span>
+            <span class="ec-tag">Culture</span>
+            <span class="ec-tag">Outdoor</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#EAE5DF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.8</span>
+            <span class="ec-reviews">(267 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">200</span>
+                <span class="ec-price-currency">MAD</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="exp-card">
+        <div class="ec-img-wrap">
+          <img src="https://images.unsplash.com/photo-1529316738904-5bcd2a803de0?w=600&q=80" alt="Hammam Experience"/>
+          <span class="ec-badge deal">Deal</span>
+          <span class="ec-avail"><span class="ec-avail-dot green"></span>Available</span>
+          <span class="ec-duration">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            2 Hours
+          </span>
+          <button class="ec-wish" onclick="toggleWish(this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+        <div class="ec-body">
+          <p class="ec-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Marrakesh
+          </p>
+          <h3 class="ec-name">Traditional Hammam & Argan Oil Spa Ritual</h3>
+          <div class="ec-tags">
+            <span class="ec-tag">Wellness</span>
+            <span class="ec-tag">Spa</span>
+            <span class="ec-tag">Indoor</span>
+          </div>
+          <div class="ec-rating">
+            <div class="ec-stars">
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#B08D5C"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="ec-score">4.9</span>
+            <span class="ec-reviews">(344 reviews)</span>
+          </div>
+          <div class="ec-footer">
+            <div class="ec-price-group">
+              <span class="ec-price-original">MAD 550</span>
+              <div class="ec-price-row">
+                <span class="ec-price-from">From</span>
+                <span class="ec-price">380</span>
+                <span class="ec-price-currency">MAD</span>
+                <span class="ec-discount">−31%</span>
+              </div>
+              <span class="ec-price-pp">per person</span>
+            </div>
+            <button class="ec-cta">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Load More -->
+      <div class="load-more-wrap">
+        <div>
+          <div class="load-more-bar"><div class="load-more-fill"></div></div>
+          <p class="load-more-prog" style="text-align:center;margin-top:8px">Showing 9 of 240 experiences</p>
+        </div>
+        <button class="load-more-btn" onclick="loadMore()">
+          Load more experiences
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand-col foot-col">
+        <div class="foot-logo">Rihla<em>Ma</em></div>
+        <p>Discover the magic of Morocco through authentic, locally-curated travel experiences.</p>
+        <div class="foot-socials">
+          <a href="#" class="foot-social">𝕏</a>
+          <a href="#" class="foot-social">in</a>
+          <a href="#" class="foot-social">ig</a>
+          <a href="#" class="foot-social">yt</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <p class="foot-col-title">Explore</p>
+        <ul>
+          <li><a href="#">All Experiences</a></li>
+          <li><a href="#">Destinations</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Special Offers</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <p class="foot-col-title">Destinations</p>
+        <ul>
+          <li><a href="#">Marrakech</a></li>
+          <li><a href="#">Fez</a></li>
+          <li><a href="#">Chefchaouen</a></li>
+          <li><a href="#">Essaouira</a></li>
+          <li><a href="#">Sahara Desert</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <p class="foot-col-title">Contact</p>
+        <ul>
+          <li><a href="#">✉ hello@rihlama.com</a></li>
+          <li><a href="#">☎ +212 5XX–XXXXXX</a></li>
+          <li><a href="#">⦿ Marrakech, Morocco</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="fb-copy">© 2026 RihlaMa. All rights reserved.</p>
+      <div class="fb-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Settings</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ─── Filters toggle ─── */
+let filtersVisible = true;
+function toggleFilters() {
+  const body = document.getElementById('pageBody');
+  const btn = document.getElementById('toggleFiltersBtn');
+  const label = document.getElementById('toggleFiltersLabel');
+  const grid = document.getElementById('expGrid');
+  filtersVisible = !filtersVisible;
+  body.classList.toggle('filters-hidden', !filtersVisible);
+  btn.classList.toggle('active', filtersVisible);
+  label.textContent = filtersVisible ? 'Filters' : 'Show Filters';
+  // expand cards to 4 cols when sidebar hidden
+  if (!filtersVisible) {
+    grid.style.gridTemplateColumns = 'repeat(4,1fr)';
+  } else {
+    grid.style.gridTemplateColumns = '';
+  }
+}
+
+/* ─── View toggle ─── */
+function setView(v) {
+  const grid = document.getElementById('expGrid');
+  const gb = document.getElementById('gridViewBtn');
+  const lb = document.getElementById('listViewBtn');
+  if (v === 'list') {
+    grid.classList.add('list-view');
+    lb.classList.add('active'); gb.classList.remove('active');
+  } else {
+    grid.classList.remove('list-view');
+    gb.classList.add('active'); lb.classList.remove('active');
+  }
+}
+
+/* ─── Wishlist toggle ─── */
+function toggleWish(btn) {
+  btn.classList.toggle('liked');
+  const svg = btn.querySelector('svg');
+  if (btn.classList.contains('liked')) {
+    svg.setAttribute('fill', 'var(--clay)');
+    svg.setAttribute('stroke', 'var(--clay)');
+  } else {
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+  }
+}
+
+/* ─── Filter checkbox ─── */
+function toggleCheck(item) {
+  const box = item.querySelector('.fi-check');
+  box.classList.toggle('checked');
+}
+
+/* ─── Filter radio ─── */
+function toggleRadio(item) {
+  const group = item.closest('ul');
+  group.querySelectorAll('.ri-dot').forEach(d => d.classList.remove('checked'));
+  item.querySelector('.ri-dot').classList.add('checked');
+}
+
+/* ─── Tag toggle ─── */
+function toggleTag(btn) {
+  btn.classList.toggle('active');
+}
+
+/* ─── Price chip ─── */
+function togglePriceChip(btn) {
+  btn.closest('.price-chips').querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─── Group collapse ─── */
+function toggleGroup(btn) {
+  btn.classList.toggle('collapsed');
+  const group = btn.closest('.filter-group');
+  const content = group.querySelector('ul, .price-range-wrap, .tag-cloud');
+  if (content) {
+    content.style.display = btn.classList.contains('collapsed') ? 'none' : '';
+  }
+}
+
+/* ─── Tab switching ─── */
+function setTab(btn, val) {
+  document.querySelectorAll('.rb-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─── Sort ─── */
+function handleSort(val) { /* wire to API */ }
+
+/* ─── Remove chip ─── */
+function removeFilter(chip) {
+  chip.style.opacity = '0';
+  chip.style.transform = 'scale(.9)';
+  setTimeout(() => { chip.remove(); }, 200);
+}
+function clearAllFilters() {
+  const af = document.getElementById('activeFilters');
+  af.querySelectorAll('.af-chip').forEach(c => { c.style.opacity='0'; setTimeout(()=>c.remove(),200); });
+  af.querySelector('.af-clear')?.remove();
+  document.querySelectorAll('.fi-check.checked').forEach(c => c.classList.remove('checked'));
+  document.querySelectorAll('.tag-btn.active').forEach(b => b.classList.remove('active'));
+}
+
+/* ─── Search ─── */
+function setSearch(text) {
+  const input = document.getElementById('searchInput');
+  input.value = text;
+  input.focus();
+}
+
+/* ─── Load more ─── */
+function loadMore() {
+  const btn = document.querySelector('.load-more-btn');
+  btn.textContent = 'Loading…';
+  setTimeout(() => { btn.innerHTML = 'Load more experiences <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'; }, 1200);
+}
+</script>
+</body>
+</html>
