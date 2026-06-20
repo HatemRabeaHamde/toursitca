@@ -1,0 +1,18 @@
+{
+  "default_branch": "development",
+  "branches": [
+    "codex/morocco-compass-home-animation",
+    "development",
+    "main"
+  ],
+  "parent": {
+    "codex/morocco-compass-home-animation": "development",
+    "development": null,
+    "main": "development"
+  },
+  "order": [
+    "development",
+    "codex/morocco-compass-home-animation",
+    "main"
+  ]
+}

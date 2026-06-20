@@ -1,17 +1,3 @@
-@php
-    $categoryEmoji = [
-        'desert' => '🏜️',
-        'mountain' => '⛰️',
-        'food' => '🍽️',
-        'cultural' => '🏛️',
-        'culture' => '🏛️',
-        'adventure' => '🧗',
-        'wellness' => '🧘',
-        'workshop' => '🎨',
-        'water' => '🌊',
-        'balloon' => '🎈',
-    ];
-@endphp
 
 @if ($landing->categories->isNotEmpty())
     <section class="cats-section">
@@ -25,7 +11,6 @@
                 <a class="cat-item" href="{{ $category['url'] }}">
                     <div class="cat-circle">
                         <img src="{{ $category['image_url'] }}" alt="{{ $category['name'] }}" loading="lazy">
-                        <div class="cat-veil">{{ $categoryEmoji[$category['slug']] ?? '✨' }}</div>
                     </div>
                     <p class="cat-name">{{ $category['name'] }}</p>
                 </a>
