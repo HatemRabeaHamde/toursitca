@@ -14,14 +14,17 @@
 
     <section class="hero" id="hero">
         <div class="hero-bg">
-            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1800&q=90" alt="{{ __('ui.landing.hero_image_alt') }}">
+            <img class="hero-slide" src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1800&q=90" alt="{{ __('ui.landing.hero_image_alt') }}">
+            <img class="hero-slide" src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1800&q=90" alt="{{ __('ui.landing.hero_image_alt') }}">
+            <img class="hero-slide" src="https://images.unsplash.com/photo-1548013146-72479768bada?w=1800&q=90" alt="{{ __('ui.landing.hero_image_alt') }}">
+            <img class="hero-slide" src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=1800&q=90" alt="{{ __('ui.landing.hero_image_alt') }}">
             <div class="hero-veil"></div>
         </div>
 
         <div class="hero-body">
             <p class="eyebrow-w">{{ __('ui.landing.eyebrow') }}</p>
             {{-- Raw output: lang string contains intentional <br>/<em> markup for the headline emphasis styling. --}}
-            <h1 class="hero-h1">{!! __('ui.landing.hero_title') !!}</h1>
+            <h1 class="hero-h1 hero-typewriter">{!! __('ui.landing.hero_title') !!}</h1>
             <p class="hero-desc">{{ __('ui.landing.hero_description', ['count' => number_format($landing->stats['experiences_count'])]) }}</p>
 
             <div class="hero-pills" aria-label="{{ __('ui.landing.stats_label') }}">
@@ -60,10 +63,31 @@
             @if ($landing->trendingCards->isEmpty())
                 <div class="trend-empty">{{ __('ui.messages.no_experiences') }}</div>
             @else
-                <div class="trend-row">
-                    @foreach ($landing->trendingCards as $card)
-                        @include('site.home.partials.experience-card', ['card' => $card])
-                    @endforeach
+                <div
+                    class="carousel-shell"
+                    x-data="homeCarousel({ autoplay: @js($landing->trendingCards->count() > 4) })"
+                    x-on:mouseenter="pause()"
+                    x-on:mouseleave="resume()"
+                    x-on:focusin="pause()"
+                    x-on:focusout="resume()"
+                    x-on:touchstart.passive="pause()"
+                >
+                    <div class="trend-row carousel-track" x-ref="track" aria-label="{{ __('ui.landing.carousel.trending') }}">
+                        @foreach ($landing->trendingCards as $card)
+                            @include('site.home.partials.experience-card', ['card' => $card])
+                        @endforeach
+                    </div>
+
+                    @if ($landing->trendingCards->count() > 4)
+                        <div class="carousel-actions">
+                            <button class="carousel-btn" type="button" x-on:click="previous()" aria-label="{{ __('ui.landing.carousel.previous_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button class="carousel-btn" type="button" x-on:click="next()" aria-label="{{ __('ui.landing.carousel.next_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
@@ -72,10 +96,31 @@
             @if ($landing->newestCards->isEmpty())
                 <div class="trend-empty">{{ __('ui.messages.no_experiences') }}</div>
             @else
-                <div class="trend-row">
-                    @foreach ($landing->newestCards as $card)
-                        @include('site.home.partials.experience-card', ['card' => $card])
-                    @endforeach
+                <div
+                    class="carousel-shell"
+                    x-data="homeCarousel({ autoplay: @js($landing->newestCards->count() > 4) })"
+                    x-on:mouseenter="pause()"
+                    x-on:mouseleave="resume()"
+                    x-on:focusin="pause()"
+                    x-on:focusout="resume()"
+                    x-on:touchstart.passive="pause()"
+                >
+                    <div class="trend-row carousel-track" x-ref="track" aria-label="{{ __('ui.landing.carousel.newest') }}">
+                        @foreach ($landing->newestCards as $card)
+                            @include('site.home.partials.experience-card', ['card' => $card])
+                        @endforeach
+                    </div>
+
+                    @if ($landing->newestCards->count() > 4)
+                        <div class="carousel-actions">
+                            <button class="carousel-btn" type="button" x-on:click="previous()" aria-label="{{ __('ui.landing.carousel.previous_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button class="carousel-btn" type="button" x-on:click="next()" aria-label="{{ __('ui.landing.carousel.next_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
@@ -84,10 +129,31 @@
             @if ($landing->topRatedCards->isEmpty())
                 <div class="trend-empty">{{ __('ui.messages.no_experiences') }}</div>
             @else
-                <div class="trend-row">
-                    @foreach ($landing->topRatedCards as $card)
-                        @include('site.home.partials.experience-card', ['card' => $card])
-                    @endforeach
+                <div
+                    class="carousel-shell"
+                    x-data="homeCarousel({ autoplay: @js($landing->topRatedCards->count() > 4) })"
+                    x-on:mouseenter="pause()"
+                    x-on:mouseleave="resume()"
+                    x-on:focusin="pause()"
+                    x-on:focusout="resume()"
+                    x-on:touchstart.passive="pause()"
+                >
+                    <div class="trend-row carousel-track" x-ref="track" aria-label="{{ __('ui.landing.carousel.top_rated') }}">
+                        @foreach ($landing->topRatedCards as $card)
+                            @include('site.home.partials.experience-card', ['card' => $card])
+                        @endforeach
+                    </div>
+
+                    @if ($landing->topRatedCards->count() > 4)
+                        <div class="carousel-actions">
+                            <button class="carousel-btn" type="button" x-on:click="previous()" aria-label="{{ __('ui.landing.carousel.previous_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button class="carousel-btn" type="button" x-on:click="next()" aria-label="{{ __('ui.landing.carousel.next_experiences') }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>

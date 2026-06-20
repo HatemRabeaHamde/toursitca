@@ -14,4 +14,11 @@ class HomeController extends Controller
 
         return view('site.home', compact('landing'));
     }
+
+    public function compass(ExperienceLandingPageService $experienceLandingPageService): View
+    {
+        $landing = $experienceLandingPageService->get();
+
+        return view('site.home-compass', compact('landing'));
+    }
 }

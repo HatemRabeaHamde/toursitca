@@ -58,6 +58,20 @@ class LandingContentTest extends TestCase
             ->assertSee('Managed answer.');
     }
 
+    public function test_morocco_compass_landing_page_renders(): void
+    {
+        $this->createExperience([
+            'title' => ['en' => 'Compass Desert Route'],
+            'category' => 'desert',
+            'location_city' => 'Marrakesh',
+        ]);
+
+        $this->get(route('site.home.compass', ['locale' => 'en']))
+            ->assertOk()
+            ->assertSee('Morocco Compass')
+            ->assertSee('Compass Desert Route');
+    }
+
     public function test_newsletter_subscription_is_stored_once_per_email(): void
     {
         $payload = ['email' => 'Traveler@Example.com'];

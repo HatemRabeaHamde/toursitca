@@ -17,6 +17,7 @@ Route::prefix('{locale}')
     ->middleware('set.locale')
     ->group(function (): void {
         Route::get('/', [HomeController::class, 'index'])->name('site.home');
+        Route::get('/morocco-compass', [HomeController::class, 'compass'])->name('site.home.compass');
         Route::get('/experiences', [ExperienceController::class, 'index'])->name('site.experiences.index');
         Route::post('/newsletter', [NewsletterController::class, 'store'])->name('site.newsletter.store');
         Route::post('/experiences/{experience:slug}/quote', [AvailabilityController::class, 'quote'])->name('site.experiences.quote');
