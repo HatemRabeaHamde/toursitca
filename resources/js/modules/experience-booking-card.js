@@ -198,12 +198,24 @@ export function experienceBookingCard(config) {
             return this.chosenOption()?.languages || [];
         },
 
-        /** The booking button walks the traveller through the next missing step. */
-        requestLabel() {
-            if (!this.store.selectedDate) return strings.chooseDate;
-            if (this.needsOption()) return strings.chooseOption;
+        /** The request button stays inactive until a date is picked and an option is chosen (when the trip has options). */
+        canRequest() {
+            return Boolean(this.store.selectedDate)
+                && !this.needsOption()
+                && this.store.hasSelection(this.store.activeOption)
+                && !this.store.isStartingCheckout;
+        },
+
+        /** What is still missing, in plain words; null when ready. */
+        nextStepHint() {
+            if (!this.store.selectedDate) return strings.hintDate;
+            if (this.needsOption()) return strings.hintOption;
 
             return null;
+        },
+
+        proceed() {
+            if (this.canRequest()) this.store.startCheckout(this.store.activeOption);
         },
 
         canAdd() {

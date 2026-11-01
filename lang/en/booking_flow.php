@@ -5,6 +5,7 @@ return [
         'choose_option' => 'Choose an option',
         'choose_date' => 'Choose a date',
     ],
+    'hint' => ['date' => 'Pick an available date to start.', 'option' => 'Now choose the option you want.'],
     'card' => [
         'option' => 'Option',
         'option_below' => 'Choose your option below',

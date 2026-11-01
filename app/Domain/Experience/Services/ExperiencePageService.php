@@ -279,6 +279,8 @@ final class ExperiencePageService
                     'travellers' => $this->plural('experiences.detail.booking.travellers_value'),
                     'chooseOption' => __('booking_flow.cta.choose_option'),
                     'chooseDate' => __('booking_flow.cta.choose_date'),
+                    'hintDate' => __('booking_flow.hint.date'),
+                    'hintOption' => __('booking_flow.hint.option'),
                     'breakdown' => __('experiences.detail.booking.breakdown'),
                     'flat' => __('experiences.detail.booking.breakdown_flat'),
                 ],

@@ -140,6 +140,9 @@ class ExperienceShowTest extends TestCase
             ->assertSee('Standard day trip')
             ->assertSee('role="radiogroup"', false)
             ->assertDontSee('id="booking-option"', false)
+            // The request button starts inactive and says what to do first.
+            ->assertSee(':disabled="!canRequest()"', false)
+            ->assertSee('Pick an available date to start.')
             ->assertViewHas('page', function ($page) use ($standard): bool {
                 $option = collect($page->booking['options'])->firstWhere('id', $standard->id);
 

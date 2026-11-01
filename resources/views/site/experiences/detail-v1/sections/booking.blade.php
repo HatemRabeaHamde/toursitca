@@ -102,9 +102,10 @@
     <p class="lv-t-caption lv-tone-muted" x-show="store.isQuoting" x-cloak role="status">{{ __('experiences.detail.booking.checking') }}</p>
     <p class="lv-bcard__error lv-t-caption" x-show="store.quoteError" x-cloak x-text="store.quoteError" role="alert"></p>
 
-    <x-site.atoms.button class="w-full" @click="request()" ::disabled="store.isStartingCheckout" ::aria-busy="store.isStartingCheckout.toString()">
-        <span x-text="store.isStartingCheckout ? @js(__('experiences.detail.booking.requesting')) : (requestLabel() || @js(__('experiences.detail.booking.request')))">{{ __('experiences.detail.booking.request') }}</span>
+    <x-site.atoms.button class="w-full" disabled @click="proceed()" ::disabled="!canRequest()" ::aria-busy="store.isStartingCheckout.toString()">
+        <span x-text="store.isStartingCheckout ? @js(__('experiences.detail.booking.requesting')) : @js(__('experiences.detail.booking.request'))">{{ __('experiences.detail.booking.request') }}</span>
     </x-site.atoms.button>
+    <p class="lv-t-caption lv-tone-muted text-center" x-show="nextStepHint()" x-text="nextStepHint()" role="status">{{ __('booking_flow.hint.date') }}</p>
 
     <ul class="flex flex-col gap-2.5 lv-t-caption lv-tone-ink">
         <li class="flex items-center gap-2.5"><x-site.atoms.icon name="card-ink" :size="17" />{{ __('experiences.detail.v1.booking.no_card') }}</li>

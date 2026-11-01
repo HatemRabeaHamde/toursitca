@@ -5,6 +5,7 @@ return [
         'choose_option' => 'Choisir une formule',
         'choose_date' => 'Choisir une date',
     ],
+    'hint' => ['date' => 'Choisissez une date disponible pour commencer.', 'option' => 'Choisissez maintenant la formule souhaitée.'],
     'card' => [
         'option' => 'Formule',
         'option_below' => 'Choisissez votre formule ci-dessous',

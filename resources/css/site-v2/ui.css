@@ -30,7 +30,7 @@
 .lv-button .lv-icon { transition: transform .45s var(--lv-ease); }
 .lv-button:hover .lv-icon { transform: translateX(4px); }
 .lv-button--primary { background: var(--lv-clay); color: #fff; }
-.lv-button--primary:hover { background: var(--lv-rust); transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(185, 80, 43, .6); }
+.lv-button--primary:hover:not(:disabled) { background: var(--lv-rust); transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(185, 80, 43, .6); }
 .lv-button--outline { padding-block: 11px; border: 1.5px solid var(--lv-clay); color: var(--lv-clay); background: transparent; }
 .lv-button--outline:hover { background: rgba(185, 80, 43, .06); }
 
@@ -237,3 +237,6 @@
 .lv-v1-choice:hover { border-color: var(--lv-control); }
 .lv-v1-choice:focus-within { outline: 2px solid var(--lv-success); outline-offset: 2px; }
 .lv-v1-choice.is-selected { background: #eef3ec; border-color: var(--lv-success); box-shadow: inset 0 0 0 .5px var(--lv-success); }
+
+.lv-button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.lv-button:disabled:hover .lv-icon { transform: none; }
