@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             PlatformAgencySeeder::class,
             LandingContentSeeder::class,
             LandingShowcaseSeeder::class,
+            DiscoverContentSeeder::class,
+            ExperienceMarketplaceDemoSeeder::class,
         ]);
     }
 }

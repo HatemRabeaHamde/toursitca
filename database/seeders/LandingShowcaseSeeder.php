@@ -90,11 +90,11 @@ class LandingShowcaseSeeder extends Seeder
                     'nl' => ['Personal expenses', 'Tips', 'Anything not listed in inclusions'],
                 ],
                 'media' => [
-                    'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1600&q=85&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1400&q=85&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1400&q=85&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1548013146-72479768bada?w=1400&q=85&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1400&q=85&auto=format&fit=crop',
+                    'images/landing-v2/hero-marrakech.jpg',
+                    'images/discover/landmarks/koutoubia.jpg',
+                    'images/discover/landmarks/jemaa-el-fnaa.jpg',
+                    'images/discover/destinations/marrakech.jpg',
+                    'images/discover/landmarks/bahia-palace.jpg',
                 ],
                 'is_top_rated' => true,
                 'sort_offset' => 0,
@@ -114,7 +114,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1548013146-72479768bada?w=1400&q=85&auto=format&fit=crop',
+                    'images/discover/experiences/food-journey.jpg',
                 ],
                 'is_top_rated' => true,
                 'sort_offset' => 1,
@@ -134,7 +134,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1400&q=85&auto=format&fit=crop',
+                    'images/discover/interests/culture.jpg',
                 ],
                 'is_top_rated' => true,
                 'sort_offset' => 2,
@@ -154,7 +154,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1400&q=85&auto=format&fit=crop',
+                    'images/discover/interests/shopping.jpg',
                 ],
                 'is_top_rated' => false,
                 'sort_offset' => 3,
@@ -174,7 +174,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1400&q=85&auto=format&fit=crop',
+                    'images/discover/destinations/fes.jpg',
                 ],
                 'is_top_rated' => false,
                 'sort_offset' => 4,
@@ -194,7 +194,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1400&q=85&auto=format&fit=crop',
+                    'images/landing-v2/know-essaouira.jpg',
                 ],
                 'is_top_rated' => false,
                 'sort_offset' => 5,
@@ -214,7 +214,7 @@ class LandingShowcaseSeeder extends Seeder
                 'inclusions' => null,
                 'exclusions' => null,
                 'media' => [
-                    'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1400&q=85&auto=format&fit=crop',
+                    'images/discover/destinations/high-atlas.jpg',
                 ],
                 'is_top_rated' => false,
                 'sort_offset' => 6,
@@ -351,17 +351,20 @@ class LandingShowcaseSeeder extends Seeder
     /**
      * @param  array<int, string>  $urls
      */
-    private function media(Experience $experience, array $urls): void
+    /** Local images (public/…) or remote URLs; stale media from earlier runs is removed. */
+    private function media(Experience $experience, array $paths): void
     {
-        foreach ($urls as $index => $url) {
+        ExperienceMedia::query()->where('experience_id', $experience->id)->whereNotIn('path', $paths)->delete();
+
+        foreach ($paths as $index => $path) {
             ExperienceMedia::query()->updateOrCreate(
                 [
                     'experience_id' => $experience->id,
-                    'path' => $url,
+                    'path' => $path,
                 ],
                 [
                     'type' => 'image',
-                    'source_type' => 'url',
+                    'source_type' => str_starts_with($path, 'http') ? 'url' : 'upload',
                     'sort_order' => $index,
                 ],
             );
