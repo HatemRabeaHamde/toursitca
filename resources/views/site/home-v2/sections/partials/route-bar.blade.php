@@ -1,5 +1,5 @@
 {{-- "Your route" trip-builder preview. Static UI from the design — no trip-planning backend yet. --}}
-@php($route = __('landing_v2.featured.route'))
+@php($route = site_content('home.featured.route'))
 
 <div data-reveal-group>
 <div data-reveal="fade" class="lv-route mt-12 flex flex-col gap-6 rounded-2xl px-6 py-5 xl:h-24 xl:flex-row xl:items-center xl:justify-between xl:px-7 xl:py-0">

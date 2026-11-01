@@ -2,11 +2,11 @@
     <div class="lv-container">
         <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-10" data-reveal-group>
             <div class="lg:w-2/3">
-                <x-landing-v2.section-heading id="lv-discover-title" :eyebrow="__('landing_v2.discover.eyebrow')" :before="__('landing_v2.discover.title_before')" :accent="__('landing_v2.discover.title_accent')" :after="__('landing_v2.discover.title_after')" />
+                <x-landing-v2.section-heading id="lv-discover-title" :eyebrow="site_content('home.discover.eyebrow')" :before="site_content('home.discover.title_before')" :accent="site_content('home.discover.title_accent')" :after="site_content('home.discover.title_after')" />
             </div>
             <div class="lg:w-[360px]">
-                <p class="lv-body text-[17px] leading-[1.6]" data-reveal="text" data-reveal-at="<0.4">{{ __('landing_v2.discover.description') }}</p>
-                <x-landing-v2.link-arrow :href="$page->discoverUrl()" class="mt-[18px]" data-reveal="fade" data-reveal-at="<0.2">{{ __('landing_v2.discover.link') }}</x-landing-v2.link-arrow>
+                <div class="lv-body text-[17px] leading-[1.6]" data-reveal="text" data-reveal-at="<0.4"><x-site.content key="home.discover.description" /></div>
+                <x-landing-v2.link-arrow :href="$page->discoverUrl()" class="mt-[18px]" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.discover.link') }}</x-landing-v2.link-arrow>
             </div>
         </div>
 

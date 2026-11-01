@@ -30,13 +30,13 @@
         @if($card->agencyName)
             <p @class(['flex items-center gap-2.5', 'mt-[18px] text-sm text-[color:var(--lv-on-dark)]' => $lead, 'lv-meta mt-2' => ! $lead])>
                 @if($lead)<img src="{{ asset($icons['shield_light']) }}" alt="" width="18" height="18" aria-hidden="true">@endif
-                {{ $lead ? __('landing_v2.featured.hosted_by', ['agency' => $card->agencyName]) : $card->agencyName }}
+                {{ $lead ? (request()->attributes->has('site_content') ? site_content('home.featured.hosted_by', ['agency' => $card->agencyName]) : __('landing_v2.featured.hosted_by', ['agency' => $card->agencyName])) : $card->agencyName }}
             </p>
         @endif
 
         @if($lead && $pairings->isNotEmpty())
             <p class="relative z-10 mt-5 flex flex-wrap items-center gap-2">
-                <span class="me-1 text-[13px] text-[color:var(--lv-on-dark-78)]">{{ __('landing_v2.featured.pairs_with') }}</span>
+                <span class="me-1 text-[13px] text-[color:var(--lv-on-dark-78)]">{{ (request()->attributes->has('site_content') ? site_content('home.featured.pairs_with') : __('landing_v2.featured.pairs_with')) }}</span>
                 @foreach($pairings as $pairing)
                     <span class="lv-chip lv-chip--outline">+ {{ $pairing }}</span>
                 @endforeach
@@ -50,12 +50,12 @@
                     {{ $card->ratingAvg }}
                 </span>
                 <span @class(['lv-price', 'lv-price--lg' => $lead])>
-                    {{ __('landing_v2.featured.from') }} <strong>{{ $card->priceFrom }} {{ $card->currency }}</strong>@if($lead) {{ __('landing_v2.featured.per_person') }}@endif
+                    {{ (request()->attributes->has('site_content') ? site_content('home.featured.from') : __('landing_v2.featured.from')) }} <strong>{{ $card->priceFrom }} {{ $card->currency }}</strong>@if($lead) {{ (request()->attributes->has('site_content') ? site_content('home.featured.per_person') : __('landing_v2.featured.per_person')) }}@endif
                 </span>
             </span>
             @if($lead)
                 <span class="lv-btn lv-btn--clay lv-btn--md" aria-hidden="true">
-                    {{ __('landing_v2.featured.cta') }}
+                    {{ (request()->attributes->has('site_content') ? site_content('home.featured.cta') : __('landing_v2.featured.cta')) }}
                     <img src="{{ asset($icons['arrow_white']) }}" alt="" width="20" height="20">
                 </span>
             @endif

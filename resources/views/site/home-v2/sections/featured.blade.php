@@ -6,8 +6,8 @@
 <section id="experiences" class="lv-section lv-bg-forest" aria-labelledby="lv-featured-title">
     <div class="lv-container">
         <div data-reveal-group>
-        <x-landing-v2.section-heading id="lv-featured-title" size="lv-h2--xl" :eyebrow="__('landing_v2.featured.eyebrow')" :before="__('landing_v2.featured.title')" :accent="__('landing_v2.featured.title_accent')" />
-        <p class="lv-lede mt-5 max-w-[600px]" data-reveal="text" data-reveal-at="<0.35">{{ __('landing_v2.featured.description') }}</p>
+        <x-landing-v2.section-heading id="lv-featured-title" size="lv-h2--xl" :eyebrow="site_content('home.featured.eyebrow')" :before="site_content('home.featured.title')" :accent="site_content('home.featured.title_accent')" />
+        <div class="lv-lede mt-5 max-w-[600px]" data-reveal="text" data-reveal-at="<0.35"><x-site.content key="home.featured.description" /></div>
         </div>
 
         @if($lead)
@@ -22,7 +22,7 @@
         @include('site.home-v2.sections.partials.route-bar')
 
         @if(! $lead)
-            <p class="lv-lede mt-14">{{ __('landing_v2.featured.empty') }}</p>
+            <p class="lv-lede mt-14">{{ site_content('home.featured.empty') }}</p>
         @endif
     </div>
 </section>

@@ -1,0 +1,2 @@
+<input type="hidden" id="{{ $field['encoded'] }}-{{ $language }}" name="{{ $base }}[text][{{ $language }}]" value="{{ old('fields.'.$field['encoded'].'.text.'.$language, $field['translations'][$language] ?? '') }}">
+<trix-editor input="{{ $field['encoded'] }}-{{ $language }}" class="min-h-32 bg-white" placeholder="{{ $field['defaults'][$language] }}" @trix-change="dirty = true" aria-label="{{ $field['label'] }} {{ strtoupper($language) }}"></trix-editor>

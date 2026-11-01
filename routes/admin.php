@@ -5,12 +5,13 @@ use App\Http\Controllers\Admin\AvailabilityController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExperienceController;
-use App\Http\Controllers\Admin\HostController;
 use App\Http\Controllers\Admin\ExperienceOptionController;
+use App\Http\Controllers\Admin\HostController;
 use App\Http\Controllers\Admin\LandingContentController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,10 @@ Route::prefix('admin')
     ->middleware(['auth', 'user.not_banned', 'role:admin'])
     ->group(function (): void {
         Route::redirect('/', '/admin/dashboard')->name('home');
+        Route::get('/site-content', [SiteContentController::class, 'index'])->name('site-content.index');
+        Route::get('/site-content/{page}', [SiteContentController::class, 'edit'])->name('site-content.edit');
+        Route::post('/site-content/{page}', [SiteContentController::class, 'update'])->name('site-content.update');
+        Route::post('/site-content/{page}/revisions/{revision}', [SiteContentController::class, 'restore'])->name('site-content.restore');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/agencies', [AgencyController::class, 'index'])->name('agencies.index');
         Route::get('/agencies/create', [AgencyController::class, 'create'])->name('agencies.create');

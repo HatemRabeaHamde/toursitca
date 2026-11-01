@@ -1,7 +1,7 @@
 @extends('layouts.site-v2')
 
 @push('page-styles')
-    <link rel="preload" as="image" href="{{ asset(config('landing_v2.images.hero')) }}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ site_content('home.hero.image')['url'] }}" fetchpriority="high">
     @vite(['resources/css/pages/landing.css'])
 @endpush
 

@@ -9,22 +9,23 @@ use App\Http\Controllers\Site\DiscoverController;
 use App\Http\Controllers\Site\ExperienceController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\HostsController;
-use App\Http\Controllers\Site\TravellerReviewsController;
 use App\Http\Controllers\Site\InterestController;
 use App\Http\Controllers\Site\NewsletterController;
 use App\Http\Controllers\Site\ReviewController;
 use App\Http\Controllers\Site\TouristBookingController;
+use App\Http\Controllers\Site\TravellerReviewsController;
 use App\Http\Controllers\Site\WishlistController;
 use App\Http\Controllers\Site\WishlistPageController;
+use App\Http\Middleware\SiteContentPreview;
 use Illuminate\Support\Facades\Route;
 
 $localePattern = implode('|', array_keys(config('locales.supported', ['en' => []])));
 
-Route::get('/', [HomeController::class, 'index'])->middleware('set.locale')->name('site.root');
+Route::get('/', [HomeController::class, 'index'])->middleware(['set.locale', SiteContentPreview::class])->name('site.root');
 
 Route::prefix('{locale}')
     ->where(['locale' => $localePattern])
-    ->middleware('set.locale')
+    ->middleware(['set.locale', SiteContentPreview::class])
     ->group(function (): void {
         Route::get('/', [HomeController::class, 'index'])->name('site.home');
         Route::get('/morocco-compass', [HomeController::class, 'compass'])->name('site.home.compass');

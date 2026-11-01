@@ -6,6 +6,13 @@
 
 ## Current MVP Audit — 2026-08-05
 
+### Home content editor — 2026-11-02
+- ✅ Config-driven fixed-section home editor: EN/FR/NL text, images/alt, SEO, sanitised rich text, drafts, admin preview, publish, revisions/restore, defaults and page cache invalidation. Home only; no layout editing.
+- ✅ PHPUnit: 163 tests / 743 assertions passing, including 8 content-editor tests. Pint run; unrelated formatter-only diffs removed. Desktop (1280px) and 375px editor checked; no mobile horizontal overflow. Browser verified draft save, admin preview, public draft isolation, publish, reopen, and public published heading using an isolated SQLite QA database.
+- 🚧 Verification limitations: `./vendor/bin/phpstan analyse` exits 1 with no output on installed PHP 8.5 (also with `--debug`); local Vite build cannot load the missing Rolldown native binding. Re-run Larastan and build in a working dependency environment before deployment.
+- Usage: Admin → Site content → Home. Empty translations use EN then original lang/config defaults. Restore/reset affect drafts until Publish. Image originals/conversions remain available for revision restores. Trix 2.1.12 assets and license are bundled locally under `public/vendor/trix`.
+- Deployment: apply the new migration and ensure the standard public media disk/storage link is configured. This task has not been deployed to the remote server.
+
 This section is the current source of truth until the older phase tables below are fully reconciled. It was audited against the actual Laravel files, routes, views, migrations, and tests currently present in the project.
 
 ### Locked Product Direction

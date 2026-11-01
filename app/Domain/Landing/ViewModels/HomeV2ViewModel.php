@@ -4,6 +4,7 @@ namespace App\Domain\Landing\ViewModels;
 
 use App\Domain\Experience\DTOs\ExperienceCardData;
 use App\Domain\Experience\DTOs\LandingPageData;
+use App\ViewModels\SiteContentPage;
 use Illuminate\Support\Collection;
 
 /**
@@ -14,11 +15,11 @@ use Illuminate\Support\Collection;
 final readonly class HomeV2ViewModel
 {
     /**
-     * @param array{hub?: string, hosts?: string, guide?: string, cities?: array<string, string>, categories?: array<string, string>} $discover
-     *        links into Discover (see LandingDiscoverLinks); empty keeps the experiences links
+     * @param  array{hub?: string, hosts?: string, guide?: string, cities?: array<string, string>, categories?: array<string, string>}  $discover
+     *                                                                                                                                             links into Discover (see LandingDiscoverLinks); empty keeps the experiences links
      */
     /**
-     * @param list<array{name: string, role: string, image: string, quote: ?string, trips: int, href: string}> $hosts verified hosts (see HostCards::verified)
+     * @param  list<array{name: string, role: string, image: string, quote: ?string, trips: int, href: string}>  $hosts  verified hosts (see HostCards::verified)
      */
     public function __construct(private LandingPageData $data, private array $discover = [], private array $hosts = []) {}
 
@@ -88,7 +89,7 @@ final readonly class HomeV2ViewModel
         return $this->featuredRest()->take(2)->map(fn (ExperienceCardData $card): string => $card->title);
     }
 
-    public function stories(): Collection
+    public function stories(?SiteContentPage $content = null): Collection
     {
         $fallbacks = config('landing_v2.images.stories', []);
 
@@ -96,7 +97,8 @@ final readonly class HomeV2ViewModel
             ->take($this->limit('stories'))
             ->values()
             ->map(fn (array $story, int $index): array => $story + [
-                'cover_url' => asset($fallbacks[$index % max(count($fallbacks), 1)] ?? ''),
+                'cover_url' => ($content ? $content->get('stories.image_'.($index % 3))['url'] : asset($fallbacks[$index % max(count($fallbacks), 1)] ?? '')),
+                'cover_alt' => $content ? $content->get('stories.image_'.($index % 3))['alt'] : '',
                 'stars' => (int) round((float) $story['rating']),
             ]);
     }
