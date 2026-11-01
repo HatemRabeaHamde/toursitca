@@ -7,5 +7,6 @@
     @include('experiences.partials.form', [
         'action' => route('agency.experiences.store'),
         'categories' => $categories,
+        'hosts' => $hosts,
     ])
 @endsection

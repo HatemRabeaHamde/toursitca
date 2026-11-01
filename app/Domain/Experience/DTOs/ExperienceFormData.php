@@ -28,12 +28,14 @@ final readonly class ExperienceFormData
         public ?array $exclusions = null,
         public array $itinerary = [],
         public string $status = 'draft',
+        public ?int $hostId = null,
     ) {}
 
     public function toModelAttributes(): array
     {
         return [
             'agency_id' => $this->agencyId,
+            'host_id' => $this->hostId,
             'created_by' => $this->createdBy,
             'title' => $this->title,
             'description' => $this->description,

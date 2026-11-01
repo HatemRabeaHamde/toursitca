@@ -1,0 +1,21 @@
+/* Tourstica v2 — cinematic hero (shared by every page hero) */
+
+/* ── Hero ──────────────────────────────────────────────── */
+.lv-hero { background: var(--lv-forest-deep); color: var(--lv-on-dark); min-height: min(100svh, 860px); }
+.lv-hero-slide { transition: opacity 1.6s cubic-bezier(.4, 0, .2, 1); }
+.lv-hero-veil-x { background: linear-gradient(90deg, rgba(6,18,15,.72) 0%, rgba(6,18,15,.42) 46%, rgba(6,18,15,0) 71%); }
+.lv-hero-veil-b { background: linear-gradient(180deg, rgba(6,18,15,0) 0%, rgba(6,18,15,.75) 100%); }
+.lv-hero-veil-t { background: linear-gradient(180deg, rgba(6,18,15,.55) 0%, rgba(6,18,15,0) 100%); }
+.lv-hero-eyebrow { color: var(--lv-gold); font-size: .875rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.lv-hero-rule { display: inline-block; width: 44px; height: 1px; background: var(--lv-gold); transform-origin: 0 50%; }
+.lv-hero-desc { font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.5; color: var(--lv-on-dark-78); }
+.lv-progress { height: 3px; border-radius: 2px; background: var(--lv-on-dark-28); overflow: hidden; }
+.lv-progress > span { display: block; height: 100%; width: 0; background: var(--lv-gold); border-radius: 2px; }
+.lv-progress.is-active > span { animation: lv-progress var(--lv-slide-ms, 6000ms) linear forwards; }
+.lv-progress.is-done > span { width: 100%; }
+@keyframes lv-progress { to { width: 100%; } }
+.lv-city-num { font-size: .75rem; letter-spacing: .14em; opacity: .8; }
+.lv-city-name { font-size: .875rem; }
+.lv-city { color: var(--lv-on-dark-78); font-weight: 500; }
+.lv-city.is-active { color: var(--lv-on-dark); font-weight: 600; }
+

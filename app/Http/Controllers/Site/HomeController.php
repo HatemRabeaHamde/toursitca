@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Domain\Discover\Services\HostCards;
+use App\Domain\Discover\Services\LandingDiscoverLinks;
 use App\Domain\Experience\Services\ExperienceLandingPageService;
-use App\Domain\Experience\Services\ExperienceSearchNavService;
+use App\Domain\Landing\ViewModels\HomeV2ViewModel;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index(
-        ExperienceLandingPageService $experienceLandingPageService,
-        ExperienceSearchNavService $experienceSearchNavService,
-    ): View
+    public function index(ExperienceLandingPageService $experienceLandingPageService, LandingDiscoverLinks $discoverLinks, HostCards $hosts): View
     {
-        $landing = $experienceLandingPageService->get();
-        $searchNav = $experienceSearchNavService->data();
+        $page = new HomeV2ViewModel($experienceLandingPageService->get(), $discoverLinks->build(), $hosts->verified());
 
-        return view('site.home', compact('landing', 'searchNav'));
+        return view('site.home-v2', compact('page'));
     }
 
     public function compass(ExperienceLandingPageService $experienceLandingPageService): View

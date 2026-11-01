@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Services\BookingRequestPageService;
 use App\Domain\Checkout\Actions\CreateCheckoutSessionAction;
 use App\Domain\Checkout\Actions\UpdateCheckoutContactAction;
 use App\Domain\Experience\Models\Experience;
@@ -69,15 +70,13 @@ class BookingController extends Controller
             ->with('status', __('ui.messages.checkout_started'));
     }
 
-    public function confirmation(Request $request, string $locale, Booking $booking): View
+    public function confirmation(Request $request, string $locale, Booking $booking, BookingRequestPageService $pages): View
     {
         $canView = (int) $request->session()->get('last_booking_id') === $booking->id
             || ($request->user() && $booking->user_id === $request->user()->id);
 
         abort_unless($canView, 403);
 
-        $booking->load(['experience.agency', 'availability']);
-
-        return view('site.bookings.confirmation', compact('booking'));
+        return view('site.bookings.confirmation', ['page' => $pages->build($booking)]);
     }
 }

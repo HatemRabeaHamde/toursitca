@@ -2,8 +2,10 @@
 
 namespace App\Domain\Landing\Models;
 
+use App\Domain\Discover\Models\Interest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -18,6 +20,11 @@ class Testimonial extends Model
         'experience_title',
         'rating',
         'avatar_url',
+        'image_url',
+        'city',
+        'days',
+        'destination_id',
+        'interest_id',
         'sort_order',
         'is_active',
     ];
@@ -30,7 +37,18 @@ class Testimonial extends Model
             'rating' => 'decimal:2',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'days' => 'integer',
         ];
+    }
+
+    public function destination(): BelongsTo
+    {
+        return $this->belongsTo(Destination::class);
+    }
+
+    public function interest(): BelongsTo
+    {
+        return $this->belongsTo(Interest::class);
     }
 
     public function scopeActive(Builder $query): Builder

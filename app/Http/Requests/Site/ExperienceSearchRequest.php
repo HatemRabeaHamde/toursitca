@@ -32,6 +32,7 @@ class ExperienceSearchRequest extends FormRequest
             'pickup_available' => ['nullable', 'boolean'],
             'duration' => ['nullable', Rule::in(['half', 'full', 'multi'])],
             'sort' => ['nullable', Rule::in(['recommended', 'price_low', 'price_high', 'rating', 'newest'])],
+            'host' => ['nullable', 'string', 'max:80', 'alpha_dash'],
         ];
     }
 
@@ -51,6 +52,7 @@ class ExperienceSearchRequest extends FormRequest
             pickupAvailable: $this->boolean('pickup_available'),
             duration: $this->filled('duration') ? $this->string('duration')->toString() : null,
             sort: $this->string('sort', 'recommended')->toString(),
+            host: $this->filled('host') ? $this->string('host')->toString() : null,
         );
     }
 

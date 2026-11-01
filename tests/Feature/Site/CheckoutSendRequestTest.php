@@ -12,11 +12,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class CheckoutPaymentConfirmTest extends TestCase
+class CheckoutSendRequestTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_confirming_checkout_creates_booking_from_snapshot(): void
+    public function test_sending_the_request_creates_a_booking_from_the_snapshot(): void
     {
         $user = User::factory()->create();
         [$checkoutSession, $availability] = $this->createCheckoutSession([
@@ -47,15 +47,24 @@ class CheckoutPaymentConfirmTest extends TestCase
             'held_seats' => 2,
         ]);
 
-        $response = $this->actingAs($user)->post(route('site.checkout.payment.confirm', [
+        $response = $this->actingAs($user)->post(route('site.checkout.contact.store', [
             'locale' => 'en',
             'checkoutSession' => $checkoutSession,
-        ]));
+        ]), [
+            'contact_first_name' => 'Hatem',
+            'contact_last_name' => 'Ali',
+            'contact_email' => 'hatem@example.com',
+            'contact_phone' => '+201000000000',
+            'contact_country' => 'Egypt',
+            'special_requests' => 'WhatsApp preferred.',
+            'terms' => '1',
+        ]);
 
         $booking = Booking::query()->firstOrFail();
 
-        $response->assertRedirect(route('site.dashboard.bookings', [
+        $response->assertRedirect(route('site.bookings.confirmation', [
             'locale' => 'en',
+            'booking' => $booking,
         ]));
 
         $availability->refresh();
@@ -77,56 +86,38 @@ class CheckoutPaymentConfirmTest extends TestCase
         $this->assertSame('30.00', $booking->commission_amount);
     }
 
-    public function test_confirmation_requires_contact_details(): void
+    public function test_request_needs_contact_details_and_terms(): void
     {
         $user = User::factory()->create();
-        [$checkoutSession] = $this->createCheckoutSession([
-            'user_id' => $user->id,
-            'session_id' => null,
-            'contact_first_name' => null,
-            'contact_last_name' => null,
-            'contact_email' => null,
-        ]);
+        [$checkoutSession] = $this->createCheckoutSession(['user_id' => $user->id, 'session_id' => null]);
 
-        $this->actingAs($user)->post(route('site.checkout.payment.confirm', [
+        $this->actingAs($user)->post(route('site.checkout.contact.store', [
             'locale' => 'en',
             'checkoutSession' => $checkoutSession,
-        ]))->assertSessionHasErrors('contact');
+        ]), [])->assertSessionHasErrors(['contact_first_name', 'contact_last_name', 'contact_email', 'terms']);
+
+        $this->assertSame(0, Booking::query()->count());
     }
 
-    public function test_payment_step_redirects_to_contact_when_contact_details_are_missing(): void
-    {
-        $user = User::factory()->create();
-        [$checkoutSession] = $this->createCheckoutSession([
-            'user_id' => $user->id,
-            'session_id' => null,
-            'contact_first_name' => null,
-            'contact_last_name' => null,
-            'contact_email' => null,
-        ]);
-
-        $this->actingAs($user)->get(route('site.checkout.payment', [
-            'locale' => 'en',
-            'checkoutSession' => $checkoutSession,
-        ]))
-            ->assertRedirect(route('site.checkout.contact', [
-                'locale' => 'en',
-                'checkoutSession' => $checkoutSession,
-            ]))
-            ->assertSessionHasErrors('contact');
-    }
-
-    public function test_confirmation_requires_authenticated_checkout_user(): void
+    public function test_a_guest_session_cannot_send_the_request(): void
     {
         [$checkoutSession] = $this->createCheckoutSession([
             'user_id' => null,
             'session_id' => 'guest-session-id',
         ]);
 
-        $this->post(route('site.checkout.payment.confirm', [
+        $this->post(route('site.checkout.contact.store', [
             'locale' => 'en',
             'checkoutSession' => $checkoutSession,
-        ]))->assertForbidden();
+        ]), [
+            'contact_first_name' => 'Hatem',
+            'contact_last_name' => 'Ali',
+            'contact_email' => 'hatem@example.com',
+            'contact_phone' => '+201000000000',
+            'contact_country' => 'Egypt',
+            'special_requests' => 'WhatsApp preferred.',
+            'terms' => '1',
+        ])->assertForbidden();
     }
 
     private function createCheckoutSession(array $sessionOverrides = [], array $availabilityOverrides = []): array

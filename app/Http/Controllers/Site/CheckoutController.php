@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Domain\Checkout\Actions\ConfirmCheckoutSessionAction;
+use App\Domain\Booking\Services\BookingTripPresenter;
 use App\Domain\Checkout\Actions\AttachCheckoutSessionToUserAction;
+use App\Domain\Checkout\Actions\ConfirmCheckoutSessionAction;
 use App\Domain\Checkout\Actions\CreateCheckoutSessionAction;
 use App\Domain\Checkout\Actions\RegisterCheckoutUserAction;
 use App\Domain\Checkout\Actions\UpdateCheckoutContactAction;
@@ -25,6 +26,8 @@ use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
+    private const TRIP_RELATIONS = ['experience.media', 'experience.host', 'experience.agency', 'availability'];
+
     public function start(CheckoutStartRequest $request, string $locale, CreateCheckoutSessionAction $action): JsonResponse
     {
         $experience = Experience::query()->findOrFail($request->integer('experience_id'));
@@ -49,7 +52,7 @@ class CheckoutController extends Controller
                 'uuid' => $checkoutSession->uuid,
                 'status' => $checkoutSession->status,
                 'reserved_until' => $checkoutSession->reserved_until->toISOString(),
-                'activity_url' => route('site.checkout.activity', [
+                'request_url' => route('site.checkout.contact', [
                     'locale' => $locale,
                     'checkoutSession' => $checkoutSession->uuid,
                 ]),
@@ -57,12 +60,12 @@ class CheckoutController extends Controller
         ], 201);
     }
 
-    public function activity(Request $request, string $locale, CheckoutSession $checkoutSession): View
+    public function activity(Request $request, string $locale, CheckoutSession $checkoutSession, BookingTripPresenter $trips): View
     {
         $this->authorizeCheckoutSession($request, $checkoutSession);
-        $checkoutSession->load(['experience.media', 'availability']);
+        $checkoutSession->load(self::TRIP_RELATIONS);
 
-        return view('site.checkout.activity', compact('checkoutSession'));
+        return view('site.checkout.activity', ['checkoutSession' => $checkoutSession, 'trip' => $trips->fromCheckout($checkoutSession)]);
     }
 
     public function storeActivity(
@@ -86,12 +89,12 @@ class CheckoutController extends Controller
             ->with('status', __('ui.messages.checkout_activity_saved'));
     }
 
-    public function contact(Request $request, string $locale, CheckoutSession $checkoutSession): View
+    public function contact(Request $request, string $locale, CheckoutSession $checkoutSession, BookingTripPresenter $trips): View
     {
         $this->authorizeCheckoutSession($request, $checkoutSession);
-        $checkoutSession->load(['experience.media', 'availability']);
+        $checkoutSession->load(self::TRIP_RELATIONS);
 
-        return view('site.checkout.contact', compact('checkoutSession'));
+        return view('site.checkout.request', ['checkoutSession' => $checkoutSession, 'trip' => $trips->fromCheckout($checkoutSession)]);
     }
 
     public function login(
@@ -127,44 +130,17 @@ class CheckoutController extends Controller
         CheckoutContactRequest $request,
         string $locale,
         CheckoutSession $checkoutSession,
-        UpdateCheckoutContactAction $action,
+        UpdateCheckoutContactAction $contactAction,
+        ConfirmCheckoutSessionAction $confirmAction,
     ): RedirectResponse {
         $this->authorizeCheckoutSession($request, $checkoutSession);
         $this->requireAuthenticatedCheckout($request, $locale, $checkoutSession);
 
-        $action->execute($checkoutSession, $request->validated());
-
-        return redirect()
-            ->route('site.checkout.payment', ['locale' => $locale, 'checkoutSession' => $checkoutSession])
-            ->with('status', __('ui.messages.checkout_contact_saved'));
-    }
-
-    public function payment(Request $request, string $locale, CheckoutSession $checkoutSession): View
-    {
-        $this->authorizeCheckoutSession($request, $checkoutSession);
-        $this->requireAuthenticatedCheckout($request, $locale, $checkoutSession);
-        $this->requireContactDetails($locale, $checkoutSession);
-        $checkoutSession->load(['experience.media', 'availability']);
-
-        return view('site.checkout.payment', compact('checkoutSession'));
-    }
-
-    public function confirmPayment(
-        Request $request,
-        string $locale,
-        CheckoutSession $checkoutSession,
-        ConfirmCheckoutSessionAction $action,
-    ): RedirectResponse {
-        $this->authorizeCheckoutSession($request, $checkoutSession);
-        $this->requireAuthenticatedCheckout($request, $locale, $checkoutSession);
-        $this->requireContactDetails($locale, $checkoutSession);
-
-        $booking = $action->execute($checkoutSession);
+        $contactAction->execute($checkoutSession, $request->validated());
+        $booking = $confirmAction->execute($checkoutSession);
         $request->session()->put('last_booking_id', $booking->id);
 
-        return redirect()
-            ->route('site.dashboard.bookings', ['locale' => $locale])
-            ->with('status', __('ui.messages.booking_created'));
+        return redirect()->route('site.bookings.confirmation', ['locale' => $locale, 'booking' => $booking]);
     }
 
     private function authorizeCheckoutSession(Request $request, CheckoutSession $checkoutSession): void
@@ -186,19 +162,6 @@ class CheckoutController extends Controller
             redirect()
                 ->route('site.checkout.contact', ['locale' => $locale, 'checkoutSession' => $checkoutSession])
                 ->withErrors(['auth' => __('ui.messages.checkout_auth_required')])
-        );
-    }
-
-    private function requireContactDetails(string $locale, CheckoutSession $checkoutSession): void
-    {
-        if (filled($checkoutSession->contact_first_name) && filled($checkoutSession->contact_last_name) && filled($checkoutSession->contact_email)) {
-            return;
-        }
-
-        throw new HttpResponseException(
-            redirect()
-                ->route('site.checkout.contact', ['locale' => $locale, 'checkoutSession' => $checkoutSession])
-                ->withErrors(['contact' => __('ui.messages.checkout_contact_required')])
         );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Domain\Experience\Models;
 
 use App\Domain\Agency\Models\Agency;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Discover\Models\Host;
 use App\Domain\Review\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,7 @@ class Experience extends Model
 
     protected $fillable = [
         'agency_id',
+        'host_id',
         'slug',
         'title',
         'description',
@@ -39,6 +41,7 @@ class Experience extends Model
         'meeting_point',
         'inclusions',
         'exclusions',
+        'highlights',
         'status',
         'thumbnail',
         'rating_avg',
@@ -47,7 +50,7 @@ class Experience extends Model
         'created_by',
     ];
 
-    public array $translatable = ['title', 'description', 'inclusions', 'exclusions'];
+    public array $translatable = ['title', 'description', 'inclusions', 'exclusions', 'highlights'];
 
     protected function casts(): array
     {
@@ -80,6 +83,17 @@ class Experience extends Model
 
             $experience->slug = static::uniqueSlug($slug, $experience->exists ? $experience->id : null);
         });
+    }
+
+    public function host(): BelongsTo
+    {
+        return $this->belongsTo(Host::class);
+    }
+
+    /** The host travellers may see: only once the host is live (approved by an admin). */
+    public function publicHost(): ?Host
+    {
+        return $this->host?->is_active ? $this->host : null;
     }
 
     public function agency(): BelongsTo

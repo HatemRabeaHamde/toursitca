@@ -2,6 +2,7 @@
     'action',
     'agencies'   => collect(),
     'categories' => collect(),
+    'hosts' => [],
     'experience' => null,
     'method'     => 'POST',
     'showAgencySelect' => false,
@@ -78,6 +79,21 @@
             />
         </x-ui.card>
     @endif
+
+    {{-- ── Host (the public face of the experience) ──────────── --}}
+    <x-ui.card :title="__('hosts_admin.experience.title')">
+        <x-ui.select
+            name="host_id"
+            :label="__('hosts_admin.experience.label')"
+            :options="$hosts"
+            :selected="old('host_id', $experience?->host_id)"
+            :placeholder="'— '.__('hosts_admin.experience.none').' —'"
+            :help="__($showAgencySelect ? 'hosts_admin.experience.help_admin' : 'hosts_admin.experience.help')"
+        />
+        @if (! $showAgencySelect && $hosts === [])
+            <p class="help mt-2"><a href="{{ route('agency.hosts.create') }}" class="underline">{{ __('hosts_admin.experience.create_first') }}</a></p>
+        @endif
+    </x-ui.card>
 
     {{-- ── Title ───────────────────────────────────────────────── --}}
     <x-ui.card :title="__('ui.fields.title')">

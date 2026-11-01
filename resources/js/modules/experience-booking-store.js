@@ -198,7 +198,7 @@ export function registerExperienceBookingStore(Alpine) {
                     throw new Error(this.errorMessage(payload));
                 }
 
-                window.location.href = payload.data.activity_url;
+                window.location.href = payload.data.request_url;
             } catch (error) {
                 this.quoteError = error.message || this.config.strings.checkoutFailed || 'Could not start checkout.';
                 this.isStartingCheckout = false;

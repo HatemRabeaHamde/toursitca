@@ -16,6 +16,11 @@ function shouldSkipTransition(event, link) {
         return true;
     }
 
+    // Tourstica v2 pages ([data-lv-motion]) use native view transitions instead.
+    if (document.querySelector('[data-lv-motion]')) {
+        return true;
+    }
+
     const url = new URL(link.href, window.location.href);
     const currentUrl = new URL(window.location.href);
 

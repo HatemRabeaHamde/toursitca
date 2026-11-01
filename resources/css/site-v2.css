@@ -1,0 +1,12 @@
+/* ============================================================
+   Tourstica v2 UI kit — entry point shared by every new public page
+   (landing, discover, destination, interest…). Page-only styles live
+   in resources/css/pages/*.css and are loaded by that page.
+   ============================================================ */
+@import './site-v2/tokens.css';
+@import './site-v2/typography.css';
+@import './site-v2/base.css';
+@import './site-v2/components.css';
+@import './site-v2/hero.css';
+@import './site-v2/motion.css';
+@import './site-v2/ui.css';

@@ -1,0 +1,101 @@
+/* ============================================================
+   Experience detail v1 (Figma "09 · Experience detail v1").
+   Hero + photo strip → main (760) + booking and pairs (380).
+   Shares booking fields and dialogs with experience-detail.css.
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.lv-page-hero.lv-v1-hero { min-height: 770px; }
+.lv-v1-hero__accent { display: block; color: var(--lv-gold); }
+.lv-v1-play { display: inline-flex; align-items: center; gap: 12px; color: var(--lv-on-dark); }
+.lv-v1-play__dot { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 999px; background: rgba(255, 255, 255, .08); transition: background-color .25s ease; }
+.lv-v1-play:hover .lv-v1-play__dot { background: rgba(255, 255, 255, .2); }
+
+.lv-v1-strip { display: flex; gap: 16px; margin-top: 28px; overflow-x: auto; scrollbar-width: none; }
+.lv-v1-strip::-webkit-scrollbar { display: none; }
+.lv-v1-strip__tile { position: relative; display: block; width: 186px; height: 128px; flex-shrink: 0; overflow: hidden; border-radius: var(--lv-radius-sm); cursor: pointer; }
+.lv-v1-strip__tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--lv-ease); }
+.lv-v1-strip__tile:hover img { transform: scale(1.05); }
+.lv-v1-strip li:first-child .lv-v1-strip__tile { outline: 2px solid rgba(250, 248, 244, .2); outline-offset: -2px; }
+.lv-v1-strip__more { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: rgba(6, 18, 15, .55); color: var(--lv-on-dark); }
+@media (max-width: 639px) { .lv-v1-strip__tile { width: 140px; height: 96px; } }
+
+/* ── Layout ───────────────────────────────────────────────── */
+.lv-v1 { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-block: 48px 80px; }
+@media (min-width: 1024px) { .lv-v1 { grid-template-columns: minmax(0, 760fr) minmax(320px, 380fr); gap: 40px; padding-bottom: 66px; } }
+@media (min-width: 1280px) { .lv-v1 { gap: 60px; } }
+.lv-v1__main { display: flex; min-width: 0; flex-direction: column; gap: 56px; }
+.lv-v1__aside { display: flex; min-width: 0; flex-direction: column; gap: 24px; scroll-margin-top: 120px; }
+.lv-v1-leaves { position: absolute; top: -70px; left: calc(50% + 290px); width: 520px; pointer-events: none; }
+@media (max-width: 1023px) { .lv-v1-leaves { display: none; } }
+
+.lv-v1-tabs { position: sticky; top: 0; z-index: 30; display: flex; gap: 32px; padding-top: 12px; overflow-x: auto; scrollbar-width: none; background: var(--lv-cream); border-bottom: 1px solid var(--lv-line); margin-bottom: -36px; transition: top .7s var(--lv-ease); }
+.lv-v1-tabs::-webkit-scrollbar { display: none; }
+.lv-v1-tabs .lv-xtabs__link { padding-bottom: 12px; }
+.lv:has(.lv-header.is-scrolled:not(.is-hidden)) .lv-v1-tabs { top: 4.5rem; }
+
+/* ── Highlights ───────────────────────────────────────────── */
+.lv-v1-highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); padding-block: 22px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+.lv-v1-highlights__item { display: flex; flex-direction: column; gap: 10px; padding-inline: 18px; }
+.lv-v1-highlights__item + .lv-v1-highlights__item { border-left: 1px solid var(--lv-line); }
+@media (max-width: 639px) {
+    .lv-v1-highlights { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
+    .lv-v1-highlights__item:nth-child(odd) { border-left: 0; }
+}
+
+/* ── Day by day ───────────────────────────────────────────── */
+.lv-v1-days { display: flex; flex-direction: column; }
+.lv-v1-day { position: relative; display: grid; grid-template-columns: 52px 14px 128px minmax(0, 1fr) 150px; gap: 20px; padding-block: 16px; border-bottom: 1px solid var(--lv-line); }
+.lv-v1-day:last-child { border-bottom: 0; }
+.lv-v1-day__line { position: relative; align-self: stretch; }
+.lv-v1-day__line::before { content: ''; position: absolute; top: 4px; left: 1px; width: 12px; height: 12px; border-radius: 999px; background: var(--lv-clay); }
+.lv-v1-day__line::after { content: ''; position: absolute; top: 22px; bottom: 0; left: 6px; width: 2px; background: var(--lv-clay); opacity: .55; }
+.lv-v1-day:last-child .lv-v1-day__line::after { display: none; }
+.lv-v1-day__thumb { width: 128px; height: 88px; border-radius: 10px; object-fit: cover; }
+.lv-v1-day--no-thumb > div { grid-column: 3 / 5; }
+@media (max-width: 767px) {
+    .lv-v1-day { grid-template-columns: 96px minmax(0, 1fr); gap: 8px 14px; }
+    .lv-v1-day > p:first-child { grid-column: 1 / -1; }
+    .lv-v1-day__line { display: none; }
+    .lv-v1-day--no-thumb > div { grid-column: 1 / -1; }
+    .lv-v1-day__thumb { width: 96px; height: 72px; }
+    .lv-v1-day > p:last-child:not(:first-child) { grid-column: 2; }
+}
+
+/* ── Included ─────────────────────────────────────────────── */
+.lv .lv-v1-included { display: grid; gap: 20px; }
+@media (min-width: 640px) { .lv .lv-v1-included { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lv-v1-included__card { display: flex; flex-direction: column; gap: 14px; padding: 25px; background: var(--lv-sand); border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+
+/* ── Host ─────────────────────────────────────────────────── */
+.lv-v1-host { display: grid; grid-template-columns: 176px minmax(0, 1fr) minmax(0, 250px); gap: 24px; padding: 25px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+.lv-v1-host__photo { width: 176px; height: 196px; border-radius: var(--lv-radius-sm); object-fit: cover; }
+.lv-v1-host__bio { font-family: var(--lv-font-serif); font-style: italic; }
+@media (max-width: 767px) { .lv-v1-host { grid-template-columns: minmax(0, 1fr); } .lv-v1-host__photo { width: 100%; height: 240px; } }
+
+/* ── Location ─────────────────────────────────────────────── */
+.lv-v1-location { display: grid; gap: 20px; }
+@media (min-width: 640px) { .lv-v1-location:not(.lv-v1-location--solo) { grid-template-columns: minmax(0, 470fr) minmax(0, 270fr); } }
+.lv-v1-map { display: block; width: 100%; height: auto; align-self: start; border-radius: var(--lv-radius); }
+.lv-v1-map__label { font-family: var(--lv-font-serif); font-size: 18px; fill: var(--lv-ink); }
+.lv-v1-location__card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 25px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+
+/* ── Booking card ─────────────────────────────────────────── */
+.lv-v1-bcard { gap: 16px; background: var(--lv-card); box-shadow: 0 16px 40px rgba(10, 41, 33, .08); }
+.lv-v1-stepper { display: inline-flex; align-self: flex-start; overflow: hidden; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); }
+.lv-v1-stepper button { display: grid; width: 48px; height: 48px; place-items: center; cursor: pointer; transition: background-color .25s ease; }
+.lv-v1-stepper button:hover:not(:disabled) { background: var(--lv-cream); }
+.lv-v1-stepper button:disabled { opacity: .35; cursor: not-allowed; }
+.lv-v1-stepper output { display: grid; width: 72px; place-items: center; border-inline: 1px solid var(--lv-line); }
+.lv-v1-choice { display: flex; align-items: center; gap: 10px; padding: 14px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); cursor: pointer; transition: border-color .25s ease, background-color .25s ease; }
+.lv-v1-choice:hover { border-color: var(--lv-control); }
+.lv-v1-choice:focus-within { outline: 2px solid var(--lv-success); outline-offset: 2px; }
+.lv-v1-choice.is-selected { background: #eef3ec; border-color: var(--lv-success); box-shadow: inset 0 0 0 .5px var(--lv-success); }
+.lv-v1-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; background: var(--lv-beige); border-radius: var(--lv-radius-sm); }
+
+/* ── Pairs well with ──────────────────────────────────────── */
+.lv-v1-pairs { display: flex; flex-direction: column; gap: 16px; padding: 25px; background: var(--lv-card); border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+.lv-v1-pair { display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); }
+.lv-v1-pair img { width: 100%; height: 96px; object-fit: cover; }
+.lv-v1-pair__link { margin-top: auto; padding: 8px 12px; text-align: center; border: 1px solid var(--lv-clay); border-radius: 10px; transition: background-color .25s ease; }
+.lv-v1-pair__link:hover { background: rgba(185, 80, 43, .08); }

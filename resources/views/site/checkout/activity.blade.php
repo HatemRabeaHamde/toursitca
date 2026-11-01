@@ -1,13 +1,13 @@
-@extends('layouts.site')
+{{-- Choose a pick-up point, opened from "Edit" on Request to book. --}}
+@extends('layouts.site-v2')
 
-@section('hide_site_chrome', 'true')
-@section('hide_site_flash', 'true')
+@section('nav_active', 'experiences')
 
-@push('styles')
-    @vite(['resources/css/booking-flow.css'])
+@push('page-styles')
+    @vite(['resources/css/booking-flow.css', 'resources/css/pages/account.css'])
 @endpush
 
-@section('content')
+@section('page')
     @php
         $experience = $checkoutSession->experience;
         $availability = $checkoutSession->availability;
@@ -22,8 +22,6 @@
 
     <div class="booking-flow">
         <div class="booking-shell">
-            @include('site.checkout.partials.steps', ['currentStep' => 'activity'])
-
             <div class="booking-grid">
                 <main class="booking-main">
                     <div class="booking-activity-panel">
@@ -123,13 +121,15 @@
 
                         <div class="booking-actions">
                             <button type="submit" class="booking-primary">
-                                {{ __('ui.nav.next_contact_details') }}
+                                {{ __('account.checkout.save_pickup') }}
                             </button>
                         </div>
                     </form>
                 </main>
 
-                @include('site.checkout.partials.summary', ['checkoutSession' => $checkoutSession])
+                <aside class="lv-flow__aside" aria-label="{{ __('account.checkout.summary') }}">
+                    @include('site.checkout.sections.summary')
+                </aside>
             </div>
         </div>
     </div>

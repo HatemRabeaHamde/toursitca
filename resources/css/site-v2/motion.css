@@ -1,0 +1,58 @@
+/* Tourstica v2 — motion states driven by resources/js/site-motion.js */
+
+/* ── Motion: choreography states (driven by site-motion.js) ── */
+.lv-header { transition: transform .7s var(--lv-ease), background-color .5s ease, backdrop-filter .5s ease, box-shadow .5s ease; }
+.lv-header-bar { height: 6rem; transition: height .5s var(--lv-ease); }
+.lv-header.is-scrolled { background: rgba(7, 28, 23, .78); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 1px 0 rgba(250, 246, 235, .08); }
+.lv-header.is-scrolled .lv-header-bar { height: 4.5rem; }
+.lv-header.is-hidden { transform: translate3d(0, -100%, 0); }
+
+/* SplitText line masks: room for italic overhang and descenders */
+.lv .lv-line-mask { padding: 0 .12em .1em 0; margin: 0 -.12em -.1em 0; }
+
+/* Hover feel */
+.lv-card { transition: transform .6s var(--lv-ease), box-shadow .6s var(--lv-ease); }
+.lv-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -20px rgba(27, 43, 38, .25); }
+.lv-link-arrow img, .lv-btn img, .lv-story-read img, .lv-faq-link img { transition: transform .45s var(--lv-ease); }
+.lv-link-arrow:hover img, .lv-btn:hover img, .lv-story-read:hover img, .lv-faq-link:hover img { transform: translateX(4px); }
+.lv-tile-caption, .lv-interest-name { transition: transform .6s var(--lv-ease); }
+.lv-tile:hover .lv-tile-caption, .lv-tile:hover .lv-interest-name { transform: translateY(-4px); }
+
+/* FAQ: height glides via grid rows instead of jumping */
+.lv-faq-panel { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .6s var(--lv-ease), opacity .45s ease; }
+.lv-faq-panel.is-open { grid-template-rows: 1fr; opacity: 1; }
+.lv-faq-panel > div { overflow: hidden; min-height: 0; }
+.lv-faq-icon { position: relative; display: inline-flex; width: 26px; height: 26px; flex-shrink: 0; align-items: center; justify-content: center; }
+.lv-faq-icon img { position: absolute; transition: opacity .35s ease, transform .5s var(--lv-ease); }
+.lv-faq-icon-open { opacity: 0; transform: rotate(-90deg) scale(.6); }
+.lv-faq-icon.is-open .lv-faq-icon-plus { opacity: 0; transform: rotate(90deg) scale(.6); }
+.lv-faq-icon.is-open .lv-faq-icon-open { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+    /* Pre-hide only when JS is present; the inline failsafe un-hides if motion never boots. */
+    html.lv-js:not(.lv-motion-failed) .lv [data-reveal],
+    html.lv-js:not(.lv-motion-failed) .lv [data-hero-intro] { visibility: hidden; }
+    /* Second page onwards: the header is already there — never flash it. */
+    html.lv-js.lv-returning:not(.lv-motion-failed) .lv [data-hero-nav] { visibility: visible; }
+
+    /* Page to page: native cross-fade, the header stays put (Chrome / Edge / Safari 18.2+). */
+    @view-transition { navigation: auto; }
+    .lv-header { view-transition-name: lv-header; }
+    ::view-transition-old(root) { animation: lv-page-out .28s cubic-bezier(.4, 0, 1, 1) both; }
+    ::view-transition-new(root) { animation: lv-page-in .42s cubic-bezier(.22, 1, .36, 1) both; }
+
+    .lv-hero-slide { animation: lv-kenburns 26s ease-in-out infinite alternate; }
+}
+@keyframes lv-page-out { to { opacity: 0; } }
+@keyframes lv-page-in { from { opacity: 0; } }
+@keyframes lv-kenburns {
+    from { transform: scale(1) translate3d(0, 0, 0); }
+    to { transform: scale(1.08) translate3d(-1.2%, -1%, 0); }
+}
+
+/* ── Reduced motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .lv *, .lv *::before, .lv *::after { animation: none !important; transition: none !important; }
+    .lv-progress.is-active > span { width: 100%; }
+}
+

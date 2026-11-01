@@ -3,6 +3,7 @@
 namespace Tests\Feature\Site;
 
 use App\Domain\Agency\Models\Agency;
+use App\Domain\Booking\Models\Booking;
 use App\Domain\Checkout\Models\CheckoutSession;
 use App\Domain\Experience\Models\Availability;
 use App\Domain\Experience\Models\Experience;
@@ -33,13 +34,15 @@ class CheckoutContactTest extends TestCase
             'contact_phone' => '+201000000000',
             'contact_country' => 'Egypt',
             'special_requests' => 'WhatsApp preferred.',
+            'terms' => '1',
         ])
-            ->assertRedirect(route('site.checkout.payment', [
+            ->assertRedirect(route('site.bookings.confirmation', [
                 'locale' => 'en',
-                'checkoutSession' => $checkoutSession,
+                'booking' => Booking::query()->firstOrFail(),
             ]));
 
         $checkoutSession->refresh();
+        $this->assertSame('completed', $checkoutSession->status);
 
         $this->assertSame('Hatem', $checkoutSession->contact_first_name);
         $this->assertSame('Ali', $checkoutSession->contact_last_name);
@@ -47,6 +50,55 @@ class CheckoutContactTest extends TestCase
         $this->assertSame('+201000000000', $checkoutSession->contact_phone);
         $this->assertSame('Egypt', $checkoutSession->contact_country);
         $this->assertSame('WhatsApp preferred.', $checkoutSession->special_requests);
+
+        $booking = Booking::query()->firstOrFail();
+        $this->assertSame($user->id, $booking->user_id);
+        $this->assertSame('pending', $booking->status);
+        $this->assertSame('Hatem Ali', $booking->guest_name);
+        $this->assertSame('WhatsApp preferred.', $booking->special_notes);
+    }
+
+    public function test_request_cannot_be_sent_without_accepting_the_terms(): void
+    {
+        $user = User::factory()->create();
+        $checkoutSession = $this->createCheckoutSession(['user_id' => $user->id, 'session_id' => null]);
+
+        $this->actingAs($user)->post(route('site.checkout.contact.store', [
+            'locale' => 'en',
+            'checkoutSession' => $checkoutSession,
+        ]), [
+            'contact_first_name' => 'Hatem',
+            'contact_last_name' => 'Ali',
+            'contact_email' => 'hatem@example.com',
+        ])->assertSessionHasErrors('terms');
+
+        $this->assertSame(0, Booking::query()->count());
+    }
+
+    public function test_request_page_shows_the_trip_and_the_contact_form(): void
+    {
+        $user = User::factory()->create(['name' => 'Sarah Mitchell', 'country' => 'Canada']);
+        $checkoutSession = $this->createCheckoutSession(['user_id' => $user->id, 'session_id' => null]);
+
+        $response = $this->actingAs($user)->get(route('site.checkout.contact', ['locale' => 'en', 'checkoutSession' => $checkoutSession]));
+
+        $this->assertMatchesRegularExpression('/MAD\s*200/u', $response->getContent());
+        $response
+            ->assertOk()
+            ->assertViewIs('site.checkout.request')
+            ->assertSee('Contact Experience')
+            ->assertSee('value="Sarah"', false)
+            ->assertSee('value="Mitchell"', false)
+            ->assertSee('value="Canada"', false)
+            ->assertSee('Send request to your host');
+    }
+
+    public function test_guest_sees_sign_in_instead_of_the_contact_form(): void
+    {
+        $checkoutSession = $this->createCheckoutSession();
+
+        $this->withSession([])->get(route('site.checkout.contact', ['locale' => 'en', 'checkoutSession' => $checkoutSession]))
+            ->assertForbidden();
     }
 
     public function test_contact_email_is_required_and_valid(): void
@@ -64,6 +116,7 @@ class CheckoutContactTest extends TestCase
             'contact_first_name' => 'Hatem',
             'contact_last_name' => 'Ali',
             'contact_email' => 'not-an-email',
+            'terms' => '1',
         ])->assertSessionHasErrors('contact_email');
     }
 
@@ -83,6 +136,7 @@ class CheckoutContactTest extends TestCase
             'contact_first_name' => 'Other',
             'contact_last_name' => 'User',
             'contact_email' => 'other@example.com',
+            'terms' => '1',
         ])->assertForbidden();
     }
 
@@ -133,7 +187,7 @@ class CheckoutContactTest extends TestCase
             'participants_count' => 2,
             'charged_seats' => 2,
             'pickup_status' => 'unknown',
-            'price_snapshot' => ['total' => '200.00'],
+            'price_snapshot' => ['unit_price' => '100.00', 'total' => '200.00'],
             'payment_method' => 'manual',
             'payment_status' => 'pending',
             'status' => 'active',

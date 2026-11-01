@@ -8,6 +8,7 @@
         'action' => route('admin.experiences.store'),
         'agencies' => $agencies,
         'categories' => $categories,
+        'hosts' => $hosts,
         'showAgencySelect' => true,
     ])
 @endsection

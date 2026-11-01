@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 final class ExperienceSearchQuery
 {
-    public function paginate(ExperienceSearchData $data, int $perPage = 12): LengthAwarePaginator
+    /** @param array<int|string, mixed> $with extra relations to eager load (e.g. 'host') */
+    public function paginate(ExperienceSearchData $data, int $perPage = 12, array $with = []): LengthAwarePaginator
     {
         $query = Experience::query()
-            ->with(ExperienceCardPresenter::eagerLoads())
+            ->with([...ExperienceCardPresenter::eagerLoads(), ...$with])
             ->published();
 
         $this->applyFilters($query, $data);
@@ -65,6 +66,10 @@ final class ExperienceSearchQuery
                         ->orWhere("description->{$fallbackLocale}", 'like', '%'.$data->search.'%');
                 }
             });
+        }
+
+        if ($data->host) {
+            $query->whereHas('host', fn (Builder $query) => $query->where('slug', $data->host));
         }
 
         if ($data->city) {

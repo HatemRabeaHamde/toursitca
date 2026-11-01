@@ -22,6 +22,7 @@ class ExperienceItineraryItem extends Model
         'location_lng',
         'is_main_stop',
         'icon',
+        'image',
     ];
 
     public array $translatable = ['title', 'description', 'location_name'];

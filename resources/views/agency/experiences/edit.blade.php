@@ -7,6 +7,7 @@
     @include('experiences.partials.form', [
         'action' => route('agency.experiences.update', $experience),
         'categories' => $categories,
+        'hosts' => $hosts,
         'experience' => $experience,
         'method' => 'PATCH',
         'submitLabel' => __('ui.nav.update_experience'),

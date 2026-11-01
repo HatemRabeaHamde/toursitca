@@ -1,0 +1,211 @@
+/* ============================================================
+   Experience detail v2 (Figma "09 · Experience detail v2 — Erg Chigaga").
+   Hero → sticky tabs → story (720) + booking card (400).
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.lv-page-hero--detail { min-height: 600px; }
+@media (max-width: 767px) { .lv-page-hero--detail { min-height: 640px; } }
+.lv-page-hero--detail .lv-page-hero__veil {
+    background:
+        linear-gradient(180deg, rgba(6, 18, 15, .55) 0%, rgba(6, 18, 15, 0) 30%, rgba(6, 18, 15, 0) 70%, rgba(6, 18, 15, .6) 100%),
+        linear-gradient(90deg, rgba(6, 18, 15, .85) 0%, rgba(6, 18, 15, .45) 55%, rgba(6, 18, 15, .15) 100%);
+}
+.lv-page-hero--detail #lv-page-title { max-width: 640px; }
+
+.lv-xhero__row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; color: var(--lv-on-dark); }
+.lv-xhero__row--trust { gap: 10px 20px; }
+.lv-xhero__item { display: inline-flex; align-items: center; gap: 8px; color: var(--lv-on-dark); }
+a.lv-xhero__item:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.lv-xhero__divider { width: 1px; height: 18px; background: var(--lv-on-dark-28); }
+@media (max-width: 479px) { .lv-xhero__divider { display: none; } }
+.lv-xhero__photos {
+    margin-top: 2px; padding: 10px 16px; border: 1px solid var(--lv-on-dark); border-radius: 999px;
+    background: rgba(255, 255, 255, .08); color: var(--lv-on-dark);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: background-color .3s ease, transform .45s var(--lv-ease);
+}
+.lv-xhero__photos:hover { background: rgba(255, 255, 255, .18); transform: translateY(-1px); }
+
+/* ── Sticky tabs ──────────────────────────────────────────── */
+.lv-xtabs {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--lv-cream); border-bottom: 1px solid var(--lv-line);
+    transition: top .7s var(--lv-ease);
+}
+.lv:has(.lv-header.is-scrolled:not(.is-hidden)) .lv-xtabs { top: 4.5rem; }
+.lv-xtabs__inner { display: flex; gap: 36px; overflow-x: auto; scrollbar-width: none; padding-top: 22px; }
+.lv-xtabs__inner::-webkit-scrollbar { display: none; }
+.lv-xtabs__link {
+    flex-shrink: 0; padding-bottom: 14px; border-bottom: 2px solid transparent;
+    font-size: .9375rem; line-height: 1.333; font-weight: 500; color: var(--lv-muted);
+    transition: color .25s ease, border-color .25s ease;
+}
+.lv-xtabs__link:hover { color: var(--lv-ink); }
+.lv-xtabs__link.is-active { color: var(--lv-clay); border-color: var(--lv-clay); font-weight: 600; }
+@media (max-width: 639px) { .lv-xtabs__inner { gap: 24px; } }
+
+/* ── Body ─────────────────────────────────────────────────── */
+.lv-xdetail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-block: 48px 96px; }
+@media (min-width: 1024px) {
+    .lv-xdetail { grid-template-columns: minmax(0, 720fr) minmax(340px, 400fr); gap: 56px; align-items: start; padding-block: 64px 110px; }
+}
+@media (min-width: 1280px) { .lv-xdetail { gap: 80px; } }
+.lv-xdetail__main { display: flex; min-width: 0; flex-direction: column; gap: 56px; }
+@media (min-width: 1024px) { .lv-xdetail__main { gap: 64px; } }
+.lv .lv-xsection { display: flex; flex-direction: column; gap: 20px; scroll-margin-top: 150px; }
+
+.lv-hl-pill {
+    display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 14px;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: 999px;
+}
+
+/* Itinerary accordion */
+.lv-itinerary { overflow: hidden; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+.lv-itinerary__day + .lv-itinerary__day { border-top: 1px solid var(--lv-line); }
+.lv-itinerary__head { display: flex; width: 100%; align-items: center; gap: 16px; padding: 18px 24px; text-align: left; }
+button.lv-itinerary__head { cursor: pointer; transition: background-color .25s ease; }
+button.lv-itinerary__head:hover { background: var(--lv-cream); }
+.lv-itinerary__label { width: 52px; flex-shrink: 0; }
+.lv-itinerary__title { flex: 1; min-width: 0; }
+.lv-itinerary__chevron { transition: transform .45s var(--lv-ease); }
+.lv-itinerary__day.is-open .lv-itinerary__chevron { transform: rotate(180deg); }
+.lv-itinerary__panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--lv-ease); }
+.lv-itinerary__day.is-open .lv-itinerary__panel { grid-template-rows: 1fr; }
+.lv-itinerary__inner { overflow: hidden; }
+.lv-itinerary__body { display: flex; align-items: flex-start; gap: 16px; padding: 0 24px 18px 92px; opacity: 0; transition: opacity .35s ease; }
+.lv-itinerary__day.is-open .lv-itinerary__body { opacity: 1; transition-delay: .1s; }
+.lv-itinerary__image { width: 120px; height: 84px; flex-shrink: 0; border-radius: 10px; object-fit: cover; }
+@media (max-width: 639px) {
+    .lv-itinerary__head { padding: 16px 18px; gap: 12px; }
+    .lv-itinerary__body { flex-direction: column; padding: 0 18px 16px; }
+}
+
+/* Host */
+.lv-hprofile {
+    display: flex; align-items: center; gap: 20px; padding: 16px 24px 16px 16px;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg);
+}
+.lv-hprofile__avatar { width: 96px; height: 96px; flex-shrink: 0; border-radius: 999px; object-fit: cover; }
+@media (max-width: 479px) { .lv-hprofile { align-items: flex-start; } .lv-hprofile__avatar { width: 72px; height: 72px; } }
+
+/* Reviews */
+.lv-xscore { font-family: var(--lv-font-serif); font-size: 64px; line-height: 1; letter-spacing: -1.5px; color: var(--lv-ink); }
+.lv-freview { display: flex; flex-direction: column; gap: 14px; padding: 22px 24px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+.lv-avatar--32 { width: 32px; height: 32px; }
+
+/* ── You may also like ── */
+.lv-xdetail:has(+ .lv-xrelated) { padding-bottom: 32px; }
+.lv-xrelated { padding-bottom: 110px; }
+@media (max-width: 1023px) { .lv-xrelated { padding-bottom: 80px; } }
+
+/* ── Booking card ─────────────────────────────────────────── */
+@media (min-width: 1024px) {
+    .lv-xdetail__aside { position: sticky; top: 88px; transition: top .7s var(--lv-ease); }
+    .lv:has(.lv-header.is-scrolled:not(.is-hidden)) .lv-xdetail__aside { top: 160px; }
+}
+.lv .lv-xdetail__aside { scroll-margin-top: 150px; }
+.lv-bcard {
+    display: flex; flex-direction: column; gap: 18px; padding: 28px;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg);
+    box-shadow: 0 16px 20px rgba(10, 41, 33, .08);
+}
+@media (max-width: 479px) { .lv-bcard { padding: 22px 18px; } }
+.lv-bcard__amount { font-family: var(--lv-font-serif); font-size: clamp(32px, 2.6vw, 40px); line-height: 1.1; letter-spacing: -.8px; white-space: nowrap; color: var(--lv-ink); }
+.lv-bcard__total { flex-shrink: 0; font-family: var(--lv-font-serif); font-size: 32px; line-height: 1.125; letter-spacing: -.5px; color: var(--lv-ink); }
+.lv-bcard__rule { border: 0; border-top: 1px solid var(--lv-line); }
+.lv-bcard__error { padding: 10px 12px; border-radius: 10px; background: rgba(185, 80, 43, .08); color: var(--lv-rust); }
+
+.lv-bfield { display: flex; min-width: 0; flex-direction: column; gap: 8px; }
+.lv-bfield__control {
+    position: relative; display: flex; width: 100%; height: 50px; align-items: center; gap: 10px; padding-inline: 14px;
+    background: #fff; border: 1px solid var(--lv-control); border-radius: var(--lv-radius-sm);
+    color: var(--lv-ink); text-align: left; transition: border-color .25s ease, box-shadow .25s ease;
+}
+button.lv-bfield__control { cursor: pointer; }
+button.lv-bfield__control:hover, .lv-bfield__control:has(select:hover) { border-color: var(--lv-ink); }
+.lv-bfield__control:focus-within { border-color: var(--lv-clay); box-shadow: 0 0 0 3px rgba(185, 80, 43, .12); }
+.lv-bfield__control.is-static { background: var(--lv-cream); border-color: var(--lv-line); }
+.lv-bfield__value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; line-height: 1.5; }
+.lv-bfield__select {
+    position: absolute; inset: 0; width: 100%; padding: 0 36px 0 42px; appearance: none; -webkit-appearance: none;
+    background: transparent; border: 0; border-radius: inherit; outline: none; cursor: pointer;
+    font: inherit; font-size: 1rem; color: var(--lv-ink); text-overflow: ellipsis;
+}
+.lv-bfield__control > .lv-icon:last-child { margin-left: auto; pointer-events: none; }
+.lv-bfield__chevron { transition: transform .35s var(--lv-ease); }
+.lv-bfield__chevron.is-open { transform: rotate(180deg); }
+
+/* Travellers popover */
+.lv-popover {
+    position: absolute; left: 0; top: calc(100% + 8px); z-index: 20; display: flex; width: min(320px, calc(100vw - 48px)); flex-direction: column; gap: 14px;
+    padding: 18px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius);
+    box-shadow: 0 24px 48px -20px rgba(27, 43, 38, .35);
+}
+.lv-popover__select { width: auto; min-width: 120px; height: 38px; padding-block: 0; }
+.lv-stepper { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.lv-stepper__controls { display: flex; align-items: center; gap: 12px; }
+.lv-stepper__btn {
+    display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--lv-control); border-radius: 999px;
+    font-size: 1.125rem; line-height: 1; color: var(--lv-ink); transition: border-color .25s ease, background-color .25s ease;
+}
+.lv-stepper__btn:hover:not(:disabled) { border-color: var(--lv-ink); background: var(--lv-cream); }
+.lv-stepper__btn:disabled { opacity: .35; cursor: not-allowed; }
+.lv-stepper__value { min-width: 18px; text-align: center; }
+
+/* ── Dialogs (calendar · photos) ──────────────────────────── */
+.lv-dialog {
+    position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px;
+    background: rgba(6, 18, 15, .55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.lv-dialog--dark { padding: 0; background: rgba(6, 18, 15, .94); }
+.lv-dialog__panel {
+    display: flex; width: min(420px, 100%); max-height: calc(100vh - 32px); flex-direction: column; gap: 18px; overflow-y: auto;
+    padding: 24px; background: #fff; border-radius: var(--lv-radius-lg); box-shadow: 0 30px 60px -20px rgba(6, 18, 15, .5);
+}
+.lv-dialog__close {
+    display: grid; width: 36px; height: 36px; flex-shrink: 0; place-items: center; border-radius: 999px;
+    font-size: 1.5rem; line-height: 1; color: var(--lv-ink); transition: background-color .25s ease;
+}
+.lv-dialog__close:hover { background: var(--lv-sand); }
+.lv-dialog__close--light { color: var(--lv-on-dark); }
+.lv-dialog__close--light:hover { background: rgba(255, 255, 255, .12); }
+
+.lv-calendar__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.lv-calendar__weekday { padding-bottom: 4px; text-align: center; }
+.lv-calendar__day {
+    display: grid; aspect-ratio: 1; place-items: center; border-radius: 999px;
+    font-size: .9375rem; font-weight: 500; color: var(--lv-ink);
+    background: rgba(31, 92, 69, .1); transition: background-color .2s ease, color .2s ease, transform .3s var(--lv-ease);
+}
+button.lv-calendar__day:hover { background: rgba(31, 92, 69, .2); transform: scale(1.06); }
+.lv-calendar__day.is-few { background: rgba(224, 164, 58, .2); }
+.lv-calendar__day.is-selected { background: var(--lv-clay); color: #fff; }
+.lv-calendar__day.is-off { background: transparent; color: var(--lv-line-2); }
+.lv-calendar__day.is-full { color: var(--lv-muted); text-decoration: line-through; }
+.lv-calendar__key { display: inline-flex; align-items: center; gap: 6px; }
+.lv-calendar__key::before { content: ''; width: 10px; height: 10px; border-radius: 999px; }
+.lv-calendar__key--available::before { background: rgba(31, 92, 69, .35); }
+.lv-calendar__key--few::before { background: var(--lv-star); }
+.lv-calendar__key--full::before { background: var(--lv-line-2); }
+
+.lv-viewer { position: relative; display: grid; width: 100%; height: 100%; grid-template-rows: auto minmax(0, 1fr); padding: 16px 16px 24px; }
+.lv-viewer__bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 8px; }
+.lv-viewer__image { width: 100%; height: 100%; object-fit: contain; border-radius: var(--lv-radius-sm); }
+.lv-viewer__nav { position: absolute; inset: 50% 16px auto; display: flex; justify-content: space-between; pointer-events: none; }
+.lv-viewer__arrow {
+    display: grid; width: 48px; height: 48px; place-items: center; border-radius: 999px; pointer-events: auto;
+    background: rgba(255, 255, 255, .12); color: var(--lv-on-dark); font-size: 1.75rem; line-height: 1;
+    transition: background-color .25s ease;
+}
+.lv-viewer__arrow:hover { background: rgba(255, 255, 255, .24); }
+
+/* ── Mobile booking bar ───────────────────────────────────── */
+.lv-xbar {
+    position: fixed; inset: auto 0 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, .96); border-top: 1px solid var(--lv-line);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+@media (min-width: 1024px) { .lv-xbar { display: none; } }
+@media (max-width: 1023px) { .lv:has(.lv-xbar) .lv-footer { padding-bottom: 72px; } }

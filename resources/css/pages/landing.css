@@ -1,0 +1,70 @@
+/* Tourstica v2 — landing-only sections (soul tiles, interests, featured, stories, plan, route bar) */
+
+/* ── Image tiles (soul / interests / featured) ─────────── */
+.lv-tile { position: relative; overflow: hidden; border-radius: var(--lv-radius); background: var(--lv-forest); isolation: isolate; }
+.lv-tile > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--lv-ease); z-index: -2; }
+.lv-tile:hover > img { transform: scale(1.05); }
+.lv-tile::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--lv-tile-veil, linear-gradient(180deg, rgba(7,28,23,0) 45%, rgba(7,28,23,.55) 100%)); }
+.lv-tile--interest { --lv-tile-veil: linear-gradient(180deg, rgba(7,28,23,0) 40%, rgba(7,28,23,.86) 100%); }
+.lv-tile--featured { --lv-tile-veil: linear-gradient(180deg, rgba(7,28,23,0) 32%, rgba(7,28,23,.9) 90%); }
+.lv-tile--lead { --lv-tile-veil: linear-gradient(180deg, rgba(7,28,23,.1) 0%, rgba(7,28,23,0) 30%, rgba(7,28,23,.88) 88%); border-radius: var(--lv-radius-lg); }
+.lv-tile-caption { font-family: var(--lv-font-serif); font-style: italic; font-size: 1.625rem; line-height: 1.1; color: var(--lv-on-dark); font-variation-settings: 'SOFT' 0, 'WONK' 1; }
+.lv-interest-name { font-family: var(--lv-font-display); font-size: 1.3125rem; line-height: 1.25; letter-spacing: -.015em; color: #fff; }
+.lv-interest-count { font-size: .8125rem; line-height: 1.5; color: rgba(255,255,255,.6); }
+.lv-leaves { opacity: 1; pointer-events: none; }
+.lv-leaves--faded { opacity: .2; transform: rotate(180deg) scaleY(-1); }
+
+.lv-pillar { border-top: 1px solid var(--lv-line); }
+.lv-pillar-num { font-size: .8125rem; font-weight: 600; letter-spacing: .16em; color: var(--lv-rust); }
+.lv-pillar-title { font-size: 1.5rem; color: var(--lv-ink); }
+
+/* Stepped interest grid — alternate cards drop down on large screens */
+@media (min-width: 1024px) { .lv-interest-grid > :nth-child(even) { margin-top: 81px; } }
+
+/* ── Featured ──────────────────────────────────────────── */
+.lv-featured-title { color: var(--lv-on-dark); letter-spacing: -.01em; }
+.lv-meta { font-size: .8125rem; color: var(--lv-on-dark-78); }
+.lv-price { font-size: .875rem; color: var(--lv-on-dark); }
+.lv-price strong { font-weight: 700; }
+.lv-price--lg { font-size: .9375rem; color: var(--lv-on-dark-78); }
+.lv-price--lg strong { font-size: 1.25rem; color: var(--lv-on-dark); }
+.lv-rating { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; color: var(--lv-on-dark); }
+
+
+/* ── Stories ───────────────────────────────────────────── */
+.lv-story-quote { font-family: var(--lv-font-serif); font-style: italic; font-size: 1.3125rem; line-height: 1.35; color: var(--lv-ink); }
+.lv-story-foot { border-top: 1px solid var(--lv-line); }
+.lv-story-read { color: var(--lv-rust); font-weight: 600; font-size: .9375rem; }
+
+/* ── Plan ──────────────────────────────────────────────── */
+.lv-plan-num { font-size: 4.5rem; line-height: 1; letter-spacing: -.03em; color: var(--lv-clay); opacity: .35; }
+.lv-plan-rule { height: 1px; background: var(--lv-line-2); }
+.lv-plan-title { font-size: 1.75rem; letter-spacing: -.01em; }
+.lv-check-dot { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--lv-forest); flex-shrink: 0; }
+
+
+/* ── Static design extras (film, route bar, host badges) ─ */
+.lv-play { border: 1px solid rgba(250, 246, 235, .7); transition: background .2s; }
+.group:hover .lv-play { background: rgba(250, 246, 235, .12); }
+.lv-btn--gold { background: var(--lv-gold-2); color: var(--lv-forest); }
+.lv-chip--outline { background: rgba(250, 246, 235, .14); border: 1px solid rgba(250, 246, 235, .32); backdrop-filter: none; }
+.lv-route { background: var(--lv-forest-2); border: 1px solid rgba(217, 162, 58, .35); }
+.lv-route-label { font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--lv-gold); }
+.lv-route-stop {
+    display: inline-flex; align-items: center; gap: 8px; height: 42px; padding-inline: 16px; border-radius: 999px;
+    background: rgba(250, 246, 235, .1); border: 1px solid rgba(250, 246, 235, .22);
+    color: var(--lv-on-dark); font-size: .9375rem; font-weight: 500; white-space: nowrap;
+}
+.lv-route-num {
+    display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--lv-gold-2); color: var(--lv-forest); font-size: .75rem; font-weight: 700;
+}
+.lv-route-add {
+    display: inline-flex; align-items: center; height: 42px; padding-inline: 16px; border-radius: 999px;
+    border: 1px dashed rgba(250, 246, 235, .42); color: var(--lv-on-dark-78); font-size: .9375rem; white-space: nowrap;
+}
+.lv-host-badge {
+    display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%;
+    background: var(--lv-cream); border: 2px solid var(--lv-card); filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .18));
+}
+

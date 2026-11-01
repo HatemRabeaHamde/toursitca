@@ -1,0 +1,65 @@
+/* ============================================================
+   Tourstica v2 — design tokens
+   Source of truth: Figma "Tourstica-a" (NniWymSrfslaslUrJZWKfi) variables.
+   Scoped to .lv so nothing leaks into the dashboards or legacy pages.
+   `--lv-*` names are what components use; they map 1:1 to Figma vars.
+   ============================================================ */
+
+.lv {
+    /* ── Surfaces (surface/*) ─────────────────────────────── */
+    --lv-cream: #faf8f4;          /* surface/cream */
+    --lv-sand: #f4f0e8;           /* surface/sand */
+    --lv-beige: #ece4d5;          /* surface/beige */
+    --lv-card: #fffefb;           /* surface/card */
+    --lv-peach: #f6e3d3;
+    --lv-forest: #0b2a22;         /* brand/green */
+    --lv-footer: #0f2621;         /* brand/green-deep */
+    --lv-forest-deep: #071c17;
+    --lv-forest-2: #12382f;
+    --lv-night: #06120f;          /* neutral/night */
+
+    /* ── Ink (text/*) ─────────────────────────────────────── */
+    --lv-ink: #1b2b26;            /* text/ink */
+    --lv-ink-2: #10201c;
+    --lv-muted: #5a6660;          /* text/muted */
+    --lv-on-dark: #faf8f4;
+    --lv-on-dark-muted: #b9c4bc;  /* text/on-dark-muted */
+    --lv-on-dark-78: rgba(250, 248, 244, .78);
+    --lv-on-dark-28: rgba(250, 248, 244, .28);
+
+    /* ── Brand & accents ──────────────────────────────────── */
+    --lv-clay: #b9502b;           /* brand/terracotta */
+    --lv-rust: #a3421f;           /* brand/terracotta-deep */
+    --lv-gold: #f2c46e;           /* accent/gold */
+    --lv-gold-2: #d9a23a;
+    --lv-star: #e0a43a;           /* accent/star */
+    --lv-sand-gold: #c9a77c;      /* accent/sand-gold */
+    --lv-sage: #6f8772;
+    --lv-success: #1f5c45;        /* status/success */
+
+    /* ── Lines ────────────────────────────────────────────── */
+    --lv-line: #e3dccf;           /* border/line */
+    --lv-line-2: #cdbb9a;
+    --lv-control: #b8b2a2;        /* border/control */
+
+    /* ── Type families ────────────────────────────────────── */
+    --lv-font-serif: 'Fraunces', Georgia, serif;
+    --lv-font-sans: 'DM Sans', system-ui, sans-serif;
+    --lv-font-display: 'Playfair Display', Georgia, serif;
+    --lv-font-footer: 'Poppins', system-ui, sans-serif;
+
+    /* ── Shape & motion ───────────────────────────────────── */
+    --lv-radius-sm: 12px;
+    --lv-radius: 16px;
+    --lv-radius-lg: 20px;
+    --lv-radius-btn: 12px;
+    --lv-shadow: 0 10px 30px rgba(27, 43, 38, .08);
+    --lv-shadow-card: 0 1px 2px rgba(27, 43, 38, .04), 0 8px 24px -12px rgba(27, 43, 38, .12);
+    --lv-ease: cubic-bezier(.22, 1, .36, 1);
+
+    font-family: var(--lv-font-sans);
+    font-variation-settings: 'opsz' 14;
+    color: var(--lv-ink);
+    background: var(--lv-cream);
+    -webkit-font-smoothing: antialiased;
+}

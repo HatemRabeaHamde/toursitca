@@ -1,0 +1,44 @@
+/* ============================================================
+   Tourstica v2 — text styles (Figma "Tourstica/*" styles).
+   One class per style; responsive sizes shrink on small screens.
+   ============================================================ */
+
+.lv-t-display, .lv-t-section, .lv-t-h1, .lv-t-h2, .lv-t-h3, .lv-t-h4, .lv-t-h5, .lv-t-h6,
+.lv-t-quote-l, .lv-t-quote-m, .lv-t-quote-s {
+    font-family: var(--lv-font-serif);
+    font-weight: 400;
+    font-variation-settings: 'SOFT' 0, 'WONK' 1;
+}
+
+.lv-t-display { font-size: clamp(2.75rem, 5.6vw, 4.5rem); line-height: 1.055; letter-spacing: -.028em; }   /* 72/76 */
+.lv-t-section { font-size: clamp(2.25rem, 4.4vw, 3.5rem); line-height: 1.06; letter-spacing: -.02em; }      /* 56/59 */
+.lv-t-h1 { font-size: clamp(2.25rem, 3.6vw, 3rem); line-height: 1.125; letter-spacing: -.021em; }           /* 48/54 */
+.lv-t-h2 { font-size: clamp(1.75rem, 2.6vw, 2.25rem); line-height: 1.167; letter-spacing: -.017em; }       /* 36/42 */
+.lv-t-h3 { font-size: 1.75rem; line-height: 1.214; letter-spacing: -.014em; }                               /* 28/34 */
+.lv-t-h4 { font-size: 1.5rem; line-height: 1.25; letter-spacing: -.0125em; }                                /* 24/30 */
+.lv-t-h5 { font-size: 1.375rem; line-height: 1.273; letter-spacing: -.009em; }                              /* 22/28 */
+.lv-t-h6 { font-size: 1.125rem; line-height: 1.333; }                                                       /* 18/24 */
+.lv-t-quote-l { font-size: clamp(1.25rem, 2vw, 1.625rem); line-height: 1.385; font-style: italic; letter-spacing: -.008em; } /* 26/36 */
+.lv-t-quote-m { font-size: 1.25rem; line-height: 1.5; font-style: italic; }                                  /* 20/30 */
+.lv-t-quote-s { font-size: 1.0625rem; line-height: 1.53; font-style: italic; }                               /* 17/26 */
+
+.lv-t-lead { font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.5; }   /* 20/30 */
+.lv-t-body-l { font-size: 1.0625rem; line-height: 1.647; }                     /* 17/28 */
+.lv-t-body-m { font-size: 1rem; line-height: 1.5; }                            /* 16/24 */
+.lv-t-body-s { font-size: .875rem; line-height: 1.5; }                         /* 14/21 */
+.lv-t-caption { font-size: .8125rem; line-height: 1.385; }                     /* 13/18 */
+.lv-t-micro { font-size: .75rem; line-height: 1.333; }                         /* 12/16 */
+
+.lv-t-label-l { font-size: 1rem; line-height: 1.375; font-weight: 600; }       /* 16/22 */
+.lv-t-label-m { font-size: .875rem; line-height: 1.43; font-weight: 600; }     /* 14/20 */
+.lv-t-label-s { font-size: .8125rem; line-height: 1.385; font-weight: 600; }   /* 13/18 */
+.lv-t-label-xs { font-size: .75rem; line-height: 1.333; font-weight: 600; }    /* 12/16 */
+.lv-t-ui-l { font-size: 1rem; line-height: 1.375; font-weight: 500; }          /* 16/22 */
+.lv-t-ui-m { font-size: .9375rem; line-height: 1.333; font-weight: 500; }      /* 15/20 */
+.lv-t-ui-s { font-size: .875rem; line-height: 1.43; font-weight: 500; }        /* 14/20 */
+.lv-t-ui-xs { font-size: .8125rem; line-height: 1.385; font-weight: 500; }     /* 13/18 */
+
+.lv-t-eyebrow { font-size: .8125rem; line-height: 1.385; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }   /* 13/18 +2.08 */
+.lv-t-eyebrow-s { font-size: .6875rem; line-height: 1.455; font-weight: 600; letter-spacing: .145em; text-transform: uppercase; } /* 11/16 +1.6 */
+
+.lv-italic { font-style: italic; }

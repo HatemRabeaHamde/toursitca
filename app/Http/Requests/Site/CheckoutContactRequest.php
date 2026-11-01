@@ -20,6 +20,7 @@ class CheckoutContactRequest extends FormRequest
             'contact_phone' => ['nullable', 'string', 'max:50'],
             'contact_country' => ['nullable', 'string', 'max:80'],
             'special_requests' => ['nullable', 'string', 'max:1000'],
+            'terms' => ['accepted'],
         ];
     }
 }

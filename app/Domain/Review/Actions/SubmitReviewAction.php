@@ -33,7 +33,15 @@ final class SubmitReviewAction
                 'experience_id' => $lockedBooking->experience_id,
                 'rating' => $data->rating,
                 'body' => $data->body,
+                ...$data->details,
             ]);
+
+            foreach (array_values($data->photos) as $order => $photo) {
+                $review->photos()->create([
+                    'path' => 'storage/'.$photo->store('review-photos', 'public'),
+                    'sort_order' => $order,
+                ]);
+            }
 
             ReviewSubmitted::dispatch($review);
 

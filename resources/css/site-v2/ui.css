@@ -1,0 +1,233 @@
+/* ============================================================
+   Tourstica v2 — UI kit skins for the shared Blade components
+   (components/site/{atoms,molecules,organisms}). Values come from
+   the Figma components (Card / Experience, Card / Story, Host card…).
+   ============================================================ */
+
+/* ── Tone helpers ─────────────────────────────────────── */
+.lv-tone-ink { color: var(--lv-ink); }
+.lv-tone-muted { color: var(--lv-muted); }
+.lv-tone-terracotta { color: var(--lv-clay); }
+.lv-tone-terracotta-deep { color: var(--lv-rust); }
+.lv-tone-gold { color: var(--lv-gold); }
+.lv-tone-cream { color: var(--lv-cream); }
+.lv-tone-success { color: var(--lv-success); }
+.lv-icon--on-dark { filter: brightness(0) invert(.98); }
+.lv-icon--ink { filter: brightness(0) saturate(100%) opacity(.7); }
+
+.lv-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ── Atoms ────────────────────────────────────────────── */
+.lv-arrow-link { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.lv-arrow-link .lv-icon { transition: transform .45s var(--lv-ease); }
+.lv-arrow-link:hover .lv-icon, .group:hover .lv-arrow-link .lv-icon { transform: translateX(4px); }
+
+.lv-button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap;
+    padding: 14px 24px; border-radius: var(--lv-radius-btn);
+    transition: transform .3s var(--lv-ease), background-color .25s ease, box-shadow .3s ease, color .25s ease;
+}
+.lv-button .lv-icon { transition: transform .45s var(--lv-ease); }
+.lv-button:hover .lv-icon { transform: translateX(4px); }
+.lv-button--primary { background: var(--lv-clay); color: #fff; }
+.lv-button--primary:hover { background: var(--lv-rust); transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(185, 80, 43, .6); }
+.lv-button--outline { padding-block: 11px; border: 1.5px solid var(--lv-clay); color: var(--lv-clay); background: transparent; }
+.lv-button--outline:hover { background: rgba(185, 80, 43, .06); }
+
+.lv-rating-inline { display: inline-flex; align-items: center; gap: 4px; color: var(--lv-ink); }
+.lv-avatar { width: 40px; height: 40px; border-radius: 999px; object-fit: cover; flex-shrink: 0; }
+
+.lv-moroccan-divider img { display: block; width: 100%; height: auto; }
+
+.lv-ornament-leaves { position: absolute; width: 520px; max-width: 45vw; height: auto; opacity: .2; pointer-events: none; z-index: 0; }
+.lv-ornament-leaves--right { top: -70px; right: -90px; }
+.lv-ornament-leaves--left { top: -70px; left: -90px; }
+.lv-ornament-leaves--center { top: -70px; left: 50%; margin-left: -230px; }
+.lv-ornament-leaves.is-flipped { transform: rotate(180deg) scaleY(-1); }
+@media (max-width: 767px) { .lv-ornament-leaves { display: none; } }
+
+/* Zellige rosette (Figma "Ornament / Zellige", 473×480) peeking in from a chapter edge. */
+.lv-zellige-start::after, .lv-zellige-end::after {
+    content: ''; position: absolute; top: 60px; width: 473px; height: 480px;
+    background: url('/images/site/ornaments/zellige.svg') center / contain no-repeat; pointer-events: none; z-index: 0;
+}
+.lv-zellige-start::after { left: -253px; }
+.lv-zellige-end::after { right: -253px; }
+@media (max-width: 1279px) { .lv-zellige-start::after, .lv-zellige-end::after { display: none; } }
+
+/* ── Filter controls (chips · pill search · native select) ── */
+.lv-filter-chip {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--lv-line); color: var(--lv-ink);
+    transition: border-color .25s ease, background-color .35s var(--lv-ease), color .35s var(--lv-ease), transform .3s var(--lv-ease);
+}
+.lv-filter-chip:active { transform: scale(.96); }
+.lv-filter-chip:hover { border-color: var(--lv-line-2); }
+.lv-filter-chip.is-active { background: var(--lv-forest); border-color: var(--lv-forest); color: var(--lv-cream); }
+
+.lv-search-field, .lv-select--pill {
+    position: relative; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px;
+    background: #fff; border: 1px solid var(--lv-line-2); border-radius: 999px;
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+.lv-search-field:focus-within, .lv-select--pill:focus-within { border-color: var(--lv-clay); box-shadow: 0 0 0 3px rgba(185, 80, 43, .12); }
+.lv-search-field input { flex: 1; min-width: 0; border: 0; padding: 0; background: transparent; color: var(--lv-ink); outline: none; box-shadow: none; }
+.lv-search-field input::placeholder { color: var(--lv-muted); }
+.lv-search-field input::-webkit-search-cancel-button { cursor: pointer; }
+
+.lv-select { position: relative; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.lv-select select {
+    appearance: none; border: 0; padding: 0 22px 0 0; background: transparent; color: var(--lv-ink);
+    cursor: pointer; outline: none; box-shadow: none;
+}
+.lv-select .lv-icon { position: absolute; right: 12px; pointer-events: none; }
+.lv-select--plain .lv-icon { right: 0; }
+.lv-select--plain select { padding-right: 20px; }
+
+/* ── Lists: load more · empty state · form fields ─────── */
+.lv-xmore { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-block: 56px 100px; transition: opacity .3s ease; }
+.lv-xmore.is-loading { opacity: .5; pointer-events: none; }
+.lv-xempty {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 40px;
+    border: 1.5px dashed var(--lv-line-2); border-radius: var(--lv-radius-lg);
+}
+.lv-field {
+    width: 100%; height: 44px; padding: 0 14px; border: 1px solid var(--lv-line-2); border-radius: 12px; background: #fff; color: var(--lv-ink);
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+.lv-field:focus { outline: none; border-color: var(--lv-clay); box-shadow: 0 0 0 3px rgba(185, 80, 43, .12); }
+.lv-check { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--lv-ink); }
+.lv-check input { width: 18px; height: 18px; accent-color: var(--lv-clay); }
+.lv-rcard__initials {
+    display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 999px; background: var(--lv-sand); color: var(--lv-rust);
+}
+
+/* ── Chapter shell ────────────────────────────────────── */
+.lv-chapter { --lv-chapter-pad: 64px; padding-block: var(--lv-chapter-pad); }
+@media (min-width: 1024px) { .lv-chapter { --lv-chapter-pad: 100px; } }
+.lv-chapter--cream { background: var(--lv-cream); }
+.lv-chapter--sand { background: var(--lv-sand); }
+.lv-chapter--white { background: #fff; }
+.lv-chapter__divider { position: absolute; inset-inline: 0; top: calc(38px - var(--lv-chapter-pad)); padding-inline: inherit; }
+
+/* ── Page hero ────────────────────────────────────────── */
+.lv-page-hero { min-height: 680px; background: var(--lv-night); }
+.lv-page-hero--tall { min-height: 760px; }
+@media (max-width: 767px) { .lv-page-hero, .lv-page-hero--tall { min-height: 620px; } }
+.lv-page-hero__veil {
+    background:
+        linear-gradient(180deg, rgba(6, 18, 15, .55) 0%, rgba(6, 18, 15, 0) 30%, rgba(6, 18, 15, 0) 70%, rgba(6, 18, 15, .6) 100%),
+        linear-gradient(90deg, rgba(6, 18, 15, .85) 0%, rgba(6, 18, 15, .45) 55%, rgba(6, 18, 15, .15) 100%);
+}
+.lv-breadcrumb a { transition: opacity .2s; }
+.lv-breadcrumb a:hover { opacity: .8; }
+
+/* ── Cards: shared surface ────────────────────────────── */
+.lv-xcard, .lv-scard {
+    position: relative; display: flex; flex-direction: column; overflow: hidden; height: 100%;
+    background: var(--lv-card); border: 1px solid var(--lv-line); border-radius: var(--lv-radius);
+    transition: transform .6s var(--lv-ease), box-shadow .6s var(--lv-ease);
+}
+.lv-xcard:hover, .lv-scard:hover, .lv-hcard:hover, .lv-guide-card--framed:hover {
+    transform: translateY(-6px); box-shadow: 0 24px 48px -22px rgba(27, 43, 38, .28);
+}
+.lv-xcard__image, .lv-scard__image, .lv-hcard__image, .lv-guide-card__image, .lv-media-card__image { position: relative; overflow: hidden; }
+.lv-xcard__image > img, .lv-scard__image > img, .lv-hcard__image > img, .lv-guide-card__image > img, .lv-media-card__image > img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--lv-ease);
+}
+.lv-xcard:hover .lv-xcard__image > img, .lv-scard:hover .lv-scard__image > img, .lv-hcard:hover .lv-hcard__image > img,
+.lv-guide-card:hover .lv-guide-card__image > img { transform: scale(1.05); }
+
+/* Experience card */
+.lv-xcard__image { height: 200px; }
+.lv-xcard__save {
+    position: absolute; top: 12px; right: 12px; z-index: 3; display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 999px; color: var(--lv-ink);
+    background: rgba(255, 255, 255, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: 0 4px 14px -6px rgba(6, 18, 15, .35);
+    transition: transform .3s var(--lv-ease), background-color .25s ease, color .25s ease;
+}
+.lv-xcard__save:hover { transform: scale(1.06); background: #fff; color: var(--lv-clay); }
+.lv-xcard__save:focus-visible { outline: 2px solid var(--lv-clay); outline-offset: 2px; }
+.lv-xcard__save:disabled { cursor: progress; }
+.lv-heart { width: 18px; height: 18px; fill: transparent; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; transition: fill .25s ease, stroke .25s ease; }
+.lv-xcard__save.is-saved { color: var(--lv-clay); }
+.lv-xcard__save.is-saved .lv-heart { fill: var(--lv-clay); animation: lv-heart-pop .45s var(--lv-ease); }
+@keyframes lv-heart-pop { 0% { transform: scale(.7); } 55% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.lv-xcard__badge { position: absolute; top: 12px; left: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: var(--lv-ink); }
+.lv-xcard__body { display: flex; flex: 1; flex-direction: column; gap: 12px; padding: 18px 20px 20px; }
+.lv-xcard__body > .lv-button { margin-top: auto; }
+.lv-xcard__rule { height: 1px; border: 0; background: var(--lv-line); }
+.lv-xcard__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+
+/* Story card */
+.lv-scard__image { height: 220px; }
+.lv-scard__body { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 20px; }
+
+/* Host card */
+.lv-hcard {
+    display: flex; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg);
+    transition: transform .6s var(--lv-ease), box-shadow .6s var(--lv-ease);
+}
+.lv-hcard__body { display: flex; flex-direction: column; gap: 6px; }
+.lv-hcard--column { flex-direction: column; gap: 6px; padding: 12px 12px 20px; height: 100%; }
+.lv-hcard--column .lv-hcard__image { height: 300px; border-radius: 14px; }
+.lv-hcard--column .lv-hcard__body { padding: 10px 8px 0; }
+.lv-hcard--row { align-items: center; gap: 20px; padding: 16px 20px 16px 16px; }
+.lv-hcard--row .lv-hcard__image { width: 120px; height: 140px; flex-shrink: 0; border-radius: 12px; }
+
+/* Info card */
+.lv-info-card { display: flex; flex-direction: column; gap: 8px; padding: 22px 24px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+.lv-info-card--l { gap: 10px; padding: 29px; }
+
+/* Media card (landmark · dish) */
+.lv-media-card { display: flex; flex-direction: column; gap: 12px; }
+.lv-media-card--landmark .lv-media-card__image { height: 220px; border-radius: var(--lv-radius); }
+.lv-media-card--dish .lv-media-card__image { height: 240px; border-radius: var(--lv-radius-lg); }
+
+/* Guide card (interest · destination) */
+.lv-guide-card { display: flex; flex-direction: column; }
+.lv-guide-card__body { display: flex; flex: 1; flex-direction: column; }
+.lv-guide-card__body > .lv-arrow-link { margin-top: auto; }
+.lv-guide-card--plain { gap: 12px; }
+.lv-guide-card--plain .lv-guide-card__image { height: 260px; border-radius: var(--lv-radius-lg); }
+.lv-guide-card--plain .lv-guide-card__body { gap: 12px; }
+.lv-guide-card--framed {
+    gap: 6px; padding: 10px 10px 18px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg);
+    transition: transform .6s var(--lv-ease), box-shadow .6s var(--lv-ease);
+}
+.lv-guide-card--framed .lv-guide-card__image { height: 180px; border-radius: 14px; }
+.lv-guide-card--framed .lv-guide-card__body { gap: 6px; padding: 8px 8px 0; }
+
+/* CTA band */
+.lv-cta-band { background: var(--lv-forest); padding-block: 64px; }
+@media (min-width: 1024px) { .lv-cta-band { padding-block: 80px; } }
+
+/* A closing CTA band runs behind the footer's rounded top so no cream shows in the corners. */
+.lv-cta-band:has(+ .lv-footer) { padding-bottom: calc(64px + 40px); margin-bottom: -40px; }
+@media (min-width: 1024px) { .lv-cta-band:has(+ .lv-footer) { padding-bottom: calc(80px + 80px); margin-bottom: -80px; } }
+.lv-cta-band + .lv-footer { z-index: 1; }
+.lv-select--pill select { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Compact experience card (marketplace · experience detail "You may also like") ── */
+.lv-ccard { position: relative; display: flex; flex-direction: column; gap: 14px; }
+.lv-ccard__media { position: relative; overflow: hidden; aspect-ratio: 384 / 264; border-radius: 18px; background: var(--lv-sand); }
+.lv-ccard__media > img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--lv-ease); }
+.lv-ccard:hover .lv-ccard__media > img { transform: scale(1.05); }
+.lv-ccard .lv-xcard__save { top: 14px; right: 14px; width: 38px; height: 38px; }
+.lv-ccard__link { transition: color .25s ease; }
+.lv-ccard__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.lv-ccard:hover .lv-ccard__link { color: var(--lv-rust); }
+.lv-ccard__link:focus-visible { outline: none; }
+.lv-ccard:has(.lv-ccard__link:focus-visible) .lv-ccard__media { box-shadow: 0 0 0 3px rgba(185, 80, 43, .4); }
+
+/* ── Review summary (experience detail · host profile) ───── */
+.lv-rsum { display: grid; gap: 20px; }
+@media (min-width: 768px) { .lv-rsum { grid-template-columns: 220px repeat(2, minmax(0, 1fr)); } }
+.lv-rsum__score { display: flex; flex-direction: column; gap: 8px; padding: 25px 22px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+.lv-rsum__value { font-family: var(--lv-font-serif); font-size: 64px; line-height: 1; letter-spacing: -1.5px; color: var(--lv-ink); }
+.lv-rsum__bar { display: grid; grid-template-columns: 24px minmax(0, 1fr) 30px; align-items: center; gap: 8px; }
+.lv-rsum__track { display: block; height: 6px; overflow: hidden; border-radius: 999px; background: var(--lv-beige); }
+.lv-rsum__fill { display: block; height: 100%; border-radius: inherit; background: var(--lv-clay); }
+.lv-rsum .lv-rcard { display: flex; flex-direction: column; gap: 14px; padding: 25px 22px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }

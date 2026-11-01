@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Agency\Models\Agency;
+use App\Domain\Discover\Services\HostFormOptions;
 use App\Domain\Landing\Models\ExperienceCategory;
 use App\Domain\Experience\Actions\AttachExperienceMediaAction;
 use App\Domain\Experience\Actions\CreateExperienceAction;
@@ -29,8 +30,10 @@ class ExperienceController extends Controller
         return view('admin.experiences.index', compact('experiences'));
     }
 
-    public function create(): View
+    public function create(HostFormOptions $hostOptions): View
     {
+        $hosts = $hostOptions->all();
+
         $agencies = Agency::query()
             ->active()
             ->orderByDesc('is_platform')
@@ -39,7 +42,7 @@ class ExperienceController extends Controller
 
         $categories = ExperienceCategory::active()->sorted()->get();
 
-        return view('admin.experiences.create', compact('agencies', 'categories'));
+        return view('admin.experiences.create', compact('agencies', 'categories', 'hosts'));
     }
 
     public function store(
@@ -71,8 +74,10 @@ class ExperienceController extends Controller
             ->with('success', __('ui.messages.experience_created'));
     }
 
-    public function edit(Experience $experience): View
+    public function edit(Experience $experience, HostFormOptions $hostOptions): View
     {
+        $hosts = $hostOptions->all();
+
         $experience->load(['media', 'itineraryItems']);
         $agencies = Agency::query()
             ->active()
@@ -82,7 +87,7 @@ class ExperienceController extends Controller
 
         $categories = ExperienceCategory::active()->sorted()->get();
 
-        return view('admin.experiences.edit', compact('agencies', 'experience', 'categories'));
+        return view('admin.experiences.edit', compact('agencies', 'experience', 'categories', 'hosts'));
     }
 
     public function update(

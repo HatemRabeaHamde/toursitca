@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Booking\Services\AccountProfileService;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -14,11 +16,14 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request, AccountProfileService $service): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        // /profile has no locale prefix: follow the traveller's saved language.
+        if (array_key_exists((string) $request->user()->preferred_lang, config('locales.supported', []))) {
+            App::setLocale($request->user()->preferred_lang);
+        }
+
+        return view('site.account.profile', ['page' => $service->build($request->user())]);
     }
 
     /**
@@ -26,7 +31,11 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $request->user()->fill($request->safe()->except('avatar'));
+
+        if ($request->hasFile('avatar')) {
+            $request->user()->avatar = 'storage/'.$request->file('avatar')->store('avatars', 'public');
+        }
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

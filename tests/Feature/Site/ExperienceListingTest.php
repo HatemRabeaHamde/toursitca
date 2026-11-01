@@ -47,10 +47,23 @@ class ExperienceListingTest extends TestCase
         ]))
             ->assertOk()
             ->assertSee('Marrakech Balloon Ride')
-            ->assertSee('Top rated')
+            ->assertSee('1 experience')
             ->assertSee('Private option available')
-            ->assertSee('Pickup available')
-            ->assertSeeHtml('<strong>1</strong> experience found');
+            ->assertSee('Pickup included');
+    }
+
+    public function test_listing_returns_fragments_for_in_place_filtering(): void
+    {
+        $this->getJson(route('site.experiences.index', ['locale' => 'en']), ['X-Requested-With' => 'XMLHttpRequest'])
+            ->assertOk()
+            ->assertJsonStructure(['chips', 'count', 'results', 'more', 'badge']);
+    }
+
+    public function test_listing_can_filter_by_host(): void
+    {
+        $this->get(route('site.experiences.index', ['locale' => 'en', 'host' => 'nobody-here']))
+            ->assertOk()
+            ->assertSee('No experiences match these filters yet.');
     }
 
     public function test_listing_filters_by_multiple_categories(): void

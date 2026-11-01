@@ -3,6 +3,7 @@
 namespace App\Domain\Experience\Services;
 
 use App\Domain\Agency\Models\Agency;
+use App\Domain\Discover\Models\Host;
 use App\Domain\Experience\DTOs\LandingPageData;
 use App\Domain\Experience\Models\Experience;
 use App\Domain\Landing\Services\LandingContentService;
@@ -55,6 +56,7 @@ final class ExperienceLandingPageService
             'cities_count' => (int) $stats->cities_count,
             'avg_rating' => number_format((float) $stats->avg_rating, 1),
             'happy_travelers' => (int) $stats->happy_travelers,
+            'partners_count' => Host::query()->listed()->where('is_verified', true)->count(),
         ];
     }
 

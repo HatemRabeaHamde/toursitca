@@ -1,0 +1,64 @@
+/* ============================================================
+   Local hosts directory — filters, directory card, vetting band,
+   join band. Shared skins (buttons, rating, badges) live in ui.css.
+   ============================================================ */
+
+.lv-page-hero--compact { min-height: 560px; }
+@media (max-width: 767px) { .lv-page-hero--compact { min-height: 520px; } }
+
+/* ── Filters ──────────────────────────────────────────────── */
+.lv-directory { padding-block: 40px 96px; background: var(--lv-cream); }
+@media (min-width: 1024px) { .lv-directory { padding-block: 40px 100px; } }
+
+/* ── Directory card ───────────────────────────────────────── */
+.lv-dcard {
+    position: relative; display: flex; flex-direction: column; height: 100%; overflow: hidden;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius);
+    transition: transform .6s var(--lv-ease), box-shadow .6s var(--lv-ease);
+}
+.lv-dcard:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -22px rgba(27, 43, 38, .28); }
+.lv-dcard__image { overflow: hidden; aspect-ratio: 384 / 300; background: var(--lv-sand); }
+.lv-dcard__image img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--lv-ease); }
+.lv-dcard:hover .lv-dcard__image img { transform: scale(1.05); }
+.lv-dcard__body { display: flex; flex: 1; flex-direction: column; gap: 6px; padding: 18px 22px 16px; }
+.lv-dcard__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.lv-dcard__link:focus-visible { outline: none; }
+.lv-dcard:has(.lv-dcard__link:focus-visible) { box-shadow: 0 0 0 3px rgba(185, 80, 43, .35); }
+.lv-dcard__foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: auto; padding-top: 12px; border-top: 1px solid var(--lv-line);
+}
+.lv-dcard__body > .lv-dcard__foot { margin-top: 10px; }
+.lv-dcard:hover .lv-arrow-link .lv-icon { transform: translateX(4px); }
+
+.lv-directory__empty {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 32px; padding: 40px;
+    border: 1.5px dashed var(--lv-line-2); border-radius: var(--lv-radius-lg);
+}
+
+/* ── Vetting band ─────────────────────────────────────────── */
+.lv-vetting { padding-block: 72px 80px; background: var(--lv-forest); }
+@media (min-width: 1024px) { .lv-vetting { padding-block: 100px 96px; } }
+.lv-vetting__zellige {
+    position: absolute; top: 50%; right: -253px; width: 473px; height: 480px; margin-top: -240px;
+    background: url('/images/site/ornaments/zellige.svg') center / contain no-repeat; pointer-events: none;
+}
+@media (max-width: 1023px) { .lv-vetting__zellige { display: none; } }
+.lv-vetting__step {
+    display: flex; flex-direction: column; gap: 10px; padding: 28px;
+    background: rgba(255, 255, 255, .04); border: 1px solid rgba(250, 248, 244, .14); border-radius: var(--lv-radius);
+}
+.lv-vetting__number {
+    display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin-bottom: 8px;
+    border-radius: 999px; background: var(--lv-gold); color: var(--lv-forest);
+}
+.lv-vetting__text { color: var(--lv-on-dark-muted); }
+
+/* ── Join band (runs behind the footer's rounded top) ─────── */
+.lv-join-band { background: var(--lv-sand); padding-block: 56px calc(56px + 40px); margin-bottom: -40px; }
+@media (min-width: 1024px) { .lv-join-band { padding-block: 64px calc(64px + 80px); margin-bottom: -80px; } }
+.lv-join-band + .lv-footer { position: relative; z-index: 1; }
+
+/* ── In-place filtering ───────────────────────────────────── */
+.lv-directory__results { transition: opacity .3s ease, filter .3s ease; }
+.lv-directory__results.is-loading { opacity: .45; filter: saturate(.6); pointer-events: none; }

@@ -8,6 +8,7 @@
         'action' => route('admin.experiences.update', $experience),
         'agencies' => $agencies,
         'categories' => $categories,
+        'hosts' => $hosts,
         'experience' => $experience,
         'method' => 'PATCH',
         'showAgencySelect' => true,

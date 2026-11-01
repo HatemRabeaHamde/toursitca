@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1200" height="24" viewBox="0 0 1200 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Divider">
+<path id="Vector" d="M14 12H582M618 12H1186" stroke="#C9A77C"/>
+<path id="Vector_2" d="M13 6L3 12L13 18" stroke="#C9A77C" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M1187 6L1197 12L1187 18" stroke="#C9A77C" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M594 6H606V18H594V6Z" stroke="#C9A77C"/>
+<path id="Vector_5" d="M600 3.5L608.5 12L600 20.5L591.5 12L600 3.5Z" stroke="#C9A77C"/>
+<path id="Vector_6" d="M600 13.6C600.884 13.6 601.6 12.8837 601.6 12C601.6 11.1163 600.884 10.4 600 10.4C599.116 10.4 598.4 11.1163 598.4 12C598.4 12.8837 599.116 13.6 600 13.6Z" fill="#C9A77C"/>
+<path id="Vector_7" d="M560 12L566 9L572 12L566 15L560 12Z" stroke="#C9A77C"/>
+<path id="Vector_8" d="M628 12L634 9L640 12L634 15L628 12Z" stroke="#C9A77C"/>
+</g>
+</svg>

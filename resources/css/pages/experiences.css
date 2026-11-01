@@ -1,0 +1,90 @@
+/* ============================================================
+   Experiences marketplace (Figma "07 · Experiences — Marketplace v2").
+   Shared skins (chips, select, buttons, wishlist) live in ui.css / hosts.css.
+   ============================================================ */
+
+/* ── Hero + floating search pill ──────────────────────────── */
+.lv-xhero { min-height: 440px; background: var(--lv-night); }
+.lv-xhero__veil {
+    background:
+        linear-gradient(180deg, rgba(6, 18, 15, .6) 0%, rgba(6, 18, 15, 0) 45%),
+        linear-gradient(90deg, rgba(6, 18, 15, .82) 0%, rgba(6, 18, 15, .5) 50%, rgba(6, 18, 15, .1) 100%);
+}
+.lv-xsearch-wrap { position: relative; z-index: 5; padding-bottom: 24px; }
+/* Desktop: the pill straddles the hero's bottom edge, as in the design. */
+@media (min-width: 768px) {
+    .lv-xhero { min-height: 440px; }
+    .lv-xsearch-wrap { position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 0; transform: translateY(50%); }
+}
+.lv-xsearch {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px; width: fit-content; max-width: 100%;
+    padding: 8px; background: #fff; border-radius: 28px; box-shadow: 0 16px 20px rgba(5, 18, 15, .25);
+}
+.lv-xsearch__field { position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 8px 24px; border-radius: 999px; cursor: pointer; transition: background-color .25s ease; }
+.lv-xsearch__field:hover, .lv-xsearch__field:focus-within { background: var(--lv-sand); }
+.lv-xsearch__field select, .lv-xsearch__field input {
+    width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: var(--lv-muted);
+    outline: none; box-shadow: none; appearance: none; cursor: pointer;
+}
+.lv-xsearch__field input[type="date"]::-webkit-calendar-picker-indicator { opacity: .45; cursor: pointer; }
+.lv-xsearch__divider { width: 1px; height: 32px; background: var(--lv-line); }
+.lv-xsearch__submit {
+    display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px 14px 22px; border-radius: 999px;
+    background: var(--lv-clay); color: #fff; transition: background-color .25s ease, transform .3s var(--lv-ease);
+}
+.lv-xsearch__submit:hover { background: var(--lv-rust); transform: translateY(-1px); }
+@media (min-width: 1024px) { .lv-xsearch__field { width: 260px; } }
+@media (max-width: 767px) {
+    .lv-xsearch { width: 100%; border-radius: 20px; }
+    .lv-xsearch__field { flex: 1 1 100%; border-radius: 14px; }
+    .lv-xsearch__divider { display: none; }
+    .lv-xsearch__submit { flex: 1 1 100%; justify-content: center; }
+}
+
+/* ── Results ──────────────────────────────────────────────── */
+.lv-xresults { padding-block: 32px 0; background: var(--lv-cream); }
+@media (min-width: 768px) { .lv-xresults { padding-top: 84px; } }
+.lv-xresults__grid { transition: opacity .3s ease, filter .3s ease; }
+.lv-xresults__grid.is-loading { opacity: .45; filter: saturate(.6); pointer-events: none; }
+.lv-xfilter-btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px;
+    background: #fff; border: 1px solid #b8b2a2; color: var(--lv-ink); transition: border-color .25s ease, background-color .25s ease;
+}
+.lv-xfilter-btn:hover { border-color: var(--lv-ink); }
+.lv-xfilter-btn__count {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 999px; background: var(--lv-clay); color: #fff; font-size: 11px;
+}
+
+/* ── Filters drawer ───────────────────────────────────────── */
+.lv-drawer { position: fixed; inset: 0; z-index: 60; }
+.lv-drawer__backdrop { position: absolute; inset: 0; background: rgba(6, 18, 15, .45); backdrop-filter: blur(2px); }
+.lv-drawer__panel {
+    position: absolute; top: 0; right: 0; bottom: 0; display: flex; flex-direction: column; width: min(420px, 100%);
+    background: var(--lv-cream); box-shadow: -24px 0 48px -24px rgba(6, 18, 15, .4);
+}
+.lv-drawer-enter, .lv-drawer-leave { transition: transform .5s var(--lv-ease); }
+.lv-drawer-from { transform: translateX(100%); }
+.lv-drawer-to { transform: translateX(0); }
+.lv-drawer__close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; font-size: 22px; line-height: 1; color: var(--lv-ink); transition: background-color .2s ease; }
+.lv-drawer__close:hover { background: var(--lv-sand); }
+
+/* ── Local partners ───────────────────────────────────────── */
+.lv-pcard {
+    display: flex; align-items: center; gap: 18px; height: 100%; padding: 16px 20px 16px 16px;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg);
+    transition: transform .5s var(--lv-ease), box-shadow .5s var(--lv-ease);
+}
+.lv-pcard:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(27, 43, 38, .3); }
+.lv-pcard__avatar { width: 72px; height: 72px; flex-shrink: 0; border-radius: 999px; object-fit: cover; }
+.lv-pcard__arrow { transition: transform .45s var(--lv-ease); }
+.lv-pcard:hover .lv-pcard__arrow { transform: translateX(4px); }
+
+/* ── Traveller reviews ────────────────────────────────────── */
+.lv-xreviews.lv-chapter { padding-bottom: 110px; }
+.lv-xreviews__score { font-family: var(--lv-font-serif); font-size: 64px; line-height: 1; letter-spacing: -1.5px; color: var(--lv-ink); }
+.lv-xreviews__stars { color: var(--lv-star); font-weight: 600; letter-spacing: 1px; }
+.lv-rcard {
+    display: flex; flex-direction: column; gap: 14px; height: 100%; padding: 24px;
+    background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius);
+}

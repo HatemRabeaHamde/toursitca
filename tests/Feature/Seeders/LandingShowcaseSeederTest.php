@@ -50,7 +50,7 @@ class LandingShowcaseSeederTest extends TestCase
             ->assertSee('Showcase Marrakech balloon ride')
             ->assertSee('Sample detail-page listing')
             ->assertSee('Demo hotel pickup coordination')
-            ->assertSee('Private option available')
-            ->assertSee('images.unsplash.com', false);
+            ->assertSee('value="private"', false)
+            ->assertSee('images/landing-v2/hero-marrakech.jpg', false);
     }
 }

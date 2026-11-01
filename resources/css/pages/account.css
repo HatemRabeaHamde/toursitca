@@ -1,0 +1,156 @@
+/* ============================================================
+   Request to book · Request sent · My profile · My bookings ·
+   Rate your trip · Thank you (Figma screens 11–16).
+   ============================================================ */
+
+/* ── Page frame ───────────────────────────────────────────── */
+.lv-flow { background: var(--lv-cream); padding-top: 96px; }
+.lv-flow__inner { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-block: 36px 96px; }
+.lv-flow__title { margin-top: 4px; }
+.lv-flow__lede { max-width: 620px; }
+.lv-flow__back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.lv-flow__back:hover { color: var(--lv-ink); }
+.lv-flow__back-icon { transform: rotate(180deg); }
+.lv-flow__leaves { position: absolute; top: 80px; right: -80px; width: 460px; pointer-events: none; }
+.lv-flow__leaves--center { right: auto; left: calc(50% - 480px); transform: scaleX(-1); }
+@media (max-width: 1023px) { .lv-flow__leaves { display: none; } }
+.lv-flow__alert { width: 100%; margin-top: 16px; padding: 12px 16px; border-radius: var(--lv-radius-sm); background: rgba(185, 80, 43, .1); color: var(--lv-rust); }
+.lv-flow__alert--ok { margin-top: 0; background: #eef3ec; color: var(--lv-success); }
+.lv-flow__grid { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 12px; }
+@media (min-width: 1024px) { .lv-flow__grid { grid-template-columns: minmax(0, 760fr) minmax(320px, 380fr); gap: 60px; align-items: start; } }
+.lv-flow__main { display: flex; min-width: 0; flex-direction: column; gap: 24px; }
+.lv-flow__aside { display: flex; min-width: 0; flex-direction: column; gap: 20px; }
+.lv-flow-card { display: flex; flex-direction: column; gap: 18px; padding: 32px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+@media (max-width: 479px) { .lv-flow-card { padding: 22px 18px; } }
+.lv-flow-rule { width: 100%; border: 0; border-top: 1px solid var(--lv-line); }
+.lv-flow-tabs { display: inline-flex; align-self: flex-start; gap: 4px; padding: 4px; background: var(--lv-sand); border-radius: 999px; }
+.lv-flow-tabs button { padding: 8px 16px; border-radius: 999px; color: var(--lv-muted); cursor: pointer; }
+.lv-flow-tabs button.is-active { background: #fff; color: var(--lv-ink); }
+
+/* ── Steps ────────────────────────────────────────────────── */
+.lv-steps { display: flex; width: 100%; flex-wrap: wrap; gap: 12px 20px; margin-top: 28px; margin-bottom: 20px; }
+.lv-steps__step { position: relative; display: flex; flex: 1 1 auto; align-items: center; gap: 10px; color: var(--lv-muted); white-space: nowrap; }
+.lv-steps__step:not(:last-child)::after { content: ''; flex: 1; min-width: 16px; height: 1px; background: var(--lv-line-2); }
+.lv-steps__step:last-child { flex: 0 0 auto; }
+.lv-steps__dot { display: grid; width: 32px; height: 32px; flex-shrink: 0; place-items: center; border: 1px solid var(--lv-line-2); border-radius: 999px; background: #fff; }
+.lv-steps__step.is-current { color: var(--lv-ink); font-weight: 600; }
+.lv-steps__step.is-current .lv-steps__dot { background: var(--lv-clay); border-color: var(--lv-clay); color: #fff; }
+
+/* ── Trip rows · forms ────────────────────────────────────── */
+.lv-trip-rows { display: grid; gap: 14px; }
+@media (min-width: 640px) { .lv-trip-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lv-trip-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--lv-cream); border: 1px solid var(--lv-line); border-radius: 14px; }
+.lv-form-grid { display: grid; gap: 16px; }
+@media (min-width: 640px) { .lv-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.lv-form-field { display: flex; min-width: 0; flex-direction: column; gap: 8px; }
+.lv-form-input { width: 100%; height: 52px; padding: 0 16px; background: #fff; border: 1px solid var(--lv-control); border-radius: var(--lv-radius-sm); color: var(--lv-ink); font-size: 1rem; transition: border-color .25s ease, box-shadow .25s ease; }
+.lv-form-input:focus { outline: none; border-color: var(--lv-clay); box-shadow: 0 0 0 3px rgba(185, 80, 43, .12); }
+.lv-form-input--area { height: auto; min-height: 120px; padding-block: 14px; resize: vertical; line-height: 1.5; }
+.lv-form-error { color: var(--lv-rust); }
+
+/* ── Summary ──────────────────────────────────────────────── */
+.lv-flow-summary { display: flex; flex-direction: column; gap: 14px; padding: 24px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); box-shadow: 0 16px 40px rgba(10, 41, 33, .08); }
+.lv-flow-summary__image { width: 100%; height: 170px; border-radius: var(--lv-radius-sm); object-fit: cover; }
+.lv-flow-summary__total { font-family: var(--lv-font-serif); font-size: 32px; line-height: 1.125; letter-spacing: -.5px; color: var(--lv-ink); }
+.lv-flow-trust { display: flex; flex-direction: column; gap: 12px; padding: 24px; background: var(--lv-sand); border-radius: var(--lv-radius-lg); }
+.lv-flow-trust li { display: flex; align-items: center; gap: 10px; }
+.lv-flow-trust .flex li { align-items: flex-start; }
+.lv-avatar--28 { width: 28px; height: 28px; }
+.lv-avatar--38 { width: 38px; height: 38px; }
+.lv-avatar--56 { width: 56px; height: 56px; }
+
+/* ── Request sent · Thank you ─────────────────────────────── */
+.lv-sent { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; padding-block: 40px 64px; text-align: center; }
+.lv-sent__lede { max-width: 620px; }
+.lv-flow-tick { display: grid; width: 72px; height: 72px; place-items: center; border-radius: 999px; background: #eef3ec; }
+.lv-sent__card { display: grid; width: 100%; max-width: 880px; gap: 28px; margin-block: 16px; padding: 32px; text-align: left; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); box-shadow: 0 24px 48px -20px rgba(27, 43, 38, .18); }
+@media (min-width: 768px) { .lv-sent__card { grid-template-columns: minmax(0, 1fr) 320px; } }
+@media (max-width: 479px) { .lv-sent__card { padding: 22px 18px; } }
+.lv-sent__trip { display: flex; flex-direction: column; gap: 12px; padding: 20px; background: var(--lv-cream); border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+.lv-sent__trip .lv-flow-summary__image { height: 130px; }
+.lv-timeline { display: flex; flex-direction: column; }
+.lv-timeline li { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 0 0 22px 28px; }
+.lv-timeline li:last-child { padding-bottom: 0; }
+.lv-timeline li::before { content: ''; position: absolute; top: 4px; left: 0; width: 14px; height: 14px; border: 2px solid var(--lv-control); border-radius: 999px; background: #fff; }
+.lv-timeline li::after { content: ''; position: absolute; top: 22px; bottom: -2px; left: 6px; width: 2px; background: var(--lv-line); }
+.lv-timeline li:last-child::after { display: none; }
+.lv-timeline li.is-done::before { background: var(--lv-success); border-color: var(--lv-success); }
+.lv-timeline li.is-current::before { background: var(--lv-clay); border-color: var(--lv-clay); }
+.lv-kv { display: flex; flex-direction: column; gap: 8px; }
+.lv-kv div { display: flex; justify-content: space-between; gap: 12px; }
+.lv-kv dt { color: var(--lv-muted); }
+.lv-kv dd { color: var(--lv-ink); font-weight: 500; text-align: right; }
+.lv-wait-card { display: flex; flex-direction: column; gap: 14px; height: 100%; padding: 12px 12px 18px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+.lv-wait-card > img { width: 100%; height: 190px; border-radius: var(--lv-radius-sm); object-fit: cover; }
+.lv-sent--narrow { padding-bottom: 96px; }
+.lv-thanks-card { display: flex; width: 100%; max-width: 640px; flex-direction: column; gap: 16px; margin-block: 8px; padding: 28px; text-align: left; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+
+/* ── Pills ────────────────────────────────────────────────── */
+.lv-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-weight: 600; background: var(--lv-sand); color: var(--lv-muted); }
+.lv-pill--wait, .lv-pill--pending { background: var(--lv-peach); color: var(--lv-rust); }
+.lv-pill--confirmed { background: #eef3ec; color: var(--lv-success); }
+.lv-pill--cancelled { background: var(--lv-beige); color: var(--lv-muted); }
+
+/* ── Account shell ────────────────────────────────────────── */
+.lv-account-band { padding-top: 96px; background: var(--lv-sand); }
+.lv-account-band__inner { display: flex; align-items: center; gap: 28px; padding-block: 36px 40px; }
+@media (max-width: 639px) { .lv-account-band__inner { align-items: flex-start; gap: 16px; } }
+.lv-account-avatar { width: 104px; height: 104px; flex-shrink: 0; border: 3px solid #fff; border-radius: 999px; object-fit: cover; }
+.lv-account-avatar--initial { display: grid; place-items: center; background: var(--lv-beige); color: var(--lv-ink); font-size: 2.25rem; }
+.lv-account-avatar--small { width: 56px; height: 56px; border: 0; font-size: 1.25rem; }
+@media (max-width: 639px) { .lv-account-band .lv-account-avatar { width: 64px; height: 64px; font-size: 1.5rem; } }
+.lv-account-leaves { position: absolute; z-index: 0; top: 0; left: calc(50% - 260px); width: 420px; opacity: .8; pointer-events: none; }
+@media (max-width: 1023px) { .lv-account-leaves { display: none; } }
+.lv-account { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 36px 96px; }
+@media (min-width: 1024px) { .lv-account { grid-template-columns: 270px minmax(0, 1fr); gap: 48px; align-items: start; padding-top: 48px; } }
+.lv-account__main { display: flex; min-width: 0; flex-direction: column; gap: 24px; }
+.lv-account-anchor { scroll-margin-top: 110px; }
+.lv-account-nav { display: flex; flex-direction: column; gap: 6px; }
+.lv-account-nav__link { display: flex; width: 100%; align-items: center; gap: 12px; padding: 11px 14px; border: 1px solid transparent; border-radius: var(--lv-radius-sm); color: var(--lv-muted); text-align: left; cursor: pointer; transition: color .25s ease, background-color .25s ease; }
+.lv-account-nav__link:hover { color: var(--lv-ink); background: var(--lv-sand); }
+.lv-account-nav__link.is-active { background: #fff; border-color: var(--lv-line); color: var(--lv-ink); font-weight: 600; }
+@media (max-width: 1023px) {
+    .lv-account-nav { flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+    .lv-account-nav .lv-flow-rule { display: none; }
+    .lv-account-nav__link { width: auto; white-space: nowrap; }
+}
+.lv-account-tabs { display: flex; gap: 28px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--lv-line); }
+.lv-account-tabs .lv-xtabs__link { flex-shrink: 0; padding-bottom: 12px; border-bottom: 2px solid transparent; color: var(--lv-muted); font-size: .9375rem; font-weight: 500; }
+.lv-account-tabs .lv-xtabs__link.is-active { border-color: var(--lv-clay); color: var(--lv-clay); font-weight: 600; }
+.lv-account-group { letter-spacing: .12em; text-transform: uppercase; color: var(--lv-muted); }
+
+/* ── Booking card ─────────────────────────────────────────── */
+.lv-bkcard { display: grid; gap: 20px; padding: 16px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); }
+@media (min-width: 640px) { .lv-bkcard { grid-template-columns: 220px minmax(0, 1fr); padding: 16px 28px 16px 16px; } }
+.lv-bkcard.is-pending { border-color: var(--lv-clay); }
+.lv-bkcard__image { width: 100%; height: 190px; border-radius: var(--lv-radius-sm); object-fit: cover; }
+.lv-bkcard__note { padding: 6px 12px; border-radius: 8px; background: var(--lv-peach); color: var(--lv-rust); }
+.lv-bkcard__note--ok { background: #eef3ec; color: var(--lv-success); }
+.lv-link-button { cursor: pointer; }
+.lv-link-button:hover { color: var(--lv-rust); text-decoration: underline; text-underline-offset: 3px; }
+.lv-account-next { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 28px; background: var(--lv-sand); border-radius: var(--lv-radius-lg); }
+.lv-account-next--wide { width: 100%; max-width: 640px; margin-top: 8px; text-align: left; }
+
+/* ── Profile ──────────────────────────────────────────────── */
+.lv-account-review { display: flex; align-items: center; gap: 14px; padding: 12px; background: var(--lv-cream); border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); }
+.lv-account-review img { width: 90px; height: 68px; flex-shrink: 0; border-radius: 10px; object-fit: cover; }
+.lv-account-prompt { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border: 1px dashed var(--lv-control); border-radius: var(--lv-radius-sm); }
+.lv-account-details summary { cursor: pointer; list-style: none; }
+.lv-account-details summary::-webkit-details-marker { display: none; }
+
+/* ── Review form ──────────────────────────────────────────── */
+.lv-stars { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.lv-stars__star { display: inline-flex; cursor: pointer; border-radius: 4px; transition: transform .2s ease; }
+.lv-stars__star:hover { transform: scale(1.1); }
+.lv-stars__star:focus-within { outline: 2px solid var(--lv-clay); outline-offset: 2px; }
+.lv-stars__word { margin-left: 12px; color: var(--lv-clay); }
+.lv-account-chip { padding: 7px 12px; background: #fff; border: 1px solid var(--lv-line-2); border-radius: 999px; color: var(--lv-ink); cursor: pointer; transition: background-color .25s ease; }
+.lv-account-chip:hover { background: var(--lv-sand); }
+.lv-account-photo { width: 108px; height: 108px; border-radius: var(--lv-radius-sm); object-fit: cover; }
+.lv-account-photo--small { width: 96px; height: 96px; }
+.lv-account-photo--add { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1.5px dashed var(--lv-control); cursor: pointer; text-align: center; }
+.lv-account-photo--add span { font-size: 1.5rem; line-height: 1; }
+.lv-account-photo--add:focus-within { outline: 2px solid var(--lv-clay); outline-offset: 2px; }
+
+/* ── Header on light pages: solid forest bar like the design (the transparent nav needs a dark hero) ── */
+.lv:has(.lv-flow, .lv-account-band) .lv-header:not(.is-scrolled) { background: var(--lv-forest); }

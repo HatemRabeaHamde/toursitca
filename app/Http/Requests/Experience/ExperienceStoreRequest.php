@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Experience;
 
+use App\Domain\Agency\Models\Agency;
 use App\Domain\Experience\DTOs\ExperienceFormData;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -19,6 +20,7 @@ class ExperienceStoreRequest extends FormRequest
 
         return [
             'agency_id' => ['nullable', 'integer', 'exists:agencies,id'],
+            'host_id' => ['nullable', 'integer', Rule::exists('hosts', 'id')->where(fn ($query) => $query->where('agency_id', $this->hostOwnerAgencyId() ?? 0)->whereNull('deleted_at'))],
             'title'        => ['required', 'array'],
             'title.en'     => ['required', 'string', 'max:150'],
             'title.fr'     => ['nullable', 'string', 'max:150'],
@@ -105,7 +107,20 @@ class ExperienceStoreRequest extends FormRequest
             inclusions: $this->localizedLines('inclusions_text'),
             exclusions: $this->localizedLines('exclusions_text'),
             itinerary: $this->itineraryItems(),
+            hostId: $this->filled('host_id') ? $this->integer('host_id') : null,
         );
+    }
+
+    /** A host can only front experiences of its own agency: the signed-in agency, or the one the admin picked. */
+    private function hostOwnerAgencyId(): ?int
+    {
+        if (! $this->routeIs('admin.*')) {
+            return $this->user()?->agency?->id;
+        }
+
+        return $this->filled('agency_id')
+            ? $this->integer('agency_id')
+            : ($this->route('experience')?->agency_id ?? Agency::query()->where('user_id', $this->user()->id)->where('is_platform', true)->value('id'));
     }
 
     private function localizedArray(string $key): array

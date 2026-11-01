@@ -21,5 +21,6 @@ final readonly class ExperienceSearchData
         public bool $pickupAvailable = false,
         public ?string $duration = null,
         public string $sort = 'recommended',
+        public ?string $host = null,
     ) {}
 }

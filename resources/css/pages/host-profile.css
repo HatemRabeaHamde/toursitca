@@ -1,0 +1,39 @@
+/* ============================================================
+   Host profile (Figma "06 · Host profile — Hassan").
+   Hero with portrait → story (760) + booking and trust (380) → more hosts.
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.lv-page-hero.lv-hp-hero { min-height: 640px; }
+.lv-hp-hero__row { display: flex; flex-direction: column; gap: 32px; margin-top: 32px; }
+@media (min-width: 768px) { .lv-hp-hero__row { flex-direction: row; align-items: center; gap: 60px; margin-top: 8px; } }
+.lv-hp-hero__photo { width: 200px; height: 236px; flex-shrink: 0; border: 2px solid rgba(250, 248, 244, .3); border-radius: var(--lv-radius); object-fit: cover; }
+@media (min-width: 1024px) { .lv-hp-hero__photo { width: 320px; height: 376px; } }
+.lv-hp-hero__quote { max-width: 620px; font-family: var(--lv-font-serif); font-size: 1.25rem; font-style: italic; line-height: 1.5; }
+.lv-hp-hero__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; }
+.lv-hp-hero__item { display: inline-flex; align-items: center; gap: 8px; color: var(--lv-on-dark); }
+a.lv-hp-hero__item:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.lv-hp-hero .lv-icon--on-dark { filter: brightness(0) invert(.97); }
+
+/* ── Layout ───────────────────────────────────────────────── */
+.lv-hp { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; padding-block: 56px 72px; }
+@media (min-width: 1024px) { .lv-hp { grid-template-columns: minmax(0, 760fr) minmax(320px, 380fr); gap: 40px; align-items: start; padding-block: 80px 100px; } }
+@media (min-width: 1280px) { .lv-hp { gap: 60px; } }
+.lv-hp__main { display: flex; min-width: 0; flex-direction: column; gap: 72px; }
+.lv-hp__aside { display: flex; min-width: 0; flex-direction: column; gap: 24px; }
+@media (min-width: 1024px) {
+    .lv-hp__aside { position: sticky; top: 88px; transition: top .7s var(--lv-ease); }
+    .lv:has(.lv-header.is-scrolled:not(.is-hidden)) .lv-hp__aside { top: 100px; }
+}
+.lv .lv-hp-section { scroll-margin-top: 110px; }
+.lv-hp-leaves { position: absolute; top: -70px; left: calc(50% + 290px); width: 520px; pointer-events: none; }
+@media (max-width: 1023px) { .lv-hp-leaves { display: none; } }
+
+/* ── Skills · coming soon ─────────────────────────────────── */
+.lv-hp-skill { padding: 9px 16px; background: #fff; border: 1px solid var(--lv-line); border-radius: 999px; }
+.lv-hp-soon { display: flex; flex-direction: column; justify-content: center; gap: 10px; min-height: 280px; padding: 28px; border: 1px dashed var(--lv-control); border-radius: var(--lv-radius-lg); }
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.lv-hp-book { display: flex; flex-direction: column; gap: 16px; padding: 28px; background: var(--lv-card); border: 1px solid var(--lv-line); border-radius: var(--lv-radius-lg); box-shadow: 0 16px 40px rgba(10, 41, 33, .08); }
+.lv-bprice { font-family: var(--lv-font-serif); font-size: 40px; line-height: 1.1; letter-spacing: -.8px; color: var(--lv-ink); }
+.lv-hp-trust { display: flex; flex-direction: column; gap: 14px; padding: 28px; background: var(--lv-sand); border-radius: var(--lv-radius-lg); }
