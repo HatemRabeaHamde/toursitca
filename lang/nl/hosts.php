@@ -1,0 +1,98 @@
+<?php
+
+/* Local hosts directory — UI strings. Host names, roles and bios live in the database. */
+
+return [
+    'meta_title' => 'Lokale gastheren — de mensen achter elke Tourstica-belevenis',
+    'breadcrumb' => 'Lokale gastheren',
+    'hero' => [
+        'eyebrow' => 'Lokale gastheren',
+        'title' => 'De mensen die Marokko',
+        'accent' => 'onvergetelijk maken.',
+        'lede' => 'Gidsen, koks, ambachtslieden en instructeurs die wonen waar ze ontvangen. Iedereen wordt gecontroleerd voordat ze hier verschijnen.',
+    ],
+    'filters' => [
+        'label' => 'Gastheren filteren',
+        'regions' => 'Regio’s',
+        'all' => 'Alle',
+        'search' => 'Zoek op naam of vaardigheid',
+        'search_label' => 'Gastheren zoeken',
+        'specialty' => 'Specialiteit',
+        'all_specialties' => 'Alle specialiteiten',
+        'apply' => 'Toepassen',
+    ],
+    'sort' => [
+        'label' => 'Sorteren:',
+        'top_rated' => 'Best beoordeeld',
+        'experiences' => 'Meeste belevenissen',
+        'name' => 'Naam (A–Z)',
+    ],
+    'count' => ':count lokale gastheer|:count lokale gastheren',
+    'vetted' => 'Elke gastheer is ID-gecontroleerd, heeft een vergunning en wordt na de eerste reis beoordeeld.',
+    'vetted_link' => 'Hoe wij gastheren screenen',
+    'empty' => [
+        'title' => 'Geen gastheren voor deze filters.',
+        'body' => 'Probeer een andere regio of specialiteit — nieuwe gastheren komen erbij zodra hun vergunning is bevestigd.',
+        'reset' => 'Filters wissen',
+    ],
+    'card' => [
+        'licensed' => 'Vergund · :number',
+        'experiences' => ':count belevenis|:count belevenissen',
+        'new' => 'Nieuwe gastheer',
+        'view_profile' => 'Bekijk profiel',
+        'rating' => 'Beoordeeld met :rating van 5 uit :count reviews',
+    ],
+    'vetting' => [
+        'eyebrow' => 'Waarom je ze kunt vertrouwen',
+        'title' => 'Zo komt een gastheer op',
+        'accent' => 'Tourstica.',
+        'steps' => [
+            1 => [
+                'title' => 'Aanmelden met documenten',
+                'body' => 'Identiteit, bedrijfsregistratie en exploitatievergunning.',
+            ],
+            2 => [
+                'title' => 'Wij controleren de vergunning',
+                'body' => 'Bevestigd bij de uitgevende instantie voordat er iets live gaat.',
+            ],
+            3 => [
+                'title' => 'De eerste reis wordt beoordeeld',
+                'body' => 'De beoordeling van een echte reiziger bepaalt of de gastheer blijft.',
+            ],
+        ],
+    ],
+    'join' => [
+        'title' => 'Ben je een lokale gids, kok of ambachtsman?',
+        'lede' => 'Deel jouw Marokko met reizigers die erom geven. Meld je aan met je vergunning — wij helpen je met de rest.',
+        'button' => 'Word gastheer',
+    ],
+    'profile' => [
+        'meta_title' => ':name, lokale gastheer in Marokko',
+        'eyebrow' => 'Lokale gastheer',
+        'see_experiences' => 'Ervaringen van :name bekijken',
+        'story' => 'Het verhaal',
+        'about' => 'Over :name',
+        'knows' => 'Wat :name weet',
+        'book_eyebrow' => 'Boek met :name',
+        'experiences' => 'Ervaringen met :name',
+        'soon' => 'Binnenkort meer met :name',
+        'soon_body' => 'Nieuwe reizen verschijnen hier zodra ons team ze heeft gecontroleerd.',
+        'reviews_eyebrow' => 'Van mensen die met :name reisden',
+        'reviews' => 'Reviews van reizigers',
+        'reviews_all' => 'Bekijk :count review|Bekijk alle :count reviews',
+        'travel_with' => 'Reizen met :name',
+        'from' => 'Vanaf',
+        'per_person' => 'per persoon',
+        'check_dates' => 'Bekijk data',
+        'no_card' => 'Geen kaart nodig tot je gastheer bevestigt',
+        'trust' => 'Waarom je :name kunt vertrouwen',
+        'verified' => 'Geverifieerde gastheer',
+        'partner_since' => 'Lokale partner sinds :year',
+        'lives_in' => 'Woont in :city.',
+        'reviewed' => 'Beoordeeld door reizigers',
+        'more_eyebrow' => 'Maak kennis',
+        'more' => 'Meer lokale',
+        'more_accent' => 'gastheren',
+        'more_link' => 'Alle gastheren bekijken',
+    ],
+];

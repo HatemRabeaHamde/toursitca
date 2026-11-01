@@ -1,0 +1,98 @@
+<?php
+
+/* Local hosts directory — UI strings. Host names, roles and bios live in the database. */
+
+return [
+    'meta_title' => 'Local hosts — the people behind every Tourstica experience',
+    'breadcrumb' => 'Local hosts',
+    'hero' => [
+        'eyebrow' => 'Local hosts',
+        'title' => 'The people who make Morocco',
+        'accent' => 'unforgettable.',
+        'lede' => 'Guides, cooks, artisans and instructors who live where they host. Every one is checked before they appear here.',
+    ],
+    'filters' => [
+        'label' => 'Filter hosts',
+        'regions' => 'Regions',
+        'all' => 'All',
+        'search' => 'Search by name or skill',
+        'search_label' => 'Search hosts',
+        'specialty' => 'Specialty',
+        'all_specialties' => 'All specialties',
+        'apply' => 'Apply',
+    ],
+    'sort' => [
+        'label' => 'Sort:',
+        'top_rated' => 'Top rated',
+        'experiences' => 'Most experiences',
+        'name' => 'Name (A–Z)',
+    ],
+    'count' => ':count local host|:count local hosts',
+    'vetted' => 'Every host is ID-checked, licensed and reviewed after their first trip.',
+    'vetted_link' => 'How we vet hosts',
+    'empty' => [
+        'title' => 'No hosts match these filters yet.',
+        'body' => 'Try another region or specialty — new hosts join once their licence is confirmed.',
+        'reset' => 'Clear filters',
+    ],
+    'card' => [
+        'licensed' => 'Licensed · :number',
+        'experiences' => ':count experience|:count experiences',
+        'new' => 'New host',
+        'view_profile' => 'View profile',
+        'rating' => 'Rated :rating out of 5 from :count reviews',
+    ],
+    'vetting' => [
+        'eyebrow' => 'Why you can trust them',
+        'title' => 'How a host gets on',
+        'accent' => 'Tourstica.',
+        'steps' => [
+            1 => [
+                'title' => 'Apply with documents',
+                'body' => 'Identity, business registration and operating licence.',
+            ],
+            2 => [
+                'title' => 'We check the licence',
+                'body' => 'Confirmed with the issuing authority before anything goes live.',
+            ],
+            3 => [
+                'title' => 'First trip is reviewed',
+                'body' => 'A real traveller’s rating decides if the host stays.',
+            ],
+        ],
+    ],
+    'join' => [
+        'title' => 'Are you a local guide, cook or artisan?',
+        'lede' => 'Share your Morocco with travellers who care. Apply with your licence — we’ll guide you through the rest.',
+        'button' => 'Become a host',
+    ],
+    'profile' => [
+        'meta_title' => ':name, local host in Morocco',
+        'eyebrow' => 'Local host',
+        'see_experiences' => 'See :name’s experiences',
+        'story' => 'The story',
+        'about' => 'About :name',
+        'knows' => 'What :name knows',
+        'book_eyebrow' => 'Book with :name',
+        'experiences' => 'Experiences with :name',
+        'soon' => 'More with :name soon',
+        'soon_body' => 'New trips appear here once our team has checked them.',
+        'reviews_eyebrow' => 'From people who travelled with :name',
+        'reviews' => 'Traveller reviews',
+        'reviews_all' => 'See :count review|See all :count reviews',
+        'travel_with' => 'Travel with :name',
+        'from' => 'From',
+        'per_person' => 'per person',
+        'check_dates' => 'Check dates',
+        'no_card' => 'No card until your host confirms',
+        'trust' => 'Why you can trust :name',
+        'verified' => 'Verified host',
+        'partner_since' => 'Local partner since :year',
+        'lives_in' => 'Lives in :city.',
+        'reviewed' => 'Reviewed by travellers',
+        'more_eyebrow' => 'Meet the people',
+        'more' => 'More local',
+        'more_accent' => 'hosts',
+        'more_link' => 'Meet all hosts',
+    ],
+];

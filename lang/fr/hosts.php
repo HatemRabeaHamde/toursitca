@@ -1,0 +1,98 @@
+<?php
+
+/* Local hosts directory — UI strings. Host names, roles and bios live in the database. */
+
+return [
+    'meta_title' => 'Hôtes locaux — les personnes derrière chaque expérience Tourstica',
+    'breadcrumb' => 'Hôtes locaux',
+    'hero' => [
+        'eyebrow' => 'Hôtes locaux',
+        'title' => 'Ceux qui rendent le Maroc',
+        'accent' => 'inoubliable.',
+        'lede' => 'Guides, cuisinières, artisans et moniteurs qui vivent là où ils accueillent. Chacun est vérifié avant d’apparaître ici.',
+    ],
+    'filters' => [
+        'label' => 'Filtrer les hôtes',
+        'regions' => 'Régions',
+        'all' => 'Tous',
+        'search' => 'Rechercher par nom ou savoir-faire',
+        'search_label' => 'Rechercher des hôtes',
+        'specialty' => 'Spécialité',
+        'all_specialties' => 'Toutes les spécialités',
+        'apply' => 'Appliquer',
+    ],
+    'sort' => [
+        'label' => 'Trier :',
+        'top_rated' => 'Mieux notés',
+        'experiences' => 'Plus d’expériences',
+        'name' => 'Nom (A–Z)',
+    ],
+    'count' => ':count hôte local|:count hôtes locaux',
+    'vetted' => 'Chaque hôte est vérifié (identité, licence) et évalué après son premier voyage.',
+    'vetted_link' => 'Comment nous vérifions',
+    'empty' => [
+        'title' => 'Aucun hôte ne correspond à ces filtres.',
+        'body' => 'Essayez une autre région ou spécialité — de nouveaux hôtes arrivent dès que leur licence est confirmée.',
+        'reset' => 'Effacer les filtres',
+    ],
+    'card' => [
+        'licensed' => 'Agréé · :number',
+        'experiences' => ':count expérience|:count expériences',
+        'new' => 'Nouvel hôte',
+        'view_profile' => 'Voir le profil',
+        'rating' => 'Noté :rating sur 5 par :count avis',
+    ],
+    'vetting' => [
+        'eyebrow' => 'Pourquoi leur faire confiance',
+        'title' => 'Comment devenir hôte sur',
+        'accent' => 'Tourstica.',
+        'steps' => [
+            1 => [
+                'title' => 'Candidature avec documents',
+                'body' => 'Identité, immatriculation et licence d’exploitation.',
+            ],
+            2 => [
+                'title' => 'Nous vérifions la licence',
+                'body' => 'Confirmée auprès de l’autorité émettrice avant toute mise en ligne.',
+            ],
+            3 => [
+                'title' => 'Le premier voyage est évalué',
+                'body' => 'La note d’un vrai voyageur décide si l’hôte reste.',
+            ],
+        ],
+    ],
+    'join' => [
+        'title' => 'Vous êtes guide, cuisinier ou artisan ?',
+        'lede' => 'Partagez votre Maroc avec des voyageurs attentifs. Postulez avec votre licence — nous vous guidons pour la suite.',
+        'button' => 'Devenir hôte',
+    ],
+    'profile' => [
+        'meta_title' => ':name, hôte local au Maroc',
+        'eyebrow' => 'Hôte local',
+        'see_experiences' => 'Voir les expériences de :name',
+        'story' => 'Son histoire',
+        'about' => 'À propos de :name',
+        'knows' => 'Ce que :name connaît',
+        'book_eyebrow' => 'Réserver avec :name',
+        'experiences' => 'Expériences avec :name',
+        'soon' => 'Bientôt plus avec :name',
+        'soon_body' => 'Les nouveaux voyages apparaissent ici une fois vérifiés par notre équipe.',
+        'reviews_eyebrow' => 'Par celles et ceux qui ont voyagé avec :name',
+        'reviews' => 'Avis des voyageurs',
+        'reviews_all' => 'Voir :count avis|Voir les :count avis',
+        'travel_with' => 'Voyager avec :name',
+        'from' => 'Dès',
+        'per_person' => 'par personne',
+        'check_dates' => 'Voir les dates',
+        'no_card' => 'Aucune carte avant la confirmation de votre hôte',
+        'trust' => 'Pourquoi faire confiance à :name',
+        'verified' => 'Hôte vérifié',
+        'partner_since' => 'Partenaire local depuis :year',
+        'lives_in' => 'Vit à :city.',
+        'reviewed' => 'Évalué par les voyageurs',
+        'more_eyebrow' => 'À la rencontre des gens',
+        'more' => 'Plus d’hôtes',
+        'more_accent' => 'locaux',
+        'more_link' => 'Voir tous les hôtes',
+    ],
+];
