@@ -1,10 +1,11 @@
 @php
     $bookUrl = $trip['href'].'#book';
     $rows = array_filter([
+        $trip['option'] ? ['icon' => 'route-terracotta', 'label' => __('booking_flow.card.option'), 'value' => $trip['option'], 'edit' => $trip['href'].'#options'] : null,
         ['icon' => 'calendar-terracotta', 'label' => __('account.checkout.dates'), 'value' => $trip['dates'], 'edit' => $bookUrl],
         ['icon' => 'user-terracotta', 'label' => __('experiences.detail.booking.travellers'), 'value' => $trip['travellers'], 'edit' => $bookUrl],
         ['icon' => 'route-terracotta', 'label' => __('experiences.detail.v1.booking.group_type'), 'value' => $trip['groupLine'], 'edit' => $bookUrl],
-        $checkoutSession->experience->pickup_enabled ? [
+        $checkoutSession->needsPickupStep() ? [
             'icon' => 'pin-terracotta-18',
             'label' => __('experiences.detail.booking.pickup'),
             'value' => $checkoutSession->pickup_status === 'add_now'

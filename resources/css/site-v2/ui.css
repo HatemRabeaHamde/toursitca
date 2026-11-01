@@ -231,3 +231,9 @@
 .lv-rsum__track { display: block; height: 6px; overflow: hidden; border-radius: 999px; background: var(--lv-beige); }
 .lv-rsum__fill { display: block; height: 100%; border-radius: inherit; background: var(--lv-clay); }
 .lv-rsum .lv-rcard { display: flex; flex-direction: column; gap: 14px; padding: 25px 22px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
+
+/* ── Selectable choice card (group type, pick-up) ─────────── */
+.lv-v1-choice { display: flex; align-items: center; gap: 10px; padding: 14px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); cursor: pointer; transition: border-color .25s ease, background-color .25s ease; }
+.lv-v1-choice:hover { border-color: var(--lv-control); }
+.lv-v1-choice:focus-within { outline: 2px solid var(--lv-success); outline-offset: 2px; }
+.lv-v1-choice.is-selected { background: #eef3ec; border-color: var(--lv-success); box-shadow: inset 0 0 0 .5px var(--lv-success); }

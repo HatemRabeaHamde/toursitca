@@ -7,6 +7,7 @@ use App\Domain\Booking\Models\Booking;
 use App\Domain\Experience\Models\Availability;
 use App\Domain\Experience\Models\Experience;
 use App\Domain\Experience\Models\ExperienceMedia;
+use App\Domain\Experience\Models\ExperienceOption;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -122,6 +123,45 @@ class ExperienceShowTest extends TestCase
             ->assertSeeInOrder(['5 ★', '75%', '4 ★', '25%', '3 ★', '0%'], false);
     }
 
+    public function test_options_get_their_own_section_instead_of_a_dropdown(): void
+    {
+        $experience = $this->createExperience(['title' => ['en' => 'Atlas Days']]);
+        $this->createMedia($experience);
+        $this->createAvailability($experience);
+        $standard = $this->createOption($experience, 'Standard day trip', ['adult' => '100.00', 'child' => '60.00'], ['pickup_enabled' => true, 'cancellation_hours' => 24, 'duration_minutes' => 480], ['en', 'fr']);
+        $this->createOption($experience, 'Private 3-day adventure', ['group' => '900.00'], ['price_type' => 'per_group', 'private_available' => true]);
+
+        $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
+            ->assertOk()
+            ->assertSee('id="options"', false)
+            ->assertSee('Choose your option')
+            ->assertSee('Pick a date to see the options')
+            ->assertSee('Private 3-day adventure')
+            ->assertSee('Standard day trip')
+            ->assertSee('role="radiogroup"', false)
+            ->assertDontSee('id="booking-option"', false)
+            ->assertViewHas('page', function ($page) use ($standard): bool {
+                $option = collect($page->booking['options'])->firstWhere('id', $standard->id);
+
+                return $option['pickup'] === true
+                    && $option['cancellationHours'] === 24
+                    && $option['adultPrice'] === 100.0
+                    && $option['childPrice'] === 60.0
+                    && array_column($option['languages'], 'code') === ['en', 'fr']
+                    && in_array('options', array_column($page->tabsV1(), 'id'), true);
+            });
+    }
+
+    public function test_experience_without_options_has_no_options_section(): void
+    {
+        $experience = $this->createExperience();
+        $this->createMedia($experience);
+
+        $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
+            ->assertOk()
+            ->assertDontSee('id="options"', false);
+    }
+
     public function test_draft_experience_show_page_returns_not_found(): void
     {
         $experience = $this->createExperience([
@@ -193,6 +233,27 @@ class ExperienceShowTest extends TestCase
             'location_city' => 'Marrakesh',
             'status' => 'published',
         ], $overrides));
+    }
+
+    /** @param array<string, string> $prices participant type => price */
+    private function createOption(Experience $experience, string $title, array $prices, array $attributes = [], array $languages = ['en']): ExperienceOption
+    {
+        $option = ExperienceOption::query()->create(array_merge([
+            'experience_id' => $experience->id,
+            'title' => ['en' => $title],
+            'price_type' => 'per_person',
+            'status' => 'active',
+        ], $attributes));
+
+        foreach ($prices as $type => $price) {
+            $option->prices()->create(['participant_type' => $type, 'price' => $price, 'currency' => 'MAD']);
+        }
+
+        foreach ($languages as $code) {
+            $option->languages()->create(['language_code' => $code, 'type' => 'live_guide']);
+        }
+
+        return $option;
     }
 
     private function createMedia(Experience $experience): void

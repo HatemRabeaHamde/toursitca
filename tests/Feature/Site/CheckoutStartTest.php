@@ -43,6 +43,20 @@ class CheckoutStartTest extends TestCase
         $this->assertTrue($checkoutSession->reserved_until->isFuture());
     }
 
+    public function test_checkout_goes_to_the_pickup_map_only_when_pickup_is_offered(): void
+    {
+        $experience = $this->createExperience();
+        $availability = $this->createAvailability($experience);
+        $payload = ['experience_id' => $experience->id, 'availability_id' => $availability->id, 'booking_type' => 'group', 'participants' => ['adult' => 1], 'payment_method' => 'manual'];
+
+        $session = $this->postJson(route('site.checkout.start', ['locale' => 'en']), $payload)->assertCreated();
+        $this->assertStringEndsWith('/contact', $session->json('data.request_url'));
+
+        $experience->forceFill(['pickup_enabled' => true])->save();
+        $session = $this->postJson(route('site.checkout.start', ['locale' => 'en']), $payload)->assertCreated();
+        $this->assertStringEndsWith('/activity', $session->json('data.request_url'));
+    }
+
     public function test_private_checkout_start_holds_all_seats(): void
     {
         $experience = $this->createExperience([

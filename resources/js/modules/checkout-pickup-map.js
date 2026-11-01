@@ -7,6 +7,8 @@ export function checkoutPickupMap(config = {}) {
         leaflet: null,
         mapReady: false,
         hasPoint: false,
+        locating: false,
+        locateError: null,
 
         init() {
             this.hasPoint = this.lat !== '' && this.lng !== '';
@@ -35,6 +37,7 @@ export function checkoutPickupMap(config = {}) {
             this.map = L.map(this.$refs.pickupMap, {
                 scrollWheelZoom: false,
                 zoomControl: true,
+                tap: true,
             }).setView(center, this.hasPoint ? 14 : 12);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,6 +65,7 @@ export function checkoutPickupMap(config = {}) {
             this.lat = Number(latlng.lat).toFixed(7);
             this.lng = Number(latlng.lng).toFixed(7);
             this.hasPoint = true;
+            this.locateError = null;
             this.placeMarker([Number(this.lat), Number(this.lng)]);
         },
 
@@ -83,11 +87,36 @@ export function checkoutPickupMap(config = {}) {
 
         markerIcon() {
             return this.leaflet.divIcon({
-                className: 'checkout-map-marker',
+                className: 'lv-map-pin',
                 html: '<span></span>',
                 iconSize: [30, 30],
                 iconAnchor: [15, 30],
             });
+        },
+
+        /** Drop the pin where the traveller is (browser geolocation, only on request). */
+        locate() {
+            this.locateError = null;
+
+            if (!navigator.geolocation) {
+                this.locateError = config.failed || null;
+                return;
+            }
+
+            this.locating = true;
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const latlng = { lat: position.coords.latitude, lng: position.coords.longitude };
+                    this.setPoint(latlng);
+                    this.map?.setView([latlng.lat, latlng.lng], 15);
+                    this.locating = false;
+                },
+                () => {
+                    this.locateError = config.failed || null;
+                    this.locating = false;
+                },
+                { enableHighAccuracy: true, timeout: 10000 },
+            );
         },
 
         clearPoint() {

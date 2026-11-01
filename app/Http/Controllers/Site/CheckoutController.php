@@ -26,7 +26,7 @@ use Illuminate\View\View;
 
 class CheckoutController extends Controller
 {
-    private const TRIP_RELATIONS = ['experience.media', 'experience.host', 'experience.agency', 'availability'];
+    private const TRIP_RELATIONS = ['experience.media', 'experience.host', 'experience.agency', 'availability', 'option'];
 
     public function start(CheckoutStartRequest $request, string $locale, CreateCheckoutSessionAction $action): JsonResponse
     {
@@ -52,7 +52,7 @@ class CheckoutController extends Controller
                 'uuid' => $checkoutSession->uuid,
                 'status' => $checkoutSession->status,
                 'reserved_until' => $checkoutSession->reserved_until->toISOString(),
-                'request_url' => route('site.checkout.contact', [
+                'request_url' => route($checkoutSession->needsPickupStep() ? 'site.checkout.activity' : 'site.checkout.contact', [
                     'locale' => $locale,
                     'checkoutSession' => $checkoutSession->uuid,
                 ]),

@@ -14,6 +14,7 @@ export function experienceBookingCard(config) {
     const plural = (forms, count) => (count === 1 ? forms.one : forms.other).replace(':count', count);
 
     return {
+        options: config.options || [],
         dateOpen: false,
         guestsOpen: false,
         formatter: null,
@@ -24,9 +25,6 @@ export function experienceBookingCard(config) {
 
             (config.options || []).forEach((option) => this.store.registerOptionPricing(option.id, option));
 
-            if (config.options?.length && this.store.activeOption === null) {
-                this.store.activeOption = config.options[0].id;
-            }
         },
 
         get store() {
@@ -114,7 +112,98 @@ export function experienceBookingCard(config) {
         async pickDate(date, label, availabilityIds) {
             this.store.selectDate(date, label, availabilityIds);
             this.dateOpen = false;
+            this.syncOptionToDate();
             await this.refreshQuote();
+            this.revealOptions();
+        },
+
+        /* ── Options (packages) ─────────────────────────────── */
+
+        optionAvailable(option) {
+            return Boolean(this.store.selectedDate) && this.store.availabilityForOption(option.id) !== null;
+        },
+
+        availableOptions() {
+            return this.options.filter((option) => this.optionAvailable(option));
+        },
+
+        chosenOption() {
+            return this.options.find((option) => option.id === this.store.activeOption) || null;
+        },
+
+        needsOption() {
+            return this.options.length > 0 && this.chosenOption() === null;
+        },
+
+        /** Per-person or per-group price of an option for the current travellers (before the server quote). */
+        optionTotal(option, original = false) {
+            const pick = (live, base) => (original ? base : live);
+            const quote = !original ? this.store.quoteForOption(option.id) : null;
+            if (quote) return Number(quote.total);
+
+            if (!original && this.store.bookingType === 'private' && this.store.config.privatePrice !== null) {
+                return this.store.config.privatePrice;
+            }
+
+            if (option.priceType === 'per_group') return pick(option.groupPrice, option.groupOriginal) || 0;
+
+            return (this.store.adults * (pick(option.adultPrice, option.adultOriginal) || 0))
+                + (this.store.children * (pick(option.childPrice, option.childOriginal) || 0));
+        },
+
+        optionDiscount(option) {
+            const was = this.optionTotal(option, true);
+            const now = this.optionTotal(option);
+
+            return was > now && was > 0 ? Math.round((1 - now / was) * 100) : null;
+        },
+
+        optionBreakdown(option) {
+            if (option.priceType === 'per_group' || this.store.bookingType === 'private') return strings.flat;
+
+            return strings.breakdown
+                .replace(':price', this.money(option.adultPrice))
+                .replace(':count', plural(strings.travellers, this.store.participantCount()));
+        },
+
+        async selectOption(option) {
+            if (!this.optionAvailable(option)) return;
+
+            this.store.activeOption = option.id;
+            this.store.quote = this.store.quotesByOption[String(option.id)] || null;
+            this.store.quoteError = null;
+
+            const codes = option.languages.map((language) => language.code);
+            if (codes.length && !codes.includes(this.store.selectedLanguage)) this.store.selectedLanguage = codes[0];
+
+            await this.refreshQuote();
+        },
+
+        /** After a new date: drop an option that is not open that day; a single open option is chosen for the traveller. */
+        syncOptionToDate() {
+            const chosen = this.chosenOption();
+            if (chosen && !this.optionAvailable(chosen)) this.store.activeOption = null;
+
+            const open = this.availableOptions();
+            if (this.store.activeOption === null && open.length === 1) this.selectOption(open[0]);
+        },
+
+        revealOptions() {
+            if (this.options.length < 2) return;
+
+            this.$nextTick(() => document.getElementById('options')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        },
+
+        languageChoices() {
+            return this.chosenOption()?.languages || [];
+        },
+
+        /** The booking button walks the traveller through the next missing step. */
+        requestLabel() {
+            if (!this.store.selectedDate) return strings.chooseDate;
+            if (this.needsOption()) return strings.chooseOption;
+
+            return null;
         },
 
         canAdd() {
@@ -181,6 +270,12 @@ export function experienceBookingCard(config) {
         request() {
             if (!this.store.selectedDate) {
                 this.openDates();
+                return;
+            }
+
+            if (this.needsOption()) {
+                this.store.quoteError = strings.chooseOption;
+                document.getElementById('options')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             }
 

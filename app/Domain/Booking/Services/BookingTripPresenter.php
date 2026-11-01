@@ -25,6 +25,7 @@ final class BookingTripPresenter
             (float) ($session->price_snapshot['unit_price'] ?? 0),
             (float) ($session->price_snapshot['total'] ?? 0),
             (string) $session->currency,
+            $session->option?->getTranslation('title', app()->getLocale(), true),
         );
     }
 
@@ -39,10 +40,11 @@ final class BookingTripPresenter
             (float) $booking->unit_price,
             (float) $booking->total_price,
             (string) ($booking->price_snapshot['currency'] ?? config('payment.currency', 'MAD')),
+            $booking->option?->getTranslation('title', app()->getLocale(), true),
         );
     }
 
-    private function present(Experience $experience, Availability $availability, array $participants, int $count, string $type, float $unit, float $total, string $currency): array
+    private function present(Experience $experience, Availability $availability, array $participants, int $count, string $type, float $unit, float $total, string $currency, ?string $option = null): array
     {
         $locale = app()->getLocale();
         $host = $experience->host;
@@ -58,6 +60,7 @@ final class BookingTripPresenter
             'hostAvatar' => ($avatar = $host?->avatar_url ?: $host?->photo_url) ? $this->url($avatar) : null,
             'hostVerified' => (bool) $host?->is_verified,
             'hostLicence' => $host?->verifiedLicence(),
+            'option' => $option ?: null,
             'dates' => $this->dates($availability, $hours),
             'date' => $availability->date->locale($locale),
             'travellers' => $this->travellers($participants, $count),

@@ -86,4 +86,10 @@ class CheckoutSession extends Model
     {
         return 'uuid';
     }
+
+    /** Whether the traveller can pin a pick-up point: the chosen option decides, else the experience. */
+    public function needsPickupStep(): bool
+    {
+        return (bool) ($this->option?->pickup_enabled ?? $this->experience?->pickup_enabled);
+    }
 }

@@ -154,3 +154,19 @@
 
 /* ── Header on light pages: solid forest bar like the design (the transparent nav needs a dark hero) ── */
 .lv:has(.lv-flow, .lv-account-band) .lv-header:not(.is-scrolled) { background: var(--lv-forest); }
+
+/* ── Pick-up map ──────────────────────────────────────────── */
+.lv-pickmap { display: flex; flex-direction: column; gap: 14px; }
+.lv-pickmap__stage { position: relative; overflow: hidden; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); background: var(--lv-sand); }
+.lv-pickmap__canvas { width: 100%; height: 460px; }
+@media (max-width: 639px) { .lv-pickmap__canvas { height: 360px; } }
+.lv-pickmap__hint { position: absolute; z-index: 500; left: 50%; bottom: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; transform: translateX(-50%); background: rgba(27, 43, 38, .92); color: var(--lv-on-dark); border-radius: 999px; pointer-events: none; white-space: nowrap; }
+.lv-pickmap__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.lv-pickmap__btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: #fff; border: 1px solid var(--lv-clay); border-radius: 999px; color: var(--lv-clay); cursor: pointer; transition: background-color .25s ease; }
+.lv-pickmap__btn:hover:not(:disabled) { background: rgba(185, 80, 43, .08); }
+.lv-pickmap__btn:disabled { opacity: .6; cursor: wait; }
+.lv-pickmap__btn--quiet { border-color: var(--lv-line-2); color: var(--lv-muted); }
+.lv-pickmap__coords { margin-inline-start: auto; }
+.lv-map-pin { position: relative; }
+.lv-map-pin span { display: block; width: 30px; height: 30px; border: 4px solid #fff; border-radius: 999px; background: var(--lv-clay); box-shadow: 0 12px 26px rgba(24, 20, 15, .3); }
+.lv-map-pin span::after { content: ''; position: absolute; left: 11px; bottom: -5px; width: 9px; height: 9px; transform: rotate(45deg); background: var(--lv-clay); border-right: 3px solid #fff; border-bottom: 3px solid #fff; }

@@ -231,7 +231,7 @@ final class ExperiencePageService
             'maxGroup' => (int) $experience->max_group_size,
             'languages' => $languages,
             'options' => array_map(function (array $option): array {
-                $price = fn (string $type): float => (float) (collect($option['prices'])->firstWhere('type', $type)['price'] ?? 0);
+                $price = fn (string $type, string $key = 'price'): float => (float) (collect($option['prices'])->firstWhere('type', $type)[$key] ?? 0);
 
                 return [
                     'id' => $option['id'],
@@ -240,6 +240,16 @@ final class ExperiencePageService
                     'adultPrice' => $price('adult'),
                     'childPrice' => $price('child'),
                     'groupPrice' => $price('group'),
+                    'adultOriginal' => $price('adult', 'original_price'),
+                    'childOriginal' => $price('child', 'original_price'),
+                    'groupOriginal' => $price('group', 'original_price'),
+                    'currency' => $option['currency'],
+                    'duration' => $option['duration_minutes'] ? $this->format->hours($option['duration_minutes'] / 60) : null,
+                    'languages' => array_map(fn (string $code): array => ['code' => $code, 'label' => Str::ucfirst(Locale::getDisplayLanguage($code, app()->getLocale()))], $option['languages']),
+                    'pickup' => (bool) $option['pickup_enabled'],
+                    'private' => (bool) $option['private_available'],
+                    'payLater' => (bool) $option['pay_later_enabled'],
+                    'cancellationHours' => $option['cancellation_hours'],
                 ];
             }, $detail->experienceOptions),
             'store' => [
@@ -267,6 +277,8 @@ final class ExperiencePageService
                     'adults' => $this->plural('experiences.detail.booking.adults_value'),
                     'children' => $this->plural('experiences.detail.booking.children_value'),
                     'travellers' => $this->plural('experiences.detail.booking.travellers_value'),
+                    'chooseOption' => __('booking_flow.cta.choose_option'),
+                    'chooseDate' => __('booking_flow.cta.choose_date'),
                     'breakdown' => __('experiences.detail.booking.breakdown'),
                     'flat' => __('experiences.detail.booking.breakdown_flat'),
                 ],

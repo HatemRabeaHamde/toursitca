@@ -1,9 +1,7 @@
 {{-- Booking card v1. Same logic as before: experienceBooking store (date → quote → checkout) through experienceBookingCard. --}}
 @php($booking = $page->booking)
 
-<div class="lv-bcard lv-v1-bcard"
-     x-data="experienceBookingCard(@js(['store' => $booking['store'], 'card' => $booking['card'], 'options' => $booking['options']]))"
-     @keydown.escape.window="dateOpen = false; closeGuests()">
+<div class="lv-bcard lv-v1-bcard">
 
     <div class="flex items-start justify-between gap-4">
         <div class="flex flex-col">
@@ -63,35 +61,36 @@
         </fieldset>
     @endif
 
-    @if(count($booking['options']) > 1)
-        <x-site.molecules.booking-field :label="__('experiences.detail.booking.option')" for="booking-option">
-            <span class="lv-bfield__control">
-                <x-site.atoms.icon name="route-terracotta" :size="18" />
-                <select id="booking-option" class="lv-bfield__select" @change="setOption($event.target.value)">
-                    @foreach($booking['options'] as $option)
-                        <option value="{{ $option['id'] }}">{{ $option['title'] }}</option>
-                    @endforeach
-                </select>
-                <x-site.atoms.icon name="chevron-down-muted" :size="16" />
-            </span>
-        </x-site.molecules.booking-field>
+    @if($booking['options'])
+        {{-- The package itself is chosen in the "Choose your option" section; here is only what was picked. --}}
+        <div class="lv-v1-picked" :class="{ 'is-empty': needsOption() }">
+            <div class="min-w-0">
+                <p class="lv-t-label-s lv-tone-ink">{{ __('booking_flow.card.option') }}</p>
+                <p class="lv-t-caption lv-tone-muted" x-show="chosenOption()" x-text="chosenOption()?.title"></p>
+                <p class="lv-t-caption lv-tone-muted" x-show="!chosenOption()" x-cloak
+                   x-text="store.selectedDate ? @js(__('booking_flow.card.option_below')) : @js(__('booking_flow.card.option_empty'))">{{ __('booking_flow.card.option_empty') }}</p>
+            </div>
+            <a href="#options" class="lv-t-label-s lv-tone-terracotta" x-show="store.selectedDate" x-cloak>
+                <span x-text="chosenOption() ? @js(__('booking_flow.card.change')) : @js(__('booking_flow.card.choose'))"></span>
+            </a>
+        </div>
     @endif
 
-    @if(count($booking['languages']) > 1)
+    <template x-if="languageChoices().length > 1">
         <x-site.molecules.booking-field :label="__('experiences.detail.booking.language')" for="booking-language">
             <span class="lv-bfield__control">
                 <x-site.atoms.icon name="globe" :size="18" />
                 <select id="booking-language" class="lv-bfield__select" @change="setLanguage($event.target.value)">
-                    @foreach($booking['languages'] as $language)
-                        <option value="{{ $language['code'] }}">{{ $language['label'] }}</option>
-                    @endforeach
+                    <template x-for="language in languageChoices()" :key="language.code">
+                        <option :value="language.code" :selected="language.code === store.selectedLanguage" x-text="language.label"></option>
+                    </template>
                 </select>
                 <x-site.atoms.icon name="chevron-down-muted" :size="16" />
             </span>
         </x-site.molecules.booking-field>
-    @endif
+    </template>
 
-    <div class="lv-v1-total">
+    <div class="lv-v1-total" x-show="!(store.selectedDate && needsOption())">
         <div class="flex min-w-0 flex-col gap-0.5">
             <p class="lv-t-label-m lv-tone-ink" x-text="store.quote ? @js(__('experiences.detail.booking.confirmed_total')) : @js(__('experiences.detail.booking.total'))">{{ __('experiences.detail.booking.total') }}</p>
             <p class="lv-t-micro lv-tone-muted" x-text="breakdown()"></p>
@@ -104,7 +103,7 @@
     <p class="lv-bcard__error lv-t-caption" x-show="store.quoteError" x-cloak x-text="store.quoteError" role="alert"></p>
 
     <x-site.atoms.button class="w-full" @click="request()" ::disabled="store.isStartingCheckout" ::aria-busy="store.isStartingCheckout.toString()">
-        <span x-text="store.isStartingCheckout ? @js(__('experiences.detail.booking.requesting')) : @js(__('experiences.detail.booking.request'))">{{ __('experiences.detail.booking.request') }}</span>
+        <span x-text="store.isStartingCheckout ? @js(__('experiences.detail.booking.requesting')) : (requestLabel() || @js(__('experiences.detail.booking.request')))">{{ __('experiences.detail.booking.request') }}</span>
     </x-site.atoms.button>
 
     <ul class="flex flex-col gap-2.5 lv-t-caption lv-tone-ink">

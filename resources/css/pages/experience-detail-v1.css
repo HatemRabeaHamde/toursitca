@@ -87,10 +87,6 @@
 .lv-v1-stepper button:hover:not(:disabled) { background: var(--lv-cream); }
 .lv-v1-stepper button:disabled { opacity: .35; cursor: not-allowed; }
 .lv-v1-stepper output { display: grid; width: 72px; place-items: center; border-inline: 1px solid var(--lv-line); }
-.lv-v1-choice { display: flex; align-items: center; gap: 10px; padding: 14px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); cursor: pointer; transition: border-color .25s ease, background-color .25s ease; }
-.lv-v1-choice:hover { border-color: var(--lv-control); }
-.lv-v1-choice:focus-within { outline: 2px solid var(--lv-success); outline-offset: 2px; }
-.lv-v1-choice.is-selected { background: #eef3ec; border-color: var(--lv-success); box-shadow: inset 0 0 0 .5px var(--lv-success); }
 .lv-v1-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; background: var(--lv-beige); border-radius: var(--lv-radius-sm); }
 
 /* ── Pairs well with ──────────────────────────────────────── */
@@ -99,3 +95,27 @@
 .lv-v1-pair img { width: 100%; height: 96px; object-fit: cover; }
 .lv-v1-pair__link { margin-top: auto; padding: 8px 12px; text-align: center; border: 1px solid var(--lv-clay); border-radius: 10px; transition: background-color .25s ease; }
 .lv-v1-pair__link:hover { background: rgba(185, 80, 43, .08); }
+
+/* ── Choose your option ───────────────────────────────────── */
+.lv-opt-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 20px 24px; background: #fff; border: 1.5px dashed var(--lv-control); border-radius: var(--lv-radius); }
+.lv-opt-list { display: flex; flex-direction: column; gap: 14px; }
+.lv-opt { background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); transition: border-color .25s ease, box-shadow .25s ease, background-color .25s ease; }
+.lv-opt:hover:not(.is-off) { border-color: var(--lv-control); }
+.lv-opt.is-selected { background: #eef3ec; border-color: var(--lv-success); box-shadow: inset 0 0 0 .5px var(--lv-success); }
+.lv-opt.is-off { opacity: .6; background: var(--lv-sand); }
+.lv-opt__main { display: flex; width: 100%; align-items: flex-start; gap: 16px; padding: 20px 22px; cursor: pointer; text-align: start; }
+.lv-opt__main:disabled { cursor: not-allowed; }
+.lv-opt__main:focus-visible { outline: 2px solid var(--lv-success); outline-offset: 2px; border-radius: var(--lv-radius); }
+.lv-opt__radio { position: relative; width: 22px; height: 22px; flex-shrink: 0; margin-top: 3px; border: 1.5px solid var(--lv-control); border-radius: 999px; background: #fff; }
+.lv-opt.is-selected .lv-opt__radio { border-color: var(--lv-success); }
+.lv-opt.is-selected .lv-opt__radio::after { content: ''; position: absolute; inset: 4px; border-radius: 999px; background: var(--lv-success); }
+.lv-opt__chips { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.lv-opt__chips li { display: inline-flex; align-items: center; gap: 6px; }
+.lv-opt__price { display: flex; flex-shrink: 0; flex-direction: column; align-items: flex-end; gap: 2px; text-align: end; }
+.lv-opt__price strong { font-size: 1.5rem; line-height: 1.2; letter-spacing: -.3px; color: var(--lv-ink); font-weight: 400; }
+.lv-opt__was { color: var(--lv-muted); text-decoration: line-through; }
+@media (max-width: 639px) { .lv-opt__main { flex-wrap: wrap; padding: 16px; } .lv-opt__price { width: 100%; flex-flow: row wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; padding-inline-start: 38px; } .lv-opt__price .lv-t-micro { flex-basis: 100%; text-align: start; } }
+
+/* picked option inside the booking card */
+.lv-v1-picked { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: var(--lv-sand); border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); }
+.lv-v1-picked.is-empty { border-style: dashed; }

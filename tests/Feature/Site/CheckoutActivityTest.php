@@ -45,6 +45,22 @@ class CheckoutActivityTest extends TestCase
         $this->assertSame('-7.9810845', $checkoutSession->pickup_lng);
     }
 
+    public function test_pickup_page_offers_a_map_to_pin_the_meeting_point(): void
+    {
+        $user = User::factory()->create();
+        $checkoutSession = $this->createCheckoutSession(['user_id' => $user->id, 'session_id' => null]);
+
+        $this->actingAs($user)->get(route('site.checkout.activity', ['locale' => 'en', 'checkoutSession' => $checkoutSession]))
+            ->assertOk()
+            ->assertSee('Where should we')
+            ->assertSee('pick you up?')
+            ->assertSee('Pin my pick-up point')
+            ->assertSee('I’ll arrange it later')
+            ->assertSee('Use my location')
+            ->assertSee('checkoutPickupMap', false)
+            ->assertSee('name="pickup_lat"', false);
+    }
+
     public function test_pickup_coordinates_are_required_when_adding_now(): void
     {
         $user = User::factory()->create();
