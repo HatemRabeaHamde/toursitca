@@ -44,7 +44,6 @@ return [
         'message_placeholder' => 'Parlez à votre hôte de votre groupe, de vos besoins alimentaires ou de tout ce qu’il devrait savoir.',
         'terms' => 'J’accepte les conditions de réservation et la politique d’annulation.',
         'send' => 'Confirmer la réservation',
-        'no_card' => 'Aucun paiement en ligne prélevé',
         'save_pickup' => 'Enregistrer le point de prise en charge',
         'summary' => 'Résumé du voyage',
         'final_note' => 'Voici le total de votre réservation. Aucun paiement en ligne prélevé.',

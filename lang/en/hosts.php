@@ -84,7 +84,6 @@ return [
         'from' => 'From',
         'per_person' => 'per person',
         'check_dates' => 'Check dates',
-        'no_card' => 'No card until your host confirms',
         'trust' => 'Why you can trust :name',
         'verified' => 'Verified host',
         'partner_since' => 'Local partner since :year',

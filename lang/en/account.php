@@ -44,7 +44,6 @@ return [
         'message_placeholder' => 'Tell your host about your group, dietary needs, or anything they should know.',
         'terms' => 'I agree to the booking terms and the cancellation policy.',
         'send' => 'Confirm booking',
-        'no_card' => 'No online payment is taken',
         'save_pickup' => 'Save pick-up point',
         'summary' => 'Trip summary',
         'final_note' => 'This is your booking total. No online payment is taken.',

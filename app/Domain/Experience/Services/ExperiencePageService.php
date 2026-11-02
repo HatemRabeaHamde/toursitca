@@ -312,7 +312,7 @@ final class ExperiencePageService
                     'hintDate' => __('booking_flow.hint.date'),
                     'hintOption' => __('booking_flow.hint.option'),
                     'breakdown' => __('experiences.detail.booking.breakdown'),
-                    'flat' => __('experiences.detail.booking.breakdown_flat'),
+                    'flat' => __('experiences.detail.booking.breakdown_group'),
                 ],
             ],
         ];

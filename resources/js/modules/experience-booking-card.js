@@ -79,13 +79,13 @@ export function experienceBookingCard(config) {
                 || this.store.activePricing()?.priceType === 'per_group';
         },
 
-        /** A package priced per group is a private group, whatever the group-type toggle says. */
+        /** Packages are set by the host: a per-group price says nothing about shared or private, so the toggle just hides. */
         isGroupPriced() {
             return this.store.activePricing()?.priceType === 'per_group';
         },
 
         isPrivateTrip() {
-            return this.isGroupPriced() || this.store.bookingType === 'private';
+            return this.store.bookingType === 'private';
         },
 
         travellersLabel() {

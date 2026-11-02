@@ -32,7 +32,6 @@
                                         <li x-show="option.pickup"><x-site.atoms.icon name="pin" :size="14" />{{ __('booking_flow.options.pickup') }}</li>
                                         <li x-show="option.private"><x-site.atoms.icon name="user-terracotta" :size="14" />{{ __('booking_flow.options.private') }}</li>
                                         <li x-show="option.cancellationHours"><x-site.atoms.icon name="calendar-terracotta" :size="14" /><span x-text="@js(__('booking_flow.options.cancellation')).replace(':hours', option.cancellationHours)"></span></li>
-                                        <li x-show="option.payLater"><x-site.atoms.icon name="check-dot" :size="14" />{{ __('booking_flow.options.pay_later') }}</li>
                                     </ul>
                                     <span class="lv-t-caption lv-tone-terracotta-deep" x-show="!optionAvailable(option)" x-cloak>{{ __('booking_flow.options.unavailable') }}</span>
                                 </span>

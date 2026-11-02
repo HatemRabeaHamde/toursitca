@@ -44,7 +44,6 @@ return [
         'message_placeholder' => 'Vertel je gastheer over je groep, dieetwensen of alles wat hij of zij moet weten.',
         'terms' => 'Ik ga akkoord met de boekingsvoorwaarden en het annuleringsbeleid.',
         'send' => 'Boeking bevestigen',
-        'no_card' => 'Er wordt geen online betaling afgeschreven',
         'save_pickup' => 'Ophaalpunt opslaan',
         'summary' => 'Reisoverzicht',
         'final_note' => 'Dit is het totaal van je boeking. Er wordt geen online betaling afgeschreven.',

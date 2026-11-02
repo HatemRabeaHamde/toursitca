@@ -38,7 +38,6 @@ return [
         'pickup' => 'Prise en charge incluse',
         'private' => 'Privatisation possible',
         'cancellation' => 'Annulation gratuite jusqu’à :hours h avant',
-        'pay_later' => 'Confirmation immédiate · aucun paiement en ligne',
         'unavailable' => 'Indisponible à cette date',
         'none_open' => 'Aucune formule n’est ouverte à cette date. Essayez un autre jour.',
     ],

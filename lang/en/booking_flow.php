@@ -38,7 +38,6 @@ return [
         'pickup' => 'Pick-up included',
         'private' => 'Private available',
         'cancellation' => 'Free cancellation up to :hours h',
-        'pay_later' => 'Instant confirmation · no online payment',
         'unavailable' => 'Not available on this date',
         'none_open' => 'No option is open on this date. Try another day.',
     ],

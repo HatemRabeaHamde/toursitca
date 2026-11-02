@@ -38,7 +38,6 @@ return [
         'pickup' => 'Ophalen inbegrepen',
         'private' => 'Privé mogelijk',
         'cancellation' => 'Gratis annuleren tot :hours u vooraf',
-        'pay_later' => 'Directe bevestiging · geen online betaling',
         'unavailable' => 'Niet beschikbaar op deze datum',
         'none_open' => 'Op deze datum is geen optie open. Probeer een andere dag.',
     ],

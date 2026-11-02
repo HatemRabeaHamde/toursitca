@@ -95,7 +95,6 @@
             <p class="lv-bcard__total" x-text="money(total())">{{ $booking['priceFrom'] }}</p>
         </div>
         <p class="lv-t-caption lv-tone-muted" x-text="breakdown()"></p>
-        <p class="lv-t-caption lv-tone-muted">{{ __('experiences.detail.v1.booking.final_note') }}</p>
     </div>
 
     <p class="lv-t-caption lv-tone-muted" x-show="store.isQuoting" x-cloak role="status">{{ __('experiences.detail.booking.checking') }}</p>

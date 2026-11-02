@@ -84,7 +84,6 @@ return [
         'from' => 'Vanaf',
         'per_person' => 'per persoon',
         'check_dates' => 'Bekijk data',
-        'no_card' => 'Geen kaart nodig tot je gastheer bevestigt',
         'trust' => 'Waarom je :name kunt vertrouwen',
         'verified' => 'Geverifieerde gastheer',
         'partner_since' => 'Lokale partner sinds :year',

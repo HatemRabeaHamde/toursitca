@@ -8,7 +8,6 @@
             <span class="lv-t-caption lv-tone-muted">{{ __('hosts.profile.per_person') }}</span>
         </p>
         <x-site.atoms.button :href="$trip['href'].'#book'" class="w-full">{{ __('hosts.profile.check_dates') }}</x-site.atoms.button>
-        <p class="flex items-center gap-2.5 lv-t-caption lv-tone-ink"><x-site.atoms.icon name="card-ink" :size="17" />{{ __('hosts.profile.no_card') }}</p>
     </div>
 @endif
 

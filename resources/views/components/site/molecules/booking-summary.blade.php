@@ -10,7 +10,7 @@
             <span class="lv-t-caption lv-tone-muted" x-show="!isFlat()">{{ __('experiences.detail.booking.per_person') }}</span>
             <span class="lv-t-caption lv-tone-muted" x-show="isFlat()" x-cloak>{{ __('booking_flow.card.per_group') }}</span>
         </div>
-        <span class="lv-booking-summary__type lv-t-label-s" aria-live="polite">
+        <span class="lv-booking-summary__type lv-t-label-s" x-show="isPrivateTrip()" x-cloak aria-live="polite">
             <x-site.atoms.icon name="user-terracotta" :size="16" />
             <span x-text="isPrivateTrip() ? @js(__('experiences.detail.v1.booking.private')) : @js(__('booking_flow.card.shared_group'))">{{ __('booking_flow.card.shared_group') }}</span>
         </span>

@@ -84,7 +84,6 @@ return [
         'from' => 'Dès',
         'per_person' => 'par personne',
         'check_dates' => 'Voir les dates',
-        'no_card' => 'Aucune carte avant la confirmation de votre hôte',
         'trust' => 'Pourquoi faire confiance à :name',
         'verified' => 'Hôte vérifié',
         'partner_since' => 'Partenaire local depuis :year',

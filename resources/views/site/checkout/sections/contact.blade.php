@@ -38,9 +38,6 @@
             <label class="lv-check lv-t-body-s"><input type="checkbox" name="terms" value="1" required @checked(old('terms'))>{{ __('account.checkout.terms') }}</label>
             @error('terms')<p class="lv-form-error lv-t-caption" role="alert">{{ $message }}</p>@enderror
         </div>
-        <div class="flex flex-wrap items-center gap-5">
-            <x-site.atoms.button type="submit">{{ __('account.checkout.send', ['name' => $host]) }}</x-site.atoms.button>
-            <p class="flex items-center gap-2 lv-t-caption lv-tone-muted"><x-site.atoms.icon name="card-muted" :size="15" />{{ __('account.checkout.no_card') }}</p>
-        </div>
+        <x-site.atoms.button type="submit">{{ __('account.checkout.send', ['name' => $host]) }}</x-site.atoms.button>
     </section>
 </form>
