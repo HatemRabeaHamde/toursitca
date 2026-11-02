@@ -124,4 +124,32 @@ class SiteContentTest extends TestCase
         $this->get('/admin/site-content/unknown')->assertNotFound();
         $this->save(['hero__title_line_1' => ['text' => ['ar' => 'invalid locale']]])->assertUnprocessable();
     }
+
+    public function test_search_identity_and_answer_fields_publish_safely(): void
+    {
+        $this->actingAs($this->admin());
+        $this->save([
+            'seo__robots' => ['text' => ['en' => 'noindex, follow']],
+            'seo__social_title' => ['text' => ['en' => 'Shared headline']],
+            'geo__name' => ['text' => ['en' => 'Tourstica operator']],
+            'geo__instagram' => ['text' => ['en' => 'https://instagram.com/tourstica']],
+            'aeo__summary' => ['text' => ['en' => 'Browse experiences offered by local agencies.']],
+        ], 'draft')->assertRedirect();
+        $this->get('/en')->assertDontSee('Shared headline');
+        $this->get('/en?content_preview=1')->assertSee('Shared headline')->assertSee('noindex, nofollow');
+        $this->save([], 'publish')->assertRedirect();
+        $response = $this->get('/en')->assertOk()->assertSee('noindex, follow')->assertSee('Shared headline')->assertSee('Tourstica operator')->assertSee('Browse experiences offered by local agencies.');
+        $response->assertSee('rel="canonical"', false)->assertSee('hreflang="nl"', false)->assertSee('hreflang="x-default"', false)->assertSee('sameAs')->assertSee('WebPage');
+        $this->save(['seo__robots' => ['text' => ['en' => 'invalid']]])->assertUnprocessable();
+        $this->save(['geo__url' => ['text' => ['en' => '/internal']]])->assertUnprocessable();
+    }
+
+    public function test_visual_canvas_is_only_present_in_admin_preview(): void
+    {
+        $this->get('/en?content_edit=1')->assertDontSee('window.siteContentCanvas', false);
+        $this->get('/en?content_preview=1&content_edit=1')->assertForbidden();
+        $this->actingAs($this->admin());
+        $this->get('/admin/site-content/home')->assertOk()->assertSee('Editable homepage preview')->assertSee('visual-editor.js');
+        $this->get('/en?content_preview=1&content_edit=1')->assertOk()->assertSee('window.siteContentCanvas', false)->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
 }

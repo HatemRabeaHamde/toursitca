@@ -7,6 +7,9 @@
 ## Current MVP Audit — 2026-08-05
 
 ### Home content editor — 2026-11-02
+- ✅ Follow-up validation: 165 tests / 769 assertions; Pint passes. Browser verified inline text editing and draft persistence, contextual SEO settings, desktop and 375px layouts. Larastan remains blocked by the existing silent PHP 8.5 exit. No CMS package installed; fixed Blade layout retained.
+- ✅ Follow-up: replaced the long editor with the actual homepage canvas and contextual field editing; preserved fixed layouts and admin-only drafts.
+- ✅ Added home SEO/GEO/AEO controls: robots, social sharing image/alt/title/description, automatic canonical and locale alternates, publisher entity details/official links, and a visible concise answer summary. No arbitrary JSON-LD, fabricated claims, or guaranteed AI visibility.
 - ✅ Config-driven fixed-section home editor: EN/FR/NL text, images/alt, SEO, sanitised rich text, drafts, admin preview, publish, revisions/restore, defaults and page cache invalidation. Home only; no layout editing.
 - ✅ PHPUnit: 163 tests / 743 assertions passing, including 8 content-editor tests. Pint run; unrelated formatter-only diffs removed. Desktop (1280px) and 375px editor checked; no mobile horizontal overflow. Browser verified draft save, admin preview, public draft isolation, publish, reopen, and public published heading using an isolated SQLite QA database.
 - 🚧 Verification limitations: `./vendor/bin/phpstan analyse` exits 1 with no output on installed PHP 8.5 (also with `--debug`); local Vite build cannot load the missing Rolldown native binding. Re-run Larastan and build in a working dependency environment before deployment.

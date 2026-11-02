@@ -10,7 +10,7 @@
     class="lv-hero relative isolate overflow-hidden"
     data-hero
     aria-labelledby="lv-hero-title"
-    x-data="lvHero({ total: {{ max($cities->count(), 1) }}, intervalMs: {{ $slideMs }} })"
+    x-data="lvHero({ total: {{ $content->preview && request()->boolean('content_edit') ? 1 : max($cities->count(), 1) }}, intervalMs: {{ $slideMs }} })"
     style="--lv-slide-ms: {{ $slideMs }}ms"
 >
     {{-- Background: design hero first, then each featured city's own image. --}}

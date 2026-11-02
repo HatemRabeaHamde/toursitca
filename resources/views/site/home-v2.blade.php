@@ -15,3 +15,7 @@
     @include('site.home-v2.sections.plan')
     @include('site.home-v2.sections.know-before')
 @endsection
+
+@if($content->preview && request()->boolean('content_edit'))
+ @include('admin.site-content.canvas')
+@endif
