@@ -1,6 +1,7 @@
 @extends('layouts.tourist')
 
 @section('content')
+    <x-site.booking-selection :snapshot="$booking->price_snapshot['booking_snapshot'] ?? []" />
     @php
         $locale = app()->getLocale();
         $steps = ['pending', 'confirmed', 'completed'];
@@ -16,7 +17,7 @@
     <div class="td-detail-head">
         <div>
             <p class="td-eyebrow">#{{ $booking->id }} · {{ $booking->experience->agency->name }}</p>
-            <h1 class="td-h1">{{ $booking->experience->getTranslation('title', $locale, false) }}</h1>
+            <h1 class="td-h1">{{ $booking->price_snapshot['booking_snapshot']['title'][$locale] ?? $booking->price_snapshot['booking_snapshot']['title']['en'] ?? $booking->experience->getTranslation('title', $locale, false) }}</h1>
         </div>
         <span class="td-badge is-{{ $booking->status }}" style="font-size:12px; height:26px; padding:0 14px;">
             {{ __('booking.status.'.$booking->status) }}

@@ -1,12 +1,27 @@
 <?php
 
 return [
+    'validation' => [
+        'payout_cancelled' => 'Un versement annulé ne peut être marqué payé.',
+        'age_policy' => 'Les âges dépendent de la formule choisie.',
+        'child_ages' => 'Indiquez un âge valide pour chaque enfant selon la formule choisie.',
+        'child_min' => 'Âge minimum enfant',
+        'child_max' => 'Âge maximum enfant',
+        'slot_locked' => 'Un créneau réservé ne peut être déplacé ni perdre de capacité.',
+        'age_range' => 'Âges :min–:max',
+        'price_help' => 'Par groupe signifie un prix pour tous les participants. Le mode privé est un réglage distinct.',
+        'price_label' => 'Prix de base (personne ou groupe)',
+    ],
     'cta' => [
         'choose_option' => 'Choisir une formule',
         'choose_date' => 'Choisir une date',
     ],
     'hint' => ['date' => 'Choisissez une date disponible pour commencer.', 'option' => 'Choisissez maintenant la formule souhaitée.'],
     'card' => [
+        'per_group' => '/ groupe',
+        'shared_group' => 'Groupe partagé',
+        'reviews' => ':count avis|:count avis',
+
         'option' => 'Formule',
         'option_below' => 'Choisissez votre formule ci-dessous',
         'option_empty' => 'Choisissez une date, puis votre formule',

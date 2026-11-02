@@ -11,6 +11,7 @@
 @endsection
 
 @section('content')
+    <a href="{{ route('admin.experience-reviews.index') }}" class="adm-btn adm-btn--primary mb-4">{{ __('experience_review.queue') }}</a>
     <div class="adm-card">
         @if($experiences->isEmpty())
             <div class="adm-empty">
@@ -61,7 +62,7 @@
                                 <td style="font-size:.8rem;color:var(--adm-text-muted);">
                                     {{ $experience->private_price ? number_format((float)$experience->private_price, 0).' MAD' : '—' }}
                                 </td>
-                                <td><span class="adm-badge {{ $sc }}">{{ __('ui.status.'.$experience->status) }}</span></td>
+                                <td><span class="adm-badge {{ $sc }}">{{ __('ui.status.'.$experience->status) }} · {{ __('experience_review.states.'.$experience->review_status) }}</span></td>
                                 <td>
                                     <div style="display:flex;gap:5px;justify-content:flex-end;">
                                         <a href="{{ route('admin.experiences.edit', $experience) }}" class="adm-btn adm-btn--ghost adm-btn--sm">Edit</a>

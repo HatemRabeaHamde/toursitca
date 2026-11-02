@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Agency\Models\Agency;
 use App\Domain\Discover\Services\HostFormOptions;
-use App\Domain\Landing\Models\ExperienceCategory;
 use App\Domain\Experience\Actions\AttachExperienceMediaAction;
 use App\Domain\Experience\Actions\CreateExperienceAction;
 use App\Domain\Experience\Actions\DeleteExperienceAction;
@@ -12,8 +11,11 @@ use App\Domain\Experience\Actions\PublishExperienceAction;
 use App\Domain\Experience\Actions\UnpublishExperienceAction;
 use App\Domain\Experience\Actions\UpdateExperienceAction;
 use App\Domain\Experience\Models\Experience;
+use App\Domain\Experience\Services\ExperienceDraftService;
+use App\Domain\Landing\Models\ExperienceCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Experience\ExperienceStoreRequest;
+use App\Http\Requests\Experience\ManageExperienceReviewRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use InvalidArgumentException;
@@ -23,7 +25,7 @@ class ExperienceController extends Controller
     public function index(): View
     {
         $experiences = Experience::query()
-            ->with('agency')
+            ->with(['agency', 'latestChangeRequest'])
             ->latest()
             ->paginate(15);
 
@@ -74,11 +76,12 @@ class ExperienceController extends Controller
             ->with('success', __('ui.messages.experience_created'));
     }
 
-    public function edit(Experience $experience, HostFormOptions $hostOptions): View
+    public function edit(Experience $experience, HostFormOptions $hostOptions, ExperienceDraftService $drafts): View
     {
         $hosts = $hostOptions->all();
 
-        $experience->load(['media', 'itineraryItems']);
+        $experience->load('latestChangeRequest');
+        $experience = $drafts->forEditing($experience);
         $agencies = Agency::query()
             ->active()
             ->orderByDesc('is_platform')
@@ -115,19 +118,11 @@ class ExperienceController extends Controller
             ->with('success', __('ui.messages.experience_updated'));
     }
 
-    public function publish(Experience $experience, PublishExperienceAction $publishExperienceAction): RedirectResponse
+    public function publish(ManageExperienceReviewRequest $request, Experience $experience, PublishExperienceAction $action): RedirectResponse
     {
-        try {
-            $publishExperienceAction->execute($experience);
-        } catch (InvalidArgumentException $exception) {
-            return redirect()
-                ->route('admin.experiences.index')
-                ->with('error', $exception->getMessage());
-        }
+        $action->execute($experience);
 
-        return redirect()
-            ->route('admin.experiences.index')
-            ->with('success', __('ui.messages.experience_published'));
+        return redirect()->route('admin.experiences.index')->with('success', __('ui.messages.experience_published'));
     }
 
     public function unpublish(Experience $experience, UnpublishExperienceAction $unpublishExperienceAction): RedirectResponse

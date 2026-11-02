@@ -6,6 +6,7 @@ use App\Domain\Experience\Actions\DeleteExperienceOptionAction;
 use App\Domain\Experience\Actions\SaveExperienceOptionAction;
 use App\Domain\Experience\Models\Experience;
 use App\Domain\Experience\Models\ExperienceOption;
+use App\Domain\Experience\Services\ExperienceDraftService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Experience\ExperienceOptionRequest;
 use Illuminate\Http\RedirectResponse;
@@ -14,9 +15,10 @@ use InvalidArgumentException;
 
 class ExperienceOptionController extends Controller
 {
-    public function index(Experience $experience): View
+    public function index(Experience $experience, ExperienceDraftService $drafts): View
     {
-        $experience->load(['options.prices', 'options.languages']);
+        $experience->load('latestChangeRequest');
+        $experience = $drafts->forEditing($experience);
 
         return view('experience-options.index', [
             'experience' => $experience,

@@ -14,7 +14,7 @@ final class SeatReservationService
             ->lockForUpdate()
             ->firstOrFail();
 
-        if (! $lockedAvailability->is_active || $lockedAvailability->date->isBefore(today())
+        if (! $lockedAvailability->is_active || $lockedAvailability->startsAt()->isPast()
             || $lockedAvailability->experience->status !== 'published'
             || $lockedAvailability->experience->agency->status !== 'active') {
             throw new InvalidArgumentException('Selected slot is not active.');

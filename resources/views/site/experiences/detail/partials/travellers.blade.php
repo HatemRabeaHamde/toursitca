@@ -9,13 +9,14 @@
     </button>
 
     <div id="booking-travellers" class="lv-popover" x-show="guestsOpen" x-cloak x-transition.opacity.duration.200ms>
-        <x-site.molecules.stepper-row :label="__('experiences.detail.booking.adults')" :hint="__('experiences.detail.booking.adults_hint')"
+        <x-site.molecules.stepper-row :label="__('experiences.detail.booking.adults')" :hint="__('booking_flow.validation.age_policy')"
             value="store.adults" can-decrease="store.adults > 1" can-increase="canAdd()"
             decrease="changeAdults(-1)" increase="changeAdults(1)" />
-        <x-site.molecules.stepper-row :label="__('experiences.detail.booking.children')" :hint="__('experiences.detail.booking.children_hint')"
+        <x-site.molecules.stepper-row :label="__('experiences.detail.booking.children')" :hint="__('booking_flow.validation.age_policy')"
             value="store.children" can-decrease="store.children > 0" can-increase="canAdd()"
             decrease="changeChildren(-1)" increase="changeChildren(1)" />
 
+        <p class="lv-t-caption lv-tone-muted" x-show="chosenOption()" x-text="@js(__('booking_flow.validation.age_range')).replace(':min', chosenOption()?.childMinAge ?? 0).replace(':max', chosenOption()?.childMaxAge ?? 17)"></p>
         <template x-if="store.children > 0">
             <div class="flex flex-col gap-2.5 border-t border-[color:var(--lv-line)] pt-3">
                 <p class="lv-t-label-s lv-tone-ink">{{ __('experiences.detail.booking.child_ages') }}</p>
@@ -24,9 +25,9 @@
                         <span x-text="@js(__('experiences.detail.booking.child', ['number' => '#'])).replace('#', index + 1)"></span>
                         <select class="lv-field lv-popover__select" :value="age ?? ''" @change="setChildAge(index, $event.target.value)">
                             <option value="">{{ __('experiences.detail.booking.age') }}</option>
-                            <option value="0">{{ __('experiences.detail.booking.age_under_one') }}</option>
+                            <option value="0" :disabled="!childAgeAllowed(0)">{{ __('experiences.detail.booking.age_under_one') }}</option>
                             @for($age = 1; $age <= 17; $age++)
-                                <option value="{{ $age }}">{{ trans_choice('experiences.detail.booking.age_years', $age, ['count' => $age]) }}</option>
+                                <option value="{{ $age }}" :disabled="!childAgeAllowed({{ $age }})">{{ trans_choice('experiences.detail.booking.age_years', $age, ['count' => $age]) }}</option>
                             @endfor
                         </select>
                     </label>

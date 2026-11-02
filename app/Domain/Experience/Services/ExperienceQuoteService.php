@@ -7,6 +7,7 @@ use App\Domain\Experience\Models\Experience;
 use App\Domain\Experience\Models\ExperienceOption;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
+use Carbon\CarbonImmutable;
 use Illuminate\Validation\ValidationException;
 
 final class ExperienceQuoteService
@@ -22,11 +23,35 @@ final class ExperienceQuoteService
         ?int $optionId = null,
         ?int $availabilityId = null,
         ?string $languageCode = null,
+        ?array $childAges = null,
     ): array {
+        if (! $experience->isPubliclyBookable()) {
+            throw ValidationException::withMessages(['experience_id' => __('ui.messages.booking_slot_unavailable')]);
+        }
+
         $experience->loadMissing(['agency', 'options.prices', 'options.languages']);
 
         $option = $this->resolveOption($experience, $optionId);
         $availability = $this->resolveAvailability($experience, $option, $availabilityId);
+        if (array_diff(array_keys($participants), ['adult', 'child']) !== [] || ($participants['adult'] ?? 0) < 1
+            || collect($participants)->contains(fn ($count): bool => ! is_int($count) || $count < 0)) {
+            throw ValidationException::withMessages(['participants' => __('ui.messages.participants_required')]);
+        }
+        if ($bookingType === 'private' && (! ($option?->private_available ?? $experience->supportsPrivateBooking())
+            || ($experience->private_price === null && $option?->price_type !== 'per_group'))) {
+            throw ValidationException::withMessages(['booking_type' => __('ui.messages.booking_slot_unavailable')]);
+        }
+        if ($childAges !== null && count($childAges) !== ($participants['child'] ?? 0)) {
+            throw ValidationException::withMessages(['child_ages' => __('booking_flow.validation.child_ages')]);
+        }
+        if ($childAges !== null && $option) {
+            $band = $option->prices->firstWhere('participant_type', 'child');
+            foreach ($childAges as $age) {
+                if ($band && ($age < ($band->min_age ?? 0) || $age > ($band->max_age ?? 17))) {
+                    throw ValidationException::withMessages(['child_ages' => __('booking_flow.validation.child_ages')]);
+                }
+            }
+        }
         $totalParticipants = array_sum($participants);
 
         if ($totalParticipants < 1) {
@@ -58,6 +83,25 @@ final class ExperienceQuoteService
 
         return [
             'experience_id' => $experience->id,
+            'booking_snapshot' => [
+                'title' => $experience->getTranslations('title'),
+                'option' => $option?->getTranslations('title'),
+                'host_name' => $experience->publicHost()?->name,
+                'host_id' => $experience->publicHost()?->id,
+                'host_avatar' => $experience->publicHost()?->avatar_url ?: $experience->publicHost()?->photo_url,
+                'host_verified' => (bool) $experience->publicHost()?->is_verified,
+                'host_licence' => $experience->publicHost()?->verifiedLicence(),
+                'location_city' => $experience->location_city,
+                'agency_name' => $experience->agency->name,
+                'meeting_point' => $experience->meeting_point,
+                'duration_hours' => (string) $experience->duration_hours,
+                'date' => $availability?->date->toDateString(),
+                'time' => $availability ? substr($availability->time_slot, 0, 5) : null,
+                'timezone' => config('booking.timezone'),
+                'cancellation_hours' => $option?->cancellation_hours,
+                'price_type' => $option?->price_type ?? 'per_person',
+                'published_version' => $experience->published_version,
+            ],
             'option_id' => $option?->id,
             'availability_id' => $availability?->id,
             'booking_type' => $bookingType,
@@ -80,7 +124,12 @@ final class ExperienceQuoteService
     private function resolveOption(Experience $experience, ?int $optionId): ?ExperienceOption
     {
         if ($optionId === null) {
-            return $experience->options->where('status', 'active')->first();
+            $active = $experience->options->where('status', 'active');
+            if ($active->count() > 1) {
+                throw ValidationException::withMessages(['option_id' => __('booking_flow.cta.choose_option')]);
+            }
+
+            return $active->first();
         }
 
         $option = $experience->options->firstWhere('id', $optionId);
@@ -119,7 +168,7 @@ final class ExperienceQuoteService
 
     private function validateAvailability(Availability $availability, string $bookingType, int $participantsCount): void
     {
-        if (! $availability->is_active || $availability->date->lt(today())) {
+        if (! $availability->is_active || CarbonImmutable::parse($availability->date->toDateString().' '.$availability->time_slot, config('app.timezone'))->isPast()) {
             throw ValidationException::withMessages([
                 'availability_id' => __('ui.messages.booking_slot_unavailable'),
             ]);
@@ -158,7 +207,15 @@ final class ExperienceQuoteService
             $baseUnit = BigDecimal::of((string) $adultPrice->price);
         }
 
-        if ($bookingType === 'private') {
+        if ($option?->price_type === 'per_group') {
+            $groupPrice = $option->prices->firstWhere('participant_type', 'group') ?? $option->prices->firstWhere('participant_type', 'adult');
+            if (! $groupPrice) {
+                throw ValidationException::withMessages(['option_id' => __('ui.messages.invalid_experience_option')]);
+            }
+            $subtotal = BigDecimal::of((string) $groupPrice->price);
+            $originalSubtotal = $groupPrice->original_price !== null ? BigDecimal::of((string) $groupPrice->original_price) : null;
+            $unitPrice = $subtotal;
+        } elseif ($bookingType === 'private') {
             $chargedSeats = $availability?->max_seats ?? $experience->max_group_size;
             $subtotal = $experience->private_price !== null
                 ? BigDecimal::of((string) $experience->private_price)
@@ -201,7 +258,8 @@ final class ExperienceQuoteService
      */
     private function participantPrice(Experience $experience, ?ExperienceOption $option, string $type): array
     {
-        $optionPrice = $option?->prices->firstWhere('participant_type', $type);
+        $optionPrice = $option?->prices->firstWhere('participant_type', $type)
+            ?? $option?->prices->firstWhere('participant_type', 'adult');
 
         if ($optionPrice) {
             return [

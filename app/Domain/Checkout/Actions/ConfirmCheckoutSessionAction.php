@@ -17,12 +17,6 @@ final class ConfirmCheckoutSessionAction
 
     public function execute(CheckoutSession $checkoutSession): Booking
     {
-        if (! $checkoutSession->isActive()) {
-            throw ValidationException::withMessages([
-                'checkout_session' => __('ui.messages.checkout_session_expired'),
-            ]);
-        }
-
         if (blank($checkoutSession->contact_first_name) || blank($checkoutSession->contact_last_name) || blank($checkoutSession->contact_email)) {
             throw ValidationException::withMessages([
                 'contact' => __('ui.messages.checkout_contact_required'),
@@ -41,6 +35,10 @@ final class ConfirmCheckoutSessionAction
                 ->lockForUpdate()
                 ->firstOrFail();
 
+            if ($lockedSession->status === 'completed') {
+                return Booking::query()->where('checkout_session_id', $lockedSession->id)->firstOrFail();
+            }
+
             if (! $lockedSession->isActive()) {
                 throw ValidationException::withMessages([
                     'checkout_session' => __('ui.messages.checkout_session_expired'),
@@ -53,8 +51,10 @@ final class ConfirmCheckoutSessionAction
                 ->firstOrFail();
 
             $availability->loadMissing('experience.agency');
-            if (! $availability->is_active
-                || $availability->date->isBefore(today())
+            $lockedSession->loadMissing('option');
+            if (($lockedSession->experience_option_id !== null && ($lockedSession->option?->status !== 'active' || $lockedSession->option?->experience_id !== $lockedSession->experience_id))
+                || ! $availability->is_active
+                || $availability->startsAt()->isPast()
                 || $availability->experience->status !== 'published'
                 || $availability->experience->agency->status !== 'active'
                 || $availability->held_seats < $lockedSession->charged_seats

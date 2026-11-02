@@ -112,6 +112,13 @@ button.lv-itinerary__head:hover { background: var(--lv-cream); }
 }
 @media (max-width: 479px) { .lv-bcard { padding: 22px 18px; } }
 .lv-bcard__amount { font-family: var(--lv-font-serif); font-size: clamp(32px, 2.6vw, 40px); line-height: 1.1; letter-spacing: -.8px; white-space: nowrap; color: var(--lv-ink); }
+.lv-booking-summary { display: flex; min-width: 0; flex-direction: column; gap: 10px; }
+.lv-booking-summary__top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.lv-booking-summary__price { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.lv-booking-summary__type { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 7px 10px; border-radius: 999px; background: var(--lv-sand, #f5f1ea); color: var(--lv-ink); }
+.lv-booking-summary__type svg, .lv-booking-summary__type img { flex-shrink: 0; }
+.lv-booking-summary__reviews { display: inline-flex; align-items: center; align-self: flex-start; flex-wrap: wrap; gap: 8px; }
+.lv-booking-summary__reviews:focus-visible { outline: 2px solid var(--lv-ink); outline-offset: 4px; border-radius: 3px; }
 .lv-bcard__total { flex-shrink: 0; font-family: var(--lv-font-serif); font-size: 32px; line-height: 1.125; letter-spacing: -.5px; color: var(--lv-ink); }
 .lv-bcard__rule { border: 0; border-top: 1px solid var(--lv-line); }
 .lv-bcard__error { padding: 10px 12px; border-radius: 10px; background: rgba(185, 80, 43, .08); color: var(--lv-rust); }

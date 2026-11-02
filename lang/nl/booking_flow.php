@@ -1,12 +1,27 @@
 <?php
 
 return [
+    'validation' => [
+        'payout_cancelled' => 'Een geannuleerde uitbetaling kan niet als betaald worden gemarkeerd.',
+        'age_policy' => 'Leeftijdsregels hangen af van het gekozen pakket.',
+        'child_ages' => 'Vul voor elk kind een geldige leeftijd binnen het pakketbereik in.',
+        'child_min' => 'Minimumleeftijd kind',
+        'child_max' => 'Maximumleeftijd kind',
+        'slot_locked' => 'Een tijdslot met boekingen of reserveringen kan niet verplaatst worden of capaciteit verliezen.',
+        'age_range' => 'Leeftijden :min–:max',
+        'price_help' => 'Per groep is één prijs voor het hele gezelschap. Privé beschikbaarheid is een aparte instelling.',
+        'price_label' => 'Basisprijs (persoon of groep)',
+    ],
     'cta' => [
         'choose_option' => 'Kies een optie',
         'choose_date' => 'Kies een datum',
     ],
     'hint' => ['date' => 'Kies een beschikbare datum om te beginnen.', 'option' => 'Kies nu de optie die je wilt.'],
     'card' => [
+        'per_group' => '/ groep',
+        'shared_group' => 'Gedeelde groep',
+        'reviews' => ':count review|:count reviews',
+
         'option' => 'Optie',
         'option_below' => 'Kies hieronder je optie',
         'option_empty' => 'Kies een datum en daarna je optie',

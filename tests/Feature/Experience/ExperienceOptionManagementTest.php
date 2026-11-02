@@ -20,6 +20,7 @@ class ExperienceOptionManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(Role::findOrCreate('admin', 'web'));
         $experience = $this->createExperience();
+        $experience->update(['status' => 'draft']);
 
         $this->actingAs($admin)
             ->post(route('admin.experiences.options.store', $experience), $this->payload())

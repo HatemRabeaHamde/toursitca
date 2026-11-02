@@ -79,6 +79,21 @@ class AvailabilityOptionManagementTest extends TestCase
         $this->assertSame(1, Availability::query()->count());
     }
 
+    public function test_held_slot_cannot_move_shrink_or_be_deleted(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findOrCreate('admin', 'web'));
+        $experience = $this->createExperience();
+        $payload = $this->payload($experience);
+        $slot = Availability::create($payload + ['held_seats' => 2]);
+        $this->actingAs($admin)->patch(route('admin.availability.update', $slot), array_replace($payload, ['date' => now()->addWeeks(2)->toDateString()]))
+            ->assertSessionHasErrors('availability');
+        $this->patch(route('admin.availability.update', $slot), array_replace($payload, ['max_seats' => 7]))->assertSessionHasErrors('availability');
+        $this->delete(route('admin.availability.destroy', $slot))->assertSessionHasErrors('availability');
+        $this->assertSame(8, $slot->fresh()->max_seats);
+        $this->assertSame(2, $slot->fresh()->held_seats);
+    }
+
     private function payload(Experience $experience, ?ExperienceOption $option = null): array
     {
         return [

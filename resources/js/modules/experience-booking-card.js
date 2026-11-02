@@ -16,6 +16,7 @@ export function experienceBookingCard(config) {
     return {
         options: config.options || [],
         dateOpen: false,
+        calendarMonth: 0,
         guestsOpen: false,
         formatter: null,
 
@@ -55,10 +56,10 @@ export function experienceBookingCard(config) {
         unitPrice() {
             const store = this.store;
 
-            if (store.bookingType === 'private' && store.config.privatePrice !== null) return store.config.privatePrice;
-
             const pricing = store.activePricing();
-            if (pricing) return pricing.priceType === 'per_group' ? pricing.groupPrice : pricing.adultPrice;
+            if (pricing?.priceType === 'per_group') return pricing.groupPrice;
+            if (store.bookingType === 'private' && store.config.privatePrice !== null) return store.config.privatePrice;
+            if (pricing) return pricing.adultPrice;
 
             return store.config.pricePerPerson;
         },
@@ -96,9 +97,10 @@ export function experienceBookingCard(config) {
 
         breakdown() {
             if (this.isFlat()) return strings.flat;
+            const option = this.chosenOption();
+            if (option) return this.optionBreakdown(option);
 
-            return strings.breakdown
-                .replace(':price', this.money(this.unitPrice()))
+            return strings.breakdown.replace(':price', this.money(this.unitPrice()))
                 .replace(':count', plural(strings.travellers, this.store.participantCount()));
         },
 
@@ -109,18 +111,59 @@ export function experienceBookingCard(config) {
             this.dateOpen = true;
         },
 
-        async pickDate(date, label, availabilityIds) {
+        async pickDate(date, label, availabilityIds, slots = []) {
+            if (this.store.isStartingCheckout) return;
             this.store.selectDate(date, label, availabilityIds);
+            this.store.selectedDaySlots = slots;
+            this.store.selectedTime = null;
+            if (slots.length) {
+                const times = this.timeChoices();
+                if (times.length === 1) this.store.selectedTime = times[0];
+                this.syncTimeAvailability();
+            }
             this.dateOpen = false;
-            this.syncOptionToDate();
-            await this.refreshQuote();
+            await this.syncOptionToDate();
+            if (!this.store.quote) await this.refreshQuote();
             this.revealOptions();
+        },
+
+        timeChoices() {
+            return [...new Set(this.store.selectedDaySlots.filter(slot => slot.seats >= this.store.participantCount()
+                && (this.store.bookingType !== 'private' || slot.privateOpen)).map(slot => slot.time))].sort();
+        },
+
+        syncTimeAvailability() {
+            if (!this.store.selectedDaySlots.length) return;
+            const ids = {};
+            const slots = this.store.selectedDaySlots.filter(slot => slot.time === this.store.selectedTime
+                && slot.seats >= this.store.participantCount() && (this.store.bookingType !== 'private' || slot.privateOpen));
+            for (const slot of slots) ids[slot.optionId ?? 'default'] = slot.id;
+            if (slots.length) ids.any = slots[0].id;
+            this.store.selectedAvailabilityIds = ids;
+        },
+
+        async selectTime(time) {
+            if (this.store.isStartingCheckout) return;
+            this.store.selectedTime = time;
+            this.store.clearQuote();
+            this.syncTimeAvailability();
+            await this.syncOptionToDate();
+            if (!this.store.quote) await this.refreshQuote();
+        },
+
+        async refreshSelection() {
+            if (this.store.selectedDaySlots.length) {
+                if (!this.timeChoices().includes(this.store.selectedTime)) this.store.selectedTime = null;
+                this.syncTimeAvailability();
+            }
+            await this.syncOptionToDate();
+            if (!this.store.quote) await this.refreshQuote();
         },
 
         /* ── Options (packages) ─────────────────────────────── */
 
         optionAvailable(option) {
-            return Boolean(this.store.selectedDate) && this.store.availabilityForOption(option.id) !== null;
+            return !this.store.config.preview && Boolean(this.store.selectedDate) && this.store.availabilityForOption(option.id) !== null;
         },
 
         availableOptions() {
@@ -141,11 +184,11 @@ export function experienceBookingCard(config) {
             const quote = !original ? this.store.quoteForOption(option.id) : null;
             if (quote) return Number(quote.total);
 
+            if (option.priceType === 'per_group') return pick(option.groupPrice, option.groupOriginal) || 0;
+
             if (!original && this.store.bookingType === 'private' && this.store.config.privatePrice !== null) {
                 return this.store.config.privatePrice;
             }
-
-            if (option.priceType === 'per_group') return pick(option.groupPrice, option.groupOriginal) || 0;
 
             return (this.store.adults * (pick(option.adultPrice, option.adultOriginal) || 0))
                 + (this.store.children * (pick(option.childPrice, option.childOriginal) || 0));
@@ -161,14 +204,16 @@ export function experienceBookingCard(config) {
         optionBreakdown(option) {
             if (option.priceType === 'per_group' || this.store.bookingType === 'private') return strings.flat;
 
-            return strings.breakdown
-                .replace(':price', this.money(option.adultPrice))
-                .replace(':count', plural(strings.travellers, this.store.participantCount()));
+            const parts = [this.money(option.adultPrice) + ' × ' + plural(strings.adults, this.store.adults)];
+            if (this.store.children) parts.push(this.money(option.childPrice) + ' × ' + plural(strings.children, this.store.children));
+            return parts.join(' + ');
         },
 
         async selectOption(option) {
             if (!this.optionAvailable(option)) return;
 
+            this.store.clearQuote();
+            if (!option.private && this.store.bookingType === 'private') this.store.setBookingType('group');
             this.store.activeOption = option.id;
             this.store.quote = this.store.quotesByOption[String(option.id)] || null;
             this.store.quoteError = null;
@@ -180,12 +225,15 @@ export function experienceBookingCard(config) {
         },
 
         /** After a new date: drop an option that is not open that day; a single open option is chosen for the traveller. */
-        syncOptionToDate() {
+        async syncOptionToDate() {
             const chosen = this.chosenOption();
-            if (chosen && !this.optionAvailable(chosen)) this.store.activeOption = null;
+            if (chosen && !this.optionAvailable(chosen)) {
+                this.store.activeOption = null;
+                return;
+            }
 
             const open = this.availableOptions();
-            if (this.store.activeOption === null && open.length === 1) this.selectOption(open[0]);
+            if (this.store.activeOption === null && open.length === 1) await this.selectOption(open[0]);
         },
 
         revealOptions() {
@@ -203,12 +251,18 @@ export function experienceBookingCard(config) {
             return Boolean(this.store.selectedDate)
                 && !this.needsOption()
                 && this.store.hasSelection(this.store.activeOption)
-                && !this.store.isStartingCheckout;
+                && !this.store.isStartingCheckout
+                && !this.store.isQuoting
+                && !this.store.quoteError
+                && this.store.quote !== null
+                && this.store.childAges.every(age => Number.isInteger(age) && this.childAgeAllowed(age));
         },
 
         /** What is still missing, in plain words; null when ready. */
         nextStepHint() {
             if (!this.store.selectedDate) return strings.hintDate;
+            if (this.store.selectedDaySlots.length && !this.store.selectedTime) return strings.hintTime;
+            if (this.store.childAges.some(age => !Number.isInteger(age))) return strings.hintAges;
             if (this.needsOption()) return strings.hintOption;
 
             return null;
@@ -223,6 +277,7 @@ export function experienceBookingCard(config) {
         },
 
         changeAdults(delta) {
+            if (this.store.isStartingCheckout) return;
             const next = this.store.adults + delta;
             if (next < 1 || (delta > 0 && !this.canAdd())) return;
 
@@ -232,10 +287,11 @@ export function experienceBookingCard(config) {
 
         stepTravellers(delta) {
             this.changeAdults(delta);
-            this.refreshQuote();
+            this.refreshSelection();
         },
 
         changeChildren(delta) {
+            if (this.store.isStartingCheckout) return;
             const next = this.store.children + delta;
             if (next < 0 || (delta > 0 && !this.canAdd())) return;
 
@@ -245,6 +301,7 @@ export function experienceBookingCard(config) {
         },
 
         setChildAge(index, value) {
+            if (this.store.isStartingCheckout) return;
             this.store.childAges[index] = value === '' ? null : parseInt(value, 10);
             this.store.clearQuote();
         },
@@ -253,12 +310,13 @@ export function experienceBookingCard(config) {
             if (!this.guestsOpen) return;
 
             this.guestsOpen = false;
-            this.refreshQuote();
+            this.refreshSelection();
         },
 
         setBookingType(type) {
+            if (type === 'private' && this.chosenOption() && !this.chosenOption().private) return;
             this.store.setBookingType(type);
-            this.refreshQuote();
+            this.refreshSelection();
         },
 
         setOption(id) {
@@ -274,7 +332,7 @@ export function experienceBookingCard(config) {
         },
 
         async refreshQuote() {
-            if (!this.store.hasSelection(this.store.activeOption)) return null;
+            if (this.store.config.preview || this.needsOption() || !this.store.hasSelection(this.store.activeOption)) return null;
 
             return this.store.applyQuote();
         },
@@ -291,7 +349,7 @@ export function experienceBookingCard(config) {
                 return;
             }
 
-            this.store.startCheckout(this.store.activeOption);
+            if (this.canRequest()) this.store.startCheckout(this.store.activeOption);
         },
     };
 }

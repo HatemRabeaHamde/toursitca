@@ -58,6 +58,7 @@ final class CreateCheckoutSessionAction
                 optionId: $optionId,
                 availabilityId: $availability->id,
                 languageCode: $languageCode,
+                childAges: $childAges,
             );
 
             $this->holdSeats($availability, $quote['charged_seats'], $bookingType);

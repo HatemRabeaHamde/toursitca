@@ -27,6 +27,7 @@ class CheckoutStartTest extends TestCase
                 'adult' => 2,
                 'child' => 1,
             ],
+            'child_ages' => [7],
             'payment_method' => 'manual',
         ])
             ->assertCreated()
@@ -61,7 +62,7 @@ class CheckoutStartTest extends TestCase
     {
         $experience = $this->createExperience([
             'price_per_person' => '100.00',
-            'private_price' => null,
+            'private_price' => '1000.00',
             'max_group_size' => 10,
         ]);
         $availability = $this->createAvailability($experience, [

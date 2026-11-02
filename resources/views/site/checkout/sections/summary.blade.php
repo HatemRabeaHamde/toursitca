@@ -13,6 +13,8 @@
             </div>
         </div>
     @endif
+    @if($trip['time'])<p class="lv-t-caption lv-tone-muted">{{ __('experience_review.time') }}: {{ $trip['time'] }}</p>@endif
+    @if($trip['cancellationHours'] !== null)<p class="lv-t-caption lv-tone-muted">{{ __('booking_flow.options.cancellation', ['hours' => $trip['cancellationHours']]) }}</p>@endif
     <hr class="lv-flow-rule">
     <p class="flex items-center justify-between gap-4 lv-t-body-s"><span class="lv-tone-muted">{{ $trip['priceLine'] }}</span><span class="lv-t-label-m lv-tone-ink">{{ $trip['total'] }}</span></p>
     <hr class="lv-flow-rule">

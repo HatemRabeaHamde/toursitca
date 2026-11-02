@@ -27,6 +27,8 @@ class ExperienceOptionRequest extends FormRequest
             'status' => ['required', Rule::in(['active', 'inactive'])],
             'adult_price' => ['required', 'numeric', 'min:0'],
             'adult_original_price' => ['nullable', 'numeric', 'min:0'],
+            'child_min_age' => ['nullable', 'integer', 'min:0', 'max:17'],
+            'child_max_age' => ['nullable', 'integer', 'min:0', 'max:17', 'gte:child_min_age'],
             'child_price' => ['nullable', 'numeric', 'min:0'],
             'child_original_price' => ['nullable', 'numeric', 'min:0'],
             'languages_text' => ['nullable', 'string', 'max:1000'],
@@ -64,7 +66,7 @@ class ExperienceOptionRequest extends FormRequest
     {
         $rows = [
             [
-                'participant_type' => 'adult',
+                'participant_type' => $this->input('price_type') === 'per_group' ? 'group' : 'adult',
                 'min_age' => 13,
                 'max_age' => 99,
                 'price' => $this->string('adult_price')->toString(),
@@ -76,8 +78,8 @@ class ExperienceOptionRequest extends FormRequest
         if ($this->filled('child_price')) {
             $rows[] = [
                 'participant_type' => 'child',
-                'min_age' => 5,
-                'max_age' => 12,
+                'min_age' => $this->integer('child_min_age', 0),
+                'max_age' => $this->integer('child_max_age', 12),
                 'price' => $this->string('child_price')->toString(),
                 'original_price' => $this->filled('child_original_price') ? $this->string('child_original_price')->toString() : null,
                 'currency' => config('payment.currency', 'MAD'),

@@ -9,6 +9,7 @@
 @endpush
 
 @section('page')
+    @if($isExperiencePreview ?? false)<p class="fixed bottom-4 left-4 right-4 z-50 rounded-xl bg-white border border-slate-300 p-4 shadow-lg text-center">{{ __('experience_review.preview_help') }} · {{ __('experience_review.draft_help') }}</p>@endif
     <div id="content" x-data="photoViewer(@js($page->gallery))">
         @include('site.experiences.detail-v1.sections.hero')
 

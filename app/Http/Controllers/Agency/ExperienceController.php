@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Agency;
 
 use App\Domain\Discover\Services\HostFormOptions;
-use App\Domain\Landing\Models\ExperienceCategory;
 use App\Domain\Experience\Actions\AttachExperienceMediaAction;
 use App\Domain\Experience\Actions\CreateExperienceAction;
 use App\Domain\Experience\Actions\DeleteExperienceAction;
-use App\Domain\Experience\Actions\PublishExperienceAction;
 use App\Domain\Experience\Actions\UnpublishExperienceAction;
 use App\Domain\Experience\Actions\UpdateExperienceAction;
 use App\Domain\Experience\Models\Experience;
+use App\Domain\Experience\Services\ExperienceDraftService;
+use App\Domain\Landing\Models\ExperienceCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Experience\ExperienceStoreRequest;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +23,7 @@ class ExperienceController extends Controller
     {
         $experiences = Experience::query()
             ->where('agency_id', auth()->user()->agency->id)
+            ->with('latestChangeRequest')
             ->latest()
             ->paginate(15);
 
@@ -58,10 +59,11 @@ class ExperienceController extends Controller
             ->with('success', __('ui.messages.experience_created'));
     }
 
-    public function edit(Experience $experience, HostFormOptions $hostOptions): View
+    public function edit(Experience $experience, HostFormOptions $hostOptions, ExperienceDraftService $drafts): View
     {
         $this->authorizeAgencyExperience($experience);
-        $experience->load(['media', 'itineraryItems']);
+        $experience->load('latestChangeRequest');
+        $experience = $drafts->forEditing($experience);
         $categories = ExperienceCategory::active()->sorted()->get();
         $hosts = $hostOptions->forAgency(auth()->user()->agency->id);
 
@@ -91,22 +93,6 @@ class ExperienceController extends Controller
         return redirect()
             ->route('agency.experiences.index')
             ->with('success', __('ui.messages.experience_updated'));
-    }
-
-    public function publish(Experience $experience, PublishExperienceAction $publishExperienceAction): RedirectResponse
-    {
-        $this->authorizeAgencyExperience($experience);
-        try {
-            $publishExperienceAction->execute($experience);
-        } catch (InvalidArgumentException $exception) {
-            return redirect()
-                ->route('agency.experiences.index')
-                ->with('error', $exception->getMessage());
-        }
-
-        return redirect()
-            ->route('agency.experiences.index')
-            ->with('success', __('ui.messages.experience_published'));
     }
 
     public function unpublish(Experience $experience, UnpublishExperienceAction $unpublishExperienceAction): RedirectResponse

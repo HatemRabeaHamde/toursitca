@@ -31,7 +31,7 @@ class CheckoutController extends Controller
     public function start(CheckoutStartRequest $request, string $locale, CreateCheckoutSessionAction $action): JsonResponse
     {
         $experience = Experience::query()->findOrFail($request->integer('experience_id'));
-        abort_unless($experience->status === 'published', 404);
+        abort_unless($experience->isPubliclyBookable(), 404);
 
         $checkoutSession = $action->execute(
             experience: $experience,

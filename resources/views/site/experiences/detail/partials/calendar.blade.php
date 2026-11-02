@@ -1,5 +1,6 @@
 {{-- Date picker dialog (same availability calendar as before). Teleported to the page root. --}}
 @php($calendar = $page->booking['calendar'])
+@php($months = $calendar['months'] ?: [$calendar])
 
 <template x-teleport="[data-lv-motion]">
     <div class="lv-dialog" x-show="dateOpen" x-cloak x-transition.opacity.duration.250ms
@@ -10,14 +11,21 @@
                 <button type="button" class="lv-dialog__close" @click="dateOpen = false" aria-label="{{ __('experiences.detail.booking.close') }}">×</button>
             </div>
 
-            <p class="lv-t-label-m lv-tone-ink">{{ $calendar['month_label'] }}</p>
+            <div class="flex items-center justify-between gap-3">
+                <button type="button" class="lv-t-label-m" @click="calendarMonth = Math.max(0, calendarMonth - 1)" :disabled="calendarMonth === 0" aria-label="{{ __('ui.experience_detail.previous_month') }}">←</button>
+                <span class="sr-only">{{ __('experiences.detail.booking.calendar') }}</span>
+                <button type="button" class="lv-t-label-m" @click="calendarMonth = Math.min(@js(count($months) - 1), calendarMonth + 1)" :disabled="calendarMonth === @js(count($months) - 1)" aria-label="{{ __('ui.experience_detail.next_month') }}">→</button>
+            </div>
+            @foreach($months as $monthIndex => $month)
+            <div x-show="calendarMonth === @js($monthIndex)">
+            <p class="lv-t-label-m lv-tone-ink mb-3">{{ $month['month_label'] }}</p>
 
             <div class="lv-calendar__grid" role="grid">
                 @foreach($calendar['weekdays'] as $weekday)
                     <span class="lv-calendar__weekday lv-t-label-xs lv-tone-muted" role="columnheader">{{ $weekday }}</span>
                 @endforeach
 
-                @foreach($calendar['weeks'] as $week)
+                @foreach($month['weeks'] as $week)
                     @foreach($week as $day)
                         @php($open = $day['in_month'] && in_array($day['status'], ['available', 'few'], true))
                         @if($open)
@@ -25,7 +33,7 @@
                                     :class="{ 'is-selected': store.selectedDate === @js($day['date']) }"
                                     :aria-pressed="(store.selectedDate === @js($day['date'])).toString()"
                                     aria-label="{{ \Carbon\CarbonImmutable::parse($day['date'])->locale(app()->getLocale())->translatedFormat('l j F Y') }}"
-                                    @click="pickDate(@js($day['date']), @js(\Carbon\CarbonImmutable::parse($day['date'])->locale(app()->getLocale())->translatedFormat('j M')), @js($day['availability_ids']))">
+                                    @click="pickDate(@js($day['date']), @js(\Carbon\CarbonImmutable::parse($day['date'])->locale(app()->getLocale())->translatedFormat('j M')), @js($day['availability_ids']), @js($day['slots'] ?? []))">
                                 {{ $day['number'] }}
                             </button>
                         @else
@@ -34,6 +42,9 @@
                     @endforeach
                 @endforeach
             </div>
+
+            </div>
+            @endforeach
 
             @if($page->booking['hasDates'])
                 <ul class="flex flex-wrap gap-x-5 gap-y-2 lv-t-caption lv-tone-muted">

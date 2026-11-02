@@ -64,7 +64,7 @@ class ExperienceQuoteTest extends TestCase
             ->assertJsonPath('data.total', '260.00');
     }
 
-    public function test_private_quote_without_private_price_charges_all_seats(): void
+    public function test_private_quote_without_an_offered_private_price_is_rejected(): void
     {
         $experience = $this->createExperience([
             'price_per_person' => '100.00',
@@ -85,10 +85,8 @@ class ExperienceQuoteTest extends TestCase
             ],
             'availability_id' => $availability->id,
         ])
-            ->assertOk()
-            ->assertJsonPath('data.participants_count', 3)
-            ->assertJsonPath('data.charged_seats', 10)
-            ->assertJsonPath('data.total', '1000.00');
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('booking_type');
     }
 
     public function test_quote_rejects_unavailable_language(): void
@@ -111,6 +109,39 @@ class ExperienceQuoteTest extends TestCase
             'option_id' => $option->id,
             'language' => 'en',
         ])->assertUnprocessable();
+    }
+
+    public function test_per_group_option_charges_one_group_price_for_the_whole_party(): void
+    {
+        $experience = $this->createExperience();
+        $option = $this->createOption($experience);
+        $option->update(['price_type' => 'per_group', 'private_available' => true]);
+        $option->prices()->create(['participant_type' => 'group', 'price' => '700.00', 'currency' => 'MAD']);
+        $availability = $this->createAvailability($experience, $option);
+        $this->postJson(route('site.experiences.quote', ['locale' => 'en', 'experience' => $experience->slug]), [
+            'booking_type' => 'group', 'participants' => ['adult' => 4], 'option_id' => $option->id, 'availability_id' => $availability->id,
+        ])->assertOk()->assertJsonPath('data.total', '700.00')->assertJsonPath('data.charged_seats', 4);
+    }
+
+    public function test_package_can_disallow_private_even_when_experience_has_private_price(): void
+    {
+        $experience = $this->createExperience(['private_price' => '900.00']);
+        $option = $this->createOption($experience);
+        $option->update(['private_available' => false]);
+        $this->postJson(route('site.experiences.quote', ['locale' => 'en', 'experience' => $experience->slug]), [
+            'booking_type' => 'private', 'participants' => ['adult' => 2], 'option_id' => $option->id,
+        ])->assertUnprocessable()->assertJsonValidationErrors('booking_type');
+    }
+
+    public function test_unknown_participant_types_and_out_of_band_child_ages_are_rejected(): void
+    {
+        $experience = $this->createExperience();
+        $option = $this->createOption($experience);
+        $option->prices()->create(['participant_type' => 'child', 'min_age' => 5, 'max_age' => 12, 'price' => '40.00', 'currency' => 'MAD']);
+        $url = route('site.experiences.quote', ['locale' => 'en', 'experience' => $experience->slug]);
+        $this->postJson($url, ['booking_type' => 'group', 'participants' => ['adult' => 1, 'other' => 1]])->assertUnprocessable();
+        $this->postJson($url, ['booking_type' => 'group', 'option_id' => $option->id, 'participants' => ['adult' => 1, 'child' => 1], 'child_ages' => [3]])
+            ->assertUnprocessable()->assertJsonValidationErrors('child_ages');
     }
 
     private function createExperience(array $overrides = []): Experience

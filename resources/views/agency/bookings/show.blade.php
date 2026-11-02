@@ -5,6 +5,7 @@
 @section('page-title', '#' . $booking->id . ' — ' . $booking->guest_name)
 
 @section('content')
+    <x-site.booking-selection :snapshot="$booking->price_snapshot['booking_snapshot'] ?? []" />
 
     <div class="mb-4">
         <a href="{{ route('agency.bookings.index') }}" class="ag-back-link">
@@ -15,7 +16,7 @@
 
     @php
         $locale      = app()->getLocale();
-        $expTitle    = $booking->experience?->getTranslation('title', $locale, false) ?? '—';
+        $expTitle    = $booking->price_snapshot['booking_snapshot']['title'][$locale] ?? $booking->price_snapshot['booking_snapshot']['title']['en'] ?? $booking->experience?->getTranslation('title', $locale, false) ?? '—';
         $date        = $booking->availability?->date?->format('d M Y') ?? '—';
         $time        = $booking->availability ? substr($booking->availability->time_slot, 0, 5) : '—';
         $statusColor = match($booking->status) {

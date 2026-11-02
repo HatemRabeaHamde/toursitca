@@ -20,14 +20,14 @@ class ExperienceController extends Controller
 
     public function show(string $locale, Experience $experience, ExperiencePageService $pages): View
     {
-        abort_unless($experience->status === 'published', 404);
+        abort_unless($experience->isPubliclyBookable(), 404);
 
         return view('site.experiences.detail-v1', ['page' => $pages->build($experience)]);
     }
 
     public function previewShow(string $locale, Experience $experience, ExperienceDetailService $experienceDetailService): View
     {
-        abort_unless($experience->status === 'published', 404);
+        abort_unless($experience->isPubliclyBookable(), 404);
 
         $detail = $experienceDetailService->get($experience);
 

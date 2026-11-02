@@ -16,7 +16,8 @@ final class CreateExperienceAction
     public function execute(ExperienceFormData $data): Experience
     {
         return DB::transaction(function () use ($data): Experience {
-            $experience = Experience::query()->create($data->toModelAttributes());
+            $experience = Experience::query()->create(array_replace($data->toModelAttributes(), ['status' => 'draft']));
+            $experience->forceFill(['review_status' => 'draft'])->save();
 
             $this->experienceItineraryService->sync($experience, $data->itinerary);
 

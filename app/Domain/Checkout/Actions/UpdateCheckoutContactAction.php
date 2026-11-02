@@ -9,6 +9,10 @@ final class UpdateCheckoutContactAction
 {
     public function execute(CheckoutSession $checkoutSession, array $payload): CheckoutSession
     {
+        if ($checkoutSession->status === 'completed') {
+            return $checkoutSession;
+        }
+
         if (! $checkoutSession->isActive()) {
             throw ValidationException::withMessages([
                 'checkout_session' => __('ui.messages.checkout_session_expired'),

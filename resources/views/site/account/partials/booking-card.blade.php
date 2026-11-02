@@ -7,13 +7,14 @@
             <span class="lv-t-caption lv-tone-muted">{{ $card['stamp'] }}</span>
         </div>
         <h3 class="lv-t-h4 lv-serif lv-tone-ink"><a href="{{ $card['href'] }}">{{ $card['title'] }}</a></h3>
+        @if($card['option'])<p class="lv-t-label-s lv-tone-muted">{{ $card['option'] }}</p>@endif
         @if($card['hostLine'])
             <p class="flex items-center gap-2 lv-t-label-s lv-tone-ink">
                 @if($card['hostAvatar'])<img src="{{ $card['hostAvatar'] }}" alt="" width="28" height="28" class="lv-avatar lv-avatar--28" loading="lazy">@endif{{ $card['hostLine'] }}
             </p>
         @endif
         <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 lv-t-caption lv-tone-muted">
-            <li class="flex items-center gap-1.5"><x-site.atoms.icon name="calendar" :size="15" />{{ $card['dates'] }}</li>
+            <li class="flex items-center gap-1.5"><x-site.atoms.icon name="calendar" :size="15" />{{ $card['dates'] }}@if($card['time']) · {{ $card['time'] }}@endif</li>
             <li class="flex items-center gap-1.5"><x-site.atoms.icon name="users" :size="15" />{{ $card['travellersShort'] }} · {{ $card['group'] }}</li>
             <li class="flex items-center gap-1.5"><x-site.atoms.icon name="card-muted" :size="15" />{{ $card['total'] }}@if($card['status'] === 'pending') · {{ __('account.bookings.not_charged') }}@endif</li>
         </ul>

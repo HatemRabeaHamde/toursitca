@@ -74,6 +74,7 @@ class ExperienceShowTest extends TestCase
             ->assertSeeInOrder(['Not included', 'Flights', 'Tips'])
             ->assertSee('View photo')
             ->assertDontSee('id="reviews"', false)
+            ->assertDontSee('data-booking-reviews', false)
             ->assertDontSee('id="location"', false);
     }
 
@@ -120,6 +121,9 @@ class ExperienceShowTest extends TestCase
         $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
             ->assertOk()
             ->assertSee('Based on 4 reviews')
+            ->assertSee('data-booking-reviews', false)
+            ->assertSee('4 reviews')
+            ->assertSee('Shared group')
             ->assertSeeInOrder(['5 ★', '75%', '4 ★', '25%', '3 ★', '0%'], false);
     }
 

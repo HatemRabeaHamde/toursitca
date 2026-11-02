@@ -276,7 +276,7 @@ class LandingShowcaseSeeder extends Seeder
 
     private function desertCampOptions(Experience $experience): void
     {
-        $action = new SaveExperienceOptionAction;
+        $action = app(SaveExperienceOptionAction::class);
 
         $options = [
             [

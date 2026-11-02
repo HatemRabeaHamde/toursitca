@@ -30,7 +30,7 @@ final class ExperiencePageService
         private readonly DiscoverUrls $urls,
     ) {}
 
-    public function build(Experience $experience): ExperiencePageViewModel
+    public function build(Experience $experience, bool $preview = false): ExperiencePageViewModel
     {
         $experience->loadMissing(['host', 'reviews.booking.availability', 'reviews.user']);
         $detail = $this->details->get($experience);
@@ -59,7 +59,7 @@ final class ExperiencePageService
             ],
             host: $this->host($experience, $languages, $locale),
             reviews: $this->reviews($experience, $reviews, $locale),
-            booking: $this->booking($experience, $detail, $reviews, $languages, $locale),
+            booking: $this->booking($experience, $detail, $reviews, $languages, $locale, $preview),
             related: $this->related($detail, $locale),
             location: $this->location($experience, $detail),
         );
@@ -212,10 +212,11 @@ final class ExperiencePageService
      * @param  Collection<int, Review>  $reviews
      * @param  list<array{code: string, label: string}>  $languages
      */
-    private function booking(Experience $experience, ExperienceDetailData $detail, Collection $reviews, array $languages, string $locale): array
+    private function booking(Experience $experience, ExperienceDetailData $detail, Collection $reviews, array $languages, string $locale, bool $preview = false): array
     {
         $summary = $detail->bookingSummary;
         $currency = $summary['currency'];
+        $supportsPrivate = $summary['supports_private'] || collect($detail->experienceOptions)->contains(fn (array $option): bool => $option['private_available'] && $option['price_type'] === 'per_group');
 
         $options = array_map(function (array $option): array {
             $price = fn (string $type, string $key = 'price'): float => (float) (collect($option['prices'])->firstWhere('type', $type)[$key] ?? 0);
@@ -225,8 +226,10 @@ final class ExperiencePageService
                 'title' => (string) $option['title'],
                 'priceType' => $option['price_type'],
                 'adultPrice' => $price('adult'),
-                'childPrice' => $price('child'),
-                'groupPrice' => $price('group'),
+                'childPrice' => collect($option['prices'])->contains('type', 'child') ? $price('child') : $price('adult'),
+                'childMinAge' => collect($option['prices'])->firstWhere('type', 'child')['min_age'] ?? 0,
+                'childMaxAge' => collect($option['prices'])->firstWhere('type', 'child')['max_age'] ?? 17,
+                'groupPrice' => collect($option['prices'])->contains('type', 'group') ? $price('group') : ($option['price_type'] === 'per_group' ? $price('adult') : null),
                 'adultOriginal' => $price('adult', 'original_price'),
                 'childOriginal' => $price('child', 'original_price'),
                 'groupOriginal' => $price('group', 'original_price'),
@@ -267,7 +270,7 @@ final class ExperiencePageService
             'rating' => $reviews->isNotEmpty() ? number_format((float) $reviews->avg('rating'), 1) : null,
             'calendar' => $this->calendar($summary['calendar'], $locale),
             'hasDates' => $summary['has_future_availability'],
-            'supportsPrivate' => $summary['supports_private'],
+            'supportsPrivate' => $supportsPrivate,
             'pickup' => $summary['pickup_enabled'] ? __('experiences.detail.booking.pickup_place', ['city' => $experience->location_city]) : null,
             'hasChildPricing' => collect($detail->experienceOptions)
                 ->contains(fn (array $option): bool => collect($option['prices'])->contains('type', 'child')),
@@ -277,13 +280,14 @@ final class ExperiencePageService
             'languages' => $languages,
             'options' => $options,
             'store' => [
+                'preview' => $preview,
                 'checkoutUrl' => $summary['checkout_url'],
                 'quoteUrl' => $summary['quote_url'],
                 'csrfToken' => csrf_token(),
                 'defaultLanguage' => $languages[0]['code'] ?? $locale,
                 'experienceId' => $experience->id,
                 'maxParticipants' => (int) $experience->max_group_size,
-                'privateAvailable' => $summary['supports_private'],
+                'privateAvailable' => $supportsPrivate,
                 'pricePerPerson' => (float) $experience->price_per_person,
                 'privatePrice' => $summary['private_price'] !== null ? (float) $summary['private_price'] : null,
                 'currency' => $currency,
@@ -303,6 +307,8 @@ final class ExperiencePageService
                     'travellers' => $this->plural('experiences.detail.booking.travellers_value'),
                     'chooseOption' => __('booking_flow.cta.choose_option'),
                     'chooseDate' => __('booking_flow.cta.choose_date'),
+                    'hintTime' => __('experience_review.choose_time'),
+                    'hintAges' => __('booking_flow.validation.child_ages'),
                     'hintDate' => __('booking_flow.hint.date'),
                     'hintOption' => __('booking_flow.hint.option'),
                     'breakdown' => __('experiences.detail.booking.breakdown'),

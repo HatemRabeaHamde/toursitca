@@ -3,6 +3,7 @@
 namespace App\Domain\Experience\Actions;
 
 use App\Domain\Experience\Models\Experience;
+use App\Domain\Experience\Services\ExperienceDraftService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -10,6 +11,8 @@ use InvalidArgumentException;
 
 final class AttachExperienceMediaAction
 {
+    public function __construct(private readonly ExperienceDraftService $drafts) {}
+
     /**
      * @param  array<int, UploadedFile>  $images
      */
@@ -19,6 +22,29 @@ final class AttachExperienceMediaAction
         ?UploadedFile $videoFile = null,
         ?string $videoUrl = null,
     ): void {
+        if (($images !== [] || $videoFile !== null || $videoUrl !== null)
+            && ($experience->status === 'published' || $experience->changeRequests()->exists())) {
+            $this->drafts->mutate($experience, function (array $payload) use ($images, $videoFile, $videoUrl): array {
+                $counts = collect($payload['media'])->countBy('type');
+                if (($counts['image'] ?? 0) + count($images) > (int) config('media.max_per_experience')
+                    || ($counts['video'] ?? 0) + (int) ($videoFile !== null) + (int) ($videoUrl !== null) > (int) config('media.max_videos_per_experience')) {
+                    throw new InvalidArgumentException('Experience media limit exceeded.');
+                }
+                foreach ($images as $image) {
+                    $path = $this->moveUploadedFile($image, config('media.public_paths.experience_images'));
+                    $payload['media'][] = ['type' => 'image', 'source_type' => 'upload', 'path' => $path, 'sort_order' => count($payload['media']) + 1];
+                    $payload['attributes']['thumbnail'] ??= $path;
+                }
+                if ($videoFile !== null || $videoUrl !== null) {
+                    $payload['media'][] = ['type' => 'video', 'source_type' => $videoFile ? 'upload' : 'url', 'path' => $videoFile ? $this->moveUploadedFile($videoFile, config('media.public_paths.experience_videos')) : $videoUrl, 'sort_order' => count($payload['media']) + 1];
+                }
+
+                return $payload;
+            });
+
+            return;
+        }
+
         $this->guardMediaLimits($experience, $images, $videoFile, $videoUrl);
 
         $sortOrder = (int) $experience->media()->max('sort_order');

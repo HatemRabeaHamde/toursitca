@@ -157,20 +157,16 @@ class CheckoutSendRequestTest extends TestCase
         return array_map(fn (string $scenario): array => [$scenario], ['inactive', 'past', 'full', 'missing_hold', 'unpublished', 'suspended', 'expired']);
     }
 
-    public function test_completed_checkout_cannot_create_a_second_booking_or_payout(): void
+    public function test_completed_checkout_returns_the_same_booking_without_duplicate_effects(): void
     {
         [$session, $availability] = $this->createCheckoutSession(['user_id' => User::factory()->create()->id]);
         $action = app(ConfirmCheckoutSessionAction::class);
-        $action->execute($session);
-
-        try {
-            $action->execute($session);
-            $this->fail('Completed checkout must not be submitted again.');
-        } catch (ValidationException) {
-            $this->assertDatabaseCount('bookings', 1);
-            $this->assertDatabaseCount('payouts', 1);
-            $this->assertSame(2, $availability->fresh()->booked_seats);
-        }
+        $first = $action->execute($session);
+        $second = $action->execute($session);
+        $this->assertSame($first->id, $second->id);
+        $this->assertDatabaseCount('bookings', 1);
+        $this->assertDatabaseCount('payouts', 1);
+        $this->assertSame(2, $availability->fresh()->booked_seats);
     }
 
     public function test_private_platform_booking_confirms_without_creating_a_payout(): void

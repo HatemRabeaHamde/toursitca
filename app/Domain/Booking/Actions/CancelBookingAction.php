@@ -34,7 +34,7 @@ final class CancelBookingAction
             $this->seatReservationService->release(
                 $lockedBooking->availability,
                 $lockedBooking->booking_type,
-                $lockedBooking->participants_count,
+                $lockedBooking->charged_seats ?? $lockedBooking->participants_count,
             );
 
             $lockedBooking->forceFill([
@@ -43,7 +43,13 @@ final class CancelBookingAction
                 'cancellation_reason' => $reason,
             ])->save();
 
-            BookingCancelled::dispatch($lockedBooking);
+            $payout = $lockedBooking->payout()->lockForUpdate()->first();
+            if ($payout?->status === 'pending') {
+                $payout->forceFill(['status' => 'cancelled', 'notes' => trim(($payout->notes ?? '')."\nBooking cancelled; no transfer required.")])->save();
+            } elseif ($payout?->status === 'paid') {
+                $payout->forceFill(['notes' => trim(($payout->notes ?? '')."\nBooking cancelled after transfer; admin reconciliation required.")])->save();
+            }
+            DB::afterCommit(fn () => BookingCancelled::dispatch($lockedBooking));
 
             return $lockedBooking->refresh();
         });

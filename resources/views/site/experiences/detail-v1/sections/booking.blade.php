@@ -1,25 +1,7 @@
 {{-- Booking card v1. Same logic as before: experienceBooking store (date → quote → checkout) through experienceBookingCard. --}}
 @php($booking = $page->booking)
-
 <div class="lv-bcard lv-v1-bcard">
-
-    <div class="flex items-start justify-between gap-4">
-        <div class="flex flex-col">
-            <p class="flex items-baseline gap-1.5">
-                <span class="lv-t-body-m lv-tone-muted">{{ __('experiences.detail.booking.from') }}</span>
-                <span class="lv-bcard__amount" x-text="money(unitPrice())">{{ $booking['priceFrom'] }}</span>
-            </p>
-            <span class="lv-t-caption lv-tone-muted" x-show="!isFlat()">{{ __('experiences.detail.booking.per_person') }}</span>
-        </div>
-        @if($booking['rating'])
-            <p class="flex items-center gap-[5px]">
-                <x-site.atoms.icon name="star" :size="16" />
-                <span class="lv-t-label-m lv-tone-ink">{{ $booking['rating'] }}</span>
-                <span class="lv-t-caption lv-tone-muted">({{ $page->hero['reviews'] }})</span>
-            </p>
-        @endif
-    </div>
-
+    <x-site.molecules.booking-summary :price="$booking['priceFrom']" :rating="$booking['rating']" :reviews="$page->hero['reviews']" />
     <x-site.molecules.booking-field :label="__('experiences.detail.v1.booking.dates')">
         <button type="button" class="lv-bfield__control" @click="openDates()" aria-haspopup="dialog" :aria-expanded="dateOpen.toString()">
             <x-site.atoms.icon name="calendar-terracotta" :size="18" />
@@ -28,7 +10,7 @@
             <x-site.atoms.icon name="chevron-down-muted" :size="16" />
         </button>
     </x-site.molecules.booking-field>
-
+    <x-site.molecules.booking-time />
     @if($booking['hasChildPricing'])
         @include('site.experiences.detail.partials.travellers')
     @else
@@ -41,14 +23,13 @@
             </div>
         </div>
     @endif
-
     @if($booking['supportsPrivate'])
         <fieldset class="lv-bfield">
             <legend class="lv-t-label-m lv-tone-ink mb-2">{{ __('experiences.detail.v1.booking.group_type') }}</legend>
             <div class="grid grid-cols-2 gap-2.5">
                 @foreach(['group' => ['small_group', 'small_group_hint'], 'private' => ['private', 'private_hint']] as $type => [$label, $hint])
                     <label class="lv-v1-choice" :class="{ 'is-selected': store.bookingType === @js($type) }">
-                        <input type="radio" name="booking-type" value="{{ $type }}" class="sr-only" @checked($type === 'group') @change="setBookingType(@js($type))">
+                        <input type="radio" name="booking-type" x-model="store.bookingType" value="{{ $type }}" :disabled="store.isStartingCheckout || (@js($type) === 'private' && chosenOption() && !chosenOption().private)" class="sr-only" @checked($type === 'group') @change="setBookingType(@js($type))">
                         <img src="{{ asset('images/site/icons/check-circle-success.svg') }}" alt="" width="20" height="20" x-show="store.bookingType === @js($type)" @if($type !== 'group') x-cloak @endif>
                         <img src="{{ asset('images/site/icons/radio-empty.svg') }}" alt="" width="20" height="20" x-show="store.bookingType !== @js($type)" @if($type === 'group') x-cloak @endif>
                         <span class="flex min-w-0 flex-col">
@@ -109,9 +90,7 @@
 
     <ul class="flex flex-col gap-2.5 lv-t-caption lv-tone-ink">
         <li class="flex items-center gap-2.5"><x-site.atoms.icon name="card-ink" :size="17" />{{ __('experiences.detail.v1.booking.no_card') }}</li>
-        @if($booking['cancellationHours'])
-            <li class="flex items-center gap-2.5"><x-site.atoms.icon name="calendar-terracotta" :size="17" />{{ __('experiences.detail.v1.booking.free_cancellation', ['hours' => $booking['cancellationHours']]) }}</li>
-        @endif
+        <li class="flex items-center gap-2.5" x-show="chosenOption()?.cancellationHours !== null && chosenOption()?.cancellationHours !== undefined" x-cloak><x-site.atoms.icon name="calendar-terracotta" :size="17" /><span x-text="@js(__('experiences.detail.v1.booking.free_cancellation', ['hours' => ':hours'])).replace(':hours', chosenOption()?.cancellationHours)"></span></li>
     </ul>
 
     @include('site.experiences.detail.partials.calendar')

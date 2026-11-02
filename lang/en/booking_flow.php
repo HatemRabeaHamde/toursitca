@@ -1,12 +1,27 @@
 <?php
 
 return [
+    'validation' => [
+        'payout_cancelled' => 'A cancelled booking payout cannot be marked as paid.',
+        'age_policy' => 'Age rules depend on the selected package.',
+        'child_ages' => 'Enter a valid age for every child within the package age range.',
+        'child_min' => 'Minimum child age',
+        'child_max' => 'Maximum child age',
+        'slot_locked' => 'A slot with bookings or active holds cannot move or lose capacity.',
+        'age_range' => 'Ages :min–:max',
+        'price_help' => 'Per group means one price for the whole party. Private availability is a separate setting.',
+        'price_label' => 'Base price (person or group)',
+    ],
     'cta' => [
         'choose_option' => 'Choose an option',
         'choose_date' => 'Choose a date',
     ],
     'hint' => ['date' => 'Pick an available date to start.', 'option' => 'Now choose the option you want.'],
     'card' => [
+        'per_group' => '/ group',
+        'shared_group' => 'Shared group',
+        'reviews' => ':count review|:count reviews',
+
         'option' => 'Option',
         'option_below' => 'Choose your option below',
         'option_empty' => 'Pick a date, then choose your option',

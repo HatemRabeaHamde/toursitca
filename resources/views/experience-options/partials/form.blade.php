@@ -1,5 +1,5 @@
 @php
-    $adultPrice = $option?->prices->firstWhere('participant_type', 'adult');
+    $adultPrice = $option?->prices->firstWhere('participant_type', 'adult') ?? $option?->prices->firstWhere('participant_type', 'group');
     $childPrice = $option?->prices->firstWhere('participant_type', 'child');
     $languagesText = $option?->languages->pluck('language_code')->implode(PHP_EOL);
 @endphp
@@ -32,12 +32,15 @@
             'active' => __('ui.status.active'),
             'inactive' => __('ui.status.inactive'),
         ]" :selected="old('status', $option?->status ?? 'active')" required />
-        <x-ui.input name="adult_price" type="number" step="0.01" min="0" :label="__('ui.fields.adult_price')" :value="old('adult_price', $adultPrice?->price)" required />
+        <x-ui.input name="adult_price" type="number" step="0.01" min="0" :label="__('booking_flow.validation.price_label')" :value="old('adult_price', $adultPrice?->price)" required />
         <x-ui.input name="adult_original_price" type="number" step="0.01" min="0" :label="__('ui.fields.adult_original_price')" :value="old('adult_original_price', $adultPrice?->original_price)" />
+        <x-ui.input name="child_min_age" type="number" min="0" max="17" :label="__('booking_flow.validation.child_min')" :value="old('child_min_age', $childPrice?->min_age ?? 0)" />
+        <x-ui.input name="child_max_age" type="number" min="0" max="17" :label="__('booking_flow.validation.child_max')" :value="old('child_max_age', $childPrice?->max_age ?? 12)" />
         <x-ui.input name="child_price" type="number" step="0.01" min="0" :label="__('ui.fields.child_price')" :value="old('child_price', $childPrice?->price)" />
         <x-ui.input name="child_original_price" type="number" step="0.01" min="0" :label="__('ui.fields.child_original_price')" :value="old('child_original_price', $childPrice?->original_price)" />
     </div>
 
+    <p class="text-sm text-slate-600">{{ __('booking_flow.validation.price_help') }}</p>
     <x-ui.textarea name="languages_text" :label="__('ui.fields.languages')" :value="old('languages_text', $languagesText)" />
 
     <div class="grid gap-3 md:grid-cols-3">

@@ -8,14 +8,7 @@
      x-data="experienceBookingCard(@js(['store' => $booking['store'], 'card' => $booking['card'], 'options' => $booking['options']]))"
      @keydown.escape.window="dateOpen = false; closeGuests()">
 
-    <div class="flex items-center justify-between gap-4">
-        <p class="flex flex-wrap items-baseline gap-x-1.5">
-            <span class="lv-t-body-m lv-tone-muted">{{ __('experiences.detail.booking.from') }}</span>
-            <span class="lv-bcard__amount" x-text="money(unitPrice())">{{ $booking['priceFrom'] }}</span>
-            <span class="lv-t-caption lv-tone-muted" x-show="!isFlat()">{{ __('experiences.detail.booking.per_person') }}</span>
-        </p>
-        @if($booking['rating'])<x-site.atoms.rating :value="$booking['rating']" size="s" />@endif
-    </div>
+    <x-site.molecules.booking-summary :price="$booking['priceFrom']" :rating="$booking['rating']" :reviews="$page->hero['reviews']" />
 
     <x-site.molecules.booking-field :label="__('experiences.detail.booking.dates')">
         <button type="button" class="lv-bfield__control" @click="openDates()" aria-haspopup="dialog" :aria-expanded="dateOpen.toString()">
@@ -25,6 +18,8 @@
             <x-site.atoms.icon name="chevron-down-muted" :size="16" />
         </button>
     </x-site.molecules.booking-field>
+
+    <x-site.molecules.booking-time />
 
     <div class="grid grid-cols-2 gap-3">
         @include('site.experiences.detail.partials.travellers')

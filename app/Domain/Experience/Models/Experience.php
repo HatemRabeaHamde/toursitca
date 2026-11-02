@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
@@ -55,6 +56,8 @@ class Experience extends Model
     protected function casts(): array
     {
         return [
+            'published_version' => 'integer',
+            'reviewed_at' => 'datetime',
             'duration_hours' => 'decimal:1',
             'price_per_person' => 'decimal:2',
             'original_price' => 'decimal:2',
@@ -83,6 +86,16 @@ class Experience extends Model
 
             $experience->slug = static::uniqueSlug($slug, $experience->exists ? $experience->id : null);
         });
+    }
+
+    public function changeRequests(): HasMany
+    {
+        return $this->hasMany(ExperienceChangeRequest::class);
+    }
+
+    public function latestChangeRequest(): HasOne
+    {
+        return $this->hasOne(ExperienceChangeRequest::class)->latestOfMany();
     }
 
     public function host(): BelongsTo
@@ -148,7 +161,12 @@ class Experience extends Model
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('status', 'published');
+        return $query->where('status', 'published')->whereHas('agency', fn (Builder $agency): Builder => $agency->where('status', 'active'));
+    }
+
+    public function isPubliclyBookable(): bool
+    {
+        return $this->status === 'published' && $this->agency?->status === 'active';
     }
 
     public function supportsPrivateBooking(): bool

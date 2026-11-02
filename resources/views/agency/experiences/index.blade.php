@@ -28,23 +28,16 @@
                             <tr>
                                 <td class="py-3 pr-4 font-medium text-slate-950">{{ $experience->getTranslation('title', app()->getLocale(), false) }}</td>
                                 <td class="py-3 pr-4 text-slate-600">{{ $experience->location_city }}</td>
-                                <td class="py-3 pr-4"><x-ui.badge color="slate">{{ __('ui.status.'.$experience->status) }}</x-ui.badge></td>
+                                <td class="py-3 pr-4"><x-ui.badge color="slate">{{ __('ui.status.'.$experience->status) }} · {{ __('experience_review.states.'.$experience->review_status) }}</x-ui.badge></td>
                                 <td class="py-3 pr-4 text-slate-600">{{ number_format((float) $experience->price_per_person, 2) }} MAD</td>
                                 <td class="py-3 pr-4 text-slate-600">{{ $experience->private_price ? number_format((float) $experience->private_price, 2).' MAD' : '-' }}</td>
                                 <td class="py-3 pr-4">
                                     <div class="flex flex-wrap justify-end gap-2">
                                         <x-ui.button size="sm" variant="secondary" :href="route('agency.experiences.edit', $experience)">{{ __('ui.nav.edit_experience') }}</x-ui.button>
                                         <x-ui.button size="sm" variant="secondary" :href="route('agency.experiences.options.index', $experience)">{{ __('ui.nav.options') }}</x-ui.button>
-                                        @if ($experience->status === 'published')
-                                            <form method="POST" action="{{ route('agency.experiences.unpublish', $experience) }}">
-                                                @csrf
-                                                <x-ui.button size="sm" variant="ghost" type="submit">{{ __('ui.nav.unpublish') }}</x-ui.button>
-                                            </form>
-                                        @else
-                                            <form method="POST" action="{{ route('agency.experiences.publish', $experience) }}">
-                                                @csrf
-                                                <x-ui.button size="sm" type="submit">{{ __('ui.nav.publish') }}</x-ui.button>
-                                            </form>
+                                        <x-site.experience-review-actions :experience="$experience" />
+                                        @if($experience->status === 'published')
+                                            <form method="POST" action="{{ route('agency.experiences.unpublish', $experience) }}">@csrf<x-ui.button size="sm" variant="ghost" type="submit">{{ __('ui.nav.unpublish') }}</x-ui.button></form>
                                         @endif
                                         <form method="POST" action="{{ route('agency.experiences.destroy', $experience) }}" onsubmit="return confirm('{{ __('ui.messages.confirm_delete_experience') }}')">
                                             @csrf

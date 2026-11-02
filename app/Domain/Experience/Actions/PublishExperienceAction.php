@@ -3,18 +3,21 @@
 namespace App\Domain\Experience\Actions;
 
 use App\Domain\Experience\Models\Experience;
-use InvalidArgumentException;
+use App\Domain\Experience\Services\ExperienceReviewService;
+use App\Models\User;
+use Illuminate\Contracts\Auth\Factory;
 
 final class PublishExperienceAction
 {
+    public function __construct(private readonly Factory $auth, private readonly ExperienceReviewService $reviews) {}
+
     public function execute(Experience $experience): Experience
     {
-        if ($experience->images()->count() === 0 && $experience->thumbnail === null) {
-            throw new InvalidArgumentException('Experience must have at least one image before publishing.');
-        }
+        $actor = $this->auth->guard()->user();
+        abort_unless($actor instanceof User && $actor->can('publish', $experience), 403);
+        $pending = $experience->changeRequests()->where('status', 'pending')->latest('id')->first();
+        $pending ??= $this->reviews->submit($experience, $actor);
 
-        $experience->forceFill(['status' => 'published'])->save();
-
-        return $experience->refresh();
+        return $this->reviews->decide($pending, $actor, 'approved', null);
     }
 }

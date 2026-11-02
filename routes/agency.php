@@ -4,12 +4,14 @@ use App\Http\Controllers\Agency\AvailabilityController;
 use App\Http\Controllers\Agency\BookingController;
 use App\Http\Controllers\Agency\DashboardController;
 use App\Http\Controllers\Agency\ExperienceController;
-use App\Http\Controllers\Agency\HostController;
 use App\Http\Controllers\Agency\ExperienceOptionController;
+use App\Http\Controllers\Agency\ExperienceReviewController;
+use App\Http\Controllers\Agency\HostController;
 use App\Http\Controllers\Agency\PayoutController;
 use App\Http\Controllers\Agency\ProfileController;
 use App\Http\Controllers\Agency\RegistrationController;
 use App\Http\Controllers\Agency\ReviewController;
+use App\Http\Controllers\ExperienceDraftPreviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (): void {
@@ -38,6 +40,7 @@ Route::prefix('agency')
             Route::delete('/hosts/{host}', [HostController::class, 'destroy'])->name('hosts.destroy');
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::get('/experiences/{experience}/draft-preview', ExperienceDraftPreviewController::class)->name('experiences.draft-preview');
             Route::get('/experiences', [ExperienceController::class, 'index'])->name('experiences.index');
             Route::get('/experiences/create', [ExperienceController::class, 'create'])->name('experiences.create');
             Route::post('/experiences', [ExperienceController::class, 'store'])->name('experiences.store');
@@ -48,7 +51,9 @@ Route::prefix('agency')
             Route::post('/experiences/{experience}/options', [ExperienceOptionController::class, 'store'])->name('experiences.options.store');
             Route::patch('/experiences/{experience}/options/{option}', [ExperienceOptionController::class, 'update'])->name('experiences.options.update');
             Route::delete('/experiences/{experience}/options/{option}', [ExperienceOptionController::class, 'destroy'])->name('experiences.options.destroy');
-            Route::post('/experiences/{experience}/publish', [ExperienceController::class, 'publish'])->name('experiences.publish');
+            Route::post('/experiences/{experience}/review', [ExperienceReviewController::class, 'store'])->name('experiences.review.store');
+            Route::delete('/experiences/{experience}/review', [ExperienceReviewController::class, 'destroy'])->name('experiences.review.destroy');
+            Route::post('/experiences/{experience}/publish', [ExperienceReviewController::class, 'store'])->name('experiences.publish');
             Route::post('/experiences/{experience}/unpublish', [ExperienceController::class, 'unpublish'])->name('experiences.unpublish');
             Route::get('/availability', [AvailabilityController::class, 'index'])->name('availability.index');
             Route::post('/availability', [AvailabilityController::class, 'store'])->name('availability.store');

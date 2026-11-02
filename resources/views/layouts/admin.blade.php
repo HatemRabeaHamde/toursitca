@@ -46,6 +46,7 @@
                 @endif
             </a>
 
+            <a href="{{ route('admin.experience-reviews.index') }}" class="adm-nav-link {{ request()->routeIs('admin.experience-reviews.*') ? 'is-active' : '' }}">{{ __('experience_review.queue') }}</a>
             <a href="{{ route('admin.experiences.index') }}"
                class="adm-nav-link {{ request()->routeIs('admin.experiences.*') ? 'is-active' : '' }}">
                 <svg class="adm-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

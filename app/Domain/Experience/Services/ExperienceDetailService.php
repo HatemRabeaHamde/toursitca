@@ -151,8 +151,10 @@ final class ExperienceDetailService
 
     private function bookingSummary(Experience $experience): array
     {
+        $activeOptionIds = $experience->options->where('status', 'active')->pluck('id')->all();
         $futureAvailabilities = $experience->availabilities
-            ->filter(fn ($availability): bool => $availability->is_active && $availability->date->toDateString() >= now()->toDateString())
+            ->filter(fn ($availability): bool => $availability->is_active && $availability->startsAt()->isFuture()
+                && ($availability->experience_option_id === null || in_array($availability->experience_option_id, $activeOptionIds, true)))
             ->sortBy(fn ($availability): string => $availability->date->toDateString().' '.$availability->time_slot)
             ->values();
 
@@ -184,14 +186,14 @@ final class ExperienceDetailService
         ];
     }
 
-    private function calendar(Collection $availabilities): array
+    private function calendar(Collection $availabilities, ?CarbonImmutable $month = null, bool $includeMonths = true): array
     {
         $selectedDate = $availabilities
             ->first(fn ($availability): bool => $availability->availableSeats() > 0)
             ?->date
             ?->toDateString();
 
-        $month = CarbonImmutable::parse($selectedDate ?: now()->toDateString())->startOfMonth();
+        $month ??= CarbonImmutable::parse($selectedDate ?: now()->toDateString())->startOfMonth();
         $cursor = $month->startOfWeek(CarbonInterface::MONDAY);
         $end = $month->endOfMonth()->endOfWeek(CarbonInterface::SUNDAY);
         $availabilityByDate = $availabilities->groupBy(fn ($availability): string => $availability->date->toDateString());
@@ -226,6 +228,11 @@ final class ExperienceDetailService
                     'selected' => $selectedDate === $dateKey,
                     'status' => $this->calendarStatus($maxSeats, $availableSeats),
                     'availability_ids' => $availabilityIds,
+                    'slots' => $availableDaySlots->map(fn ($slot): array => [
+                        'id' => $slot->id, 'time' => substr($slot->time_slot, 0, 5),
+                        'optionId' => $slot->experience_option_id, 'seats' => $slot->availableSeats(),
+                        'privateOpen' => $slot->booked_seats === 0 && $slot->held_seats === 0,
+                    ])->all(),
                 ];
 
                 $cursor = $cursor->addDay();
@@ -234,11 +241,17 @@ final class ExperienceDetailService
             $weeks[] = $week;
         }
 
-        return [
-            'month_label' => $month->translatedFormat('j F Y'),
+        $calendar = [
+            'month_label' => $month->locale(app()->getLocale())->translatedFormat('F Y'),
             'weekdays' => __('ui.experience_detail.weekdays_short'),
             'weeks' => $weeks,
         ];
+        if ($includeMonths) {
+            $calendar['months'] = $availabilities->map(fn ($slot): string => $slot->date->format('Y-m'))
+                ->unique()->sort()->values()->map(fn (string $key): array => $this->calendar($availabilities, CarbonImmutable::parse($key.'-01'), false))->all();
+        }
+
+        return $calendar;
     }
 
     private function calendarStatus(int $maxSeats, int $availableSeats): ?string
@@ -268,6 +281,8 @@ final class ExperienceDetailService
                 $prices = $option->prices
                     ->map(fn ($price): array => [
                         'type' => $price->participant_type,
+                        'min_age' => $price->min_age,
+                        'max_age' => $price->max_age,
                         'price' => number_format((float) $price->price, 2, '.', ''),
                         'original_price' => $price->original_price !== null ? number_format((float) $price->original_price, 2, '.', '') : null,
                     ])

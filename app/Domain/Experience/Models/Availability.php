@@ -3,6 +3,7 @@
 namespace App\Domain\Experience\Models;
 
 use App\Domain\Booking\Models\Booking;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -44,6 +45,11 @@ class Availability extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function startsAt(): CarbonImmutable
+    {
+        return CarbonImmutable::parse($this->date->toDateString().' '.$this->time_slot, config('booking.timezone', 'Africa/Casablanca'));
     }
 
     public function availableSeats(): int

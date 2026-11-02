@@ -7,6 +7,7 @@ use App\Domain\Checkout\Models\CheckoutSession;
 use App\Domain\Experience\Models\Availability;
 use App\Domain\Experience\Models\Experience;
 use App\Domain\Experience\Support\ExperienceFormatter;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
 
 /** One trip's display values, shared by the request pages and My bookings. */
@@ -16,7 +17,7 @@ final class BookingTripPresenter
 
     public function fromCheckout(CheckoutSession $session): array
     {
-        return $this->present(
+        return $this->withSnapshot($this->present(
             $session->experience,
             $session->availability,
             (array) $session->participants,
@@ -26,12 +27,12 @@ final class BookingTripPresenter
             (float) ($session->price_snapshot['total'] ?? 0),
             (string) $session->currency,
             $session->option?->getTranslation('title', app()->getLocale(), true),
-        );
+        ), $session->price_snapshot['booking_snapshot'] ?? []);
     }
 
     public function fromBooking(Booking $booking): array
     {
-        return $this->present(
+        return $this->withSnapshot($this->present(
             $booking->experience,
             $booking->availability,
             (array) $booking->participants,
@@ -41,7 +42,36 @@ final class BookingTripPresenter
             (float) $booking->total_price,
             (string) ($booking->price_snapshot['currency'] ?? config('payment.currency', 'MAD')),
             $booking->option?->getTranslation('title', app()->getLocale(), true),
-        );
+        ), $booking->price_snapshot['booking_snapshot'] ?? []);
+    }
+
+    private function withSnapshot(array $trip, array $snapshot): array
+    {
+        $locale = app()->getLocale();
+        $trip['cancellationHours'] = $snapshot['cancellation_hours'] ?? null;
+        $trip['time'] = $snapshot['time'] ?? null;
+        if ($snapshot === []) {
+            return $trip;
+        }
+        $trip['title'] = $snapshot['title'][$locale] ?? $snapshot['title']['en'] ?? $trip['title'];
+        $trip['option'] = $snapshot['option'][$locale] ?? $snapshot['option']['en'] ?? $trip['option'];
+        $trip['hostName'] = $snapshot['host_name'];
+        $trip['hostLine'] = $snapshot['host_name'] ?? $snapshot['agency_name'];
+        $trip['hostAvatar'] = filled($snapshot['host_avatar'] ?? null) ? $this->url($snapshot['host_avatar']) : null;
+        $trip['hostVerified'] = $snapshot['host_verified'] ?? false;
+        $trip['hostLicence'] = $snapshot['host_licence'] ?? null;
+        if (! empty($snapshot['date'])) {
+            $date = CarbonImmutable::parse($snapshot['date'])->locale($locale);
+            $days = max(1, (int) ceil((float) $snapshot['duration_hours'] / 24));
+            $trip['date'] = $date;
+            $trip['dates'] = $days === 1 ? $date->translatedFormat('M j, Y') : $date->translatedFormat('M j').' – '.$date->addDays($days - 1)->translatedFormat('M j, Y');
+            $trip['place'] = collect([$snapshot['location_city'] ?? null, $this->format->duration((float) $snapshot['duration_hours'])])->filter()->implode(' · ');
+        }
+        if ($snapshot['price_type'] === 'per_group') {
+            $trip['priceLine'] = __('experiences.detail.booking.breakdown_flat');
+        }
+
+        return $trip;
     }
 
     private function present(Experience $experience, Availability $availability, array $participants, int $count, string $type, float $unit, float $total, string $currency, ?string $option = null): array

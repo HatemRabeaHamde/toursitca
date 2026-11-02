@@ -17,7 +17,7 @@ class BookingController extends Controller
 {
     public function create(string $locale, Experience $experience): View
     {
-        abort_unless($experience->status === 'published', 404);
+        abort_unless($experience->isPubliclyBookable(), 404);
 
         $experience->load('agency');
 

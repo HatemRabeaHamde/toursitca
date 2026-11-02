@@ -6,6 +6,8 @@ export function registerExperienceBookingStore(Alpine) {
         bookingType: 'group',
         selectedDate: null,
         selectedDateLabel: null,
+        selectedTime: null,
+        selectedDaySlots: [],
         selectedAvailabilityIds: {},
         selectedLanguage: null,
         activeOption: null,
@@ -14,6 +16,8 @@ export function registerExperienceBookingStore(Alpine) {
         quotesByOption: {},
         quoteError: null,
         isQuoting: false,
+        quoteVersion: 0,
+        quoteRequestId: 0,
         isStartingCheckout: false,
         config: {
             checkoutUrl: null,
@@ -66,6 +70,7 @@ export function registerExperienceBookingStore(Alpine) {
         },
 
         setBookingType(type) {
+            if (this.isStartingCheckout) return;
             if (type === 'private' && ! this.config.privateAvailable) {
                 return;
             }
@@ -75,6 +80,8 @@ export function registerExperienceBookingStore(Alpine) {
         },
 
         selectDate(date, label, availabilityIds = {}) {
+            if (this.isStartingCheckout) return;
+
             this.selectedDate = date;
             this.selectedDateLabel = label;
             this.selectedAvailabilityIds = availabilityIds || {};
@@ -83,6 +90,9 @@ export function registerExperienceBookingStore(Alpine) {
         },
 
         clearQuote() {
+            this.quoteVersion++;
+            this.isQuoting = false;
+            this.availabilityChecked = false;
             this.quote = null;
             this.quotesByOption = {};
             this.quoteError = null;
@@ -101,7 +111,7 @@ export function registerExperienceBookingStore(Alpine) {
             const ids = this.selectedAvailabilityIds || {};
             const optionKey = optionId === null || optionId === undefined ? null : String(optionId);
 
-            return (optionKey && ids[optionKey]) || ids.default || ids.any || null;
+            return optionKey ? (ids[optionKey] || ids.default || null) : (ids.default || ids.any || null);
         },
 
         hasSelection(optionId = null) {
@@ -126,7 +136,7 @@ export function registerExperienceBookingStore(Alpine) {
             };
 
             if (this.children > 0 && this.childAges.length > 0) {
-                payload.child_ages = this.childAges.map(age => age ?? 0);
+                payload.child_ages = this.childAges;
             }
 
             return payload;
@@ -140,6 +150,11 @@ export function registerExperienceBookingStore(Alpine) {
                 return null;
             }
 
+            const version = this.quoteVersion;
+            const requestId = ++this.quoteRequestId;
+            const body = JSON.stringify(this.requestPayload(targetOption));
+            const current = () => requestId === this.quoteRequestId && version === this.quoteVersion
+                && body === JSON.stringify(this.requestPayload(targetOption)) && targetOption === this.activeOption;
             this.isQuoting = true;
             this.quoteError = null;
 
@@ -147,13 +162,15 @@ export function registerExperienceBookingStore(Alpine) {
                 const response = await fetch(this.config.quoteUrl, {
                     method: 'POST',
                     headers: this.headers(),
-                    body: JSON.stringify(this.requestPayload(targetOption)),
+                    body,
                 });
                 const payload = await response.json();
 
                 if (! response.ok) {
                     throw new Error(this.errorMessage(payload));
                 }
+
+                if (!current()) return null;
 
                 const quote = payload.data;
                 const key = targetOption === null || targetOption === undefined ? 'default' : String(targetOption);
@@ -164,18 +181,20 @@ export function registerExperienceBookingStore(Alpine) {
                     ...this.quotesByOption,
                     [key]: quote,
                 };
-                this.activeOption = targetOption;
 
                 return quote;
             } catch (error) {
+                if (!current()) return null;
+
                 this.quoteError = error.message || this.config.strings.quoteFailed || 'Could not check availability.';
                 return null;
             } finally {
-                this.isQuoting = false;
+                if (current()) this.isQuoting = false;
             }
         },
 
         async startCheckout(optionId = null) {
+            if (this.isStartingCheckout || this.config.preview) return;
             const targetOption = optionId ?? this.activeOption;
 
             if (! this.hasSelection(targetOption)) {
@@ -235,6 +254,8 @@ export function registerExperienceBookingStore(Alpine) {
         },
 
         liveTotal() {
+            const group = this.activePricing();
+            if (group?.priceType === 'per_group') return Number(group.groupPrice) || 0;
             if (this.bookingType === 'private' && this.config.privatePrice !== null) {
                 return this.config.privatePrice;
             }
@@ -277,6 +298,8 @@ export function registerExperienceBookingStore(Alpine) {
         },
 
         livePriceLabel() {
+            const group = this.activePricing();
+            if (group?.priceType === 'per_group') return this.config.currency + ' ' + (Number(group.groupPrice) || 0).toFixed(2);
             if (this.bookingType === 'private' && this.config.privatePrice !== null) {
                 return this.config.currency + ' ' + this.config.privatePrice.toFixed(2);
             }

@@ -3,13 +3,17 @@
 namespace Tests\Feature\Booking;
 
 use App\Domain\Agency\Models\Agency;
+use App\Domain\Booking\Actions\CancelBookingAction;
 use App\Domain\Booking\Actions\CreateBookingAction;
 use App\Domain\Booking\DTOs\BookingData;
+use App\Domain\Experience\Actions\UpdateAvailabilityAction;
 use App\Domain\Experience\Models\Availability;
 use App\Domain\Experience\Models\Experience;
+use App\Domain\Payout\Actions\MarkPayoutPaidAction;
 use App\Domain\Payout\Models\Payout;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -131,6 +135,39 @@ class AdminBookingFlowTest extends TestCase
             ->assertOk()
             ->assertSee('Paid Guest')
             ->assertDontSee('Pending Guest');
+    }
+
+    public function test_cancellation_releases_seats_and_keeps_cancelled_payout_out_of_payables(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findOrCreate('admin', 'web'));
+        $availability = $this->createAvailability();
+        $booking = app(CreateBookingAction::class)->execute(new BookingData(
+            availabilityId: $availability->id, bookingType: 'group', participantsCount: 2,
+            guestName: 'Cancel test', guestEmail: 'cancel@example.test',
+        ));
+        app(CancelBookingAction::class)->execute($booking);
+        $this->assertSame(0, $availability->fresh()->booked_seats);
+        $payout = $booking->payout()->firstOrFail();
+        $this->assertSame('cancelled', $payout->status);
+        $this->expectException(ValidationException::class);
+        app(MarkPayoutPaidAction::class)->execute($payout, $admin);
+    }
+
+    public function test_private_booking_keeps_slot_locked_when_capacity_increases(): void
+    {
+        $availability = $this->createAvailability();
+        app(CreateBookingAction::class)->execute(new BookingData(
+            availabilityId: $availability->id, bookingType: 'private', participantsCount: 2,
+            guestName: 'Private test', guestEmail: 'private@example.test',
+        ));
+        app(UpdateAvailabilityAction::class)->execute($availability, [
+            'experience_id' => $availability->experience_id, 'experience_option_id' => null,
+            'date' => $availability->date->toDateString(), 'time_slot' => substr($availability->time_slot, 0, 5),
+            'max_seats' => 8, 'is_active' => true,
+        ]);
+        $this->assertSame(8, $availability->fresh()->booked_seats);
+        $this->assertSame(0, $availability->fresh()->availableSeats());
     }
 
     private function createAvailability(string $agencyName = 'Test Agency', string $agencySlug = 'test-agency'): Availability

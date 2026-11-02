@@ -3,6 +3,7 @@
 @section('title', __('ui.pages.options_title'))
 
 @section('content')
+    <x-site.experience-review-notice :experience="$experience" :prefix="$routePrefix" />
     <div class="mb-4">
         <x-ui.button :href="route($routePrefix.'.experiences.index')" variant="secondary">{{ __('ui.nav.back_to_experiences') }}</x-ui.button>
     </div>

@@ -8,6 +8,7 @@
 @endsection
 
 @section('content')
+    <x-site.booking-selection :snapshot="$booking->price_snapshot['booking_snapshot'] ?? []" />
 
     @if(session('success'))
         <div class="adm-flash adm-flash--success" x-data x-init="setTimeout(() => $el.remove(), 4000)">

@@ -39,7 +39,9 @@
                         <img src="{{ $trip['image'] }}" alt="" width="254" height="118" class="lv-flow-summary__image">
                         <p class="lv-t-h5 lv-serif lv-tone-ink">{{ $trip['title'] }}</p>
                         <dl class="lv-kv lv-t-caption">
+                            @if($trip['option'])<div><dt>{{ __('booking_flow.card.option') }}</dt><dd>{{ $trip['option'] }}</dd></div>@endif
                             @if($trip['hostLine'])<div><dt>{{ __('account.sent.host') }}</dt><dd>{{ $trip['hostLine'] }}</dd></div>@endif
+                            @if($trip['time'])<div><dt>{{ __('experience_review.time') }}</dt><dd>{{ $trip['time'] }}</dd></div>@endif
                             <div><dt>{{ __('account.checkout.dates') }}</dt><dd>{{ $trip['dates'] }}</dd></div>
                             <div><dt>{{ __('experiences.detail.booking.travellers') }}</dt><dd>{{ $trip['travellers'] }} · {{ $trip['group'] }}</dd></div>
                             <div><dt>{{ __('experiences.detail.booking.total') }}</dt><dd>{{ $trip['total'] }}</dd></div>
