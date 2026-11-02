@@ -4,34 +4,65 @@
     <div class="lv-container lv-xsearch-wrap">
         <form id="xp-filters" method="GET" action="{{ $page->indexUrl }}#results" role="search" aria-label="{{ __('experiences.search.label') }}"
               class="lv-xsearch" @submit.prevent="submit($el)">
-            <label class="lv-xsearch__field">
-                <span class="lv-t-label-xs lv-tone-ink">{{ __('experiences.search.where') }}</span>
-                <select name="city" class="lv-t-body-s" @change="$el.form.requestSubmit()">
-                    <option value="">{{ __('experiences.search.any_destination') }}</option>
+            {{-- Where: custom listbox instead of the browser's native menu; the value rides in a hidden input. --}}
+            @php($cityLabel = collect($page->cities)->firstWhere('value', $page->filters->city)['label'] ?? '')
+            <div class="lv-xsearch__field lv-xsearch__field--where" x-data="{ open: false, value: @js((string) $page->filters->city), label: @js($cityLabel),
+                 pick(value, label) { this.value = value; this.label = label; this.open = false; this.$nextTick(() => this.$refs.input.form.requestSubmit()) },
+                 sync(value) { this.value = value; this.label = [...this.$refs.list.querySelectorAll('[data-value]')].find((el) => el.dataset.value === value)?.dataset.label ?? '' } }"
+                 @click.outside="open = false" @keydown.escape="open = false" @live-filters:synced.window="sync($event.detail.params.get('city') || '')">
+                <button type="button" class="lv-xsearch__trigger" @click="open = !open" aria-haspopup="listbox" :aria-expanded="open.toString()">
+                    <x-site.atoms.icon name="pin-terracotta" :size="20" />
+                    <span class="lv-xsearch__text">
+                        <span class="lv-xsearch__label">{{ __('experiences.search.where') }}</span>
+                        <span class="lv-xsearch__value" :class="{ 'is-placeholder': !value }" x-text="label || @js(__('experiences.search.any_destination'))">{{ $cityLabel ?: __('experiences.search.any_destination') }}</span>
+                    </span>
+                    <x-site.atoms.icon name="chevron-down-muted" :size="16" class="lv-xsearch__chevron" ::class="{ 'is-open': open }" />
+                </button>
+                <input type="hidden" name="city" :value="value" x-ref="input">
+                <ul class="lv-xmenu" x-ref="list" role="listbox" x-show="open" x-cloak x-transition.opacity.duration.150ms data-lenis-prevent>
+                    <li><button type="button" role="option" class="lv-xmenu__item" :class="{ 'is-selected': !value }" :aria-selected="(!value).toString()" @click="pick('', '')">{{ __('experiences.search.any_destination') }}</button></li>
                     @foreach($page->cities as $city)
-                        <option value="{{ $city['value'] }}" @selected($page->filters->city === $city['value'])>{{ $city['label'] }}</option>
+                        <li><button type="button" role="option" class="lv-xmenu__item" :class="{ 'is-selected': value === @js($city['value']) }" :aria-selected="(value === @js($city['value'])).toString()" data-value="{{ $city['value'] }}" data-label="{{ $city['label'] }}" @click="pick(@js($city['value']), @js($city['label']))">{{ $city['label'] }}</button></li>
                     @endforeach
-                </select>
+                </ul>
+            </div>
+            <span class="lv-xsearch__divider" aria-hidden="true"></span>
+
+            {{-- When: native date picker (shows "Add dates" until focused). --}}
+            <label class="lv-xsearch__field lv-xsearch__field--when">
+                <x-site.atoms.icon name="calendar-terracotta" :size="20" />
+                <span class="lv-xsearch__text">
+                    <span class="lv-xsearch__label">{{ __('experiences.search.when') }}</span>
+                    <input type="{{ $page->filters->date ? 'date' : 'text' }}" name="date" value="{{ $page->filters->date }}" min="{{ now()->toDateString() }}"
+                           placeholder="{{ __('experiences.search.add_dates') }}" class="lv-xsearch__value" aria-label="{{ __('experiences.search.when') }}"
+                           x-data @focus="$el.type = 'date'; $nextTick(() => { try { $el.showPicker() } catch (e) {} })"
+                           @blur="if (! $el.value) $el.type = 'text'" @change="$el.form.requestSubmit()">
+                </span>
             </label>
             <span class="lv-xsearch__divider" aria-hidden="true"></span>
-            <label class="lv-xsearch__field">
-                <span class="lv-t-label-xs lv-tone-ink">{{ __('experiences.search.when') }}</span>
-                {{-- Shows "Add dates" until focused, then the native date picker. --}}
-                <input type="{{ $page->filters->date ? 'date' : 'text' }}" name="date" value="{{ $page->filters->date }}" min="{{ now()->toDateString() }}"
-                       placeholder="{{ __('experiences.search.add_dates') }}" class="lv-t-body-s" aria-label="{{ __('experiences.search.when') }}"
-                       x-data @focus="$el.type = 'date'; $nextTick(() => { try { $el.showPicker() } catch (e) {} })"
-                       @blur="if (! $el.value) $el.type = 'text'" @change="$el.form.requestSubmit()">
-            </label>
-            <span class="lv-xsearch__divider" aria-hidden="true"></span>
-            <label class="lv-xsearch__field">
-                <span class="lv-t-label-xs lv-tone-ink">{{ __('experiences.search.who') }}</span>
-                <select name="participants" class="lv-t-body-s" @change="$el.form.requestSubmit()">
-                    <option value="">{{ __('experiences.search.any_travellers') }}</option>
+
+            {{-- Who --}}
+            @php($whoLabel = collect($page->travellers())->firstWhere('value', (string) $page->filters->participants)['label'] ?? '')
+            <div class="lv-xsearch__field lv-xsearch__field--who" x-data="{ open: false, value: @js((string) $page->filters->participants), label: @js($whoLabel),
+                 pick(value, label) { this.value = value; this.label = label; this.open = false; this.$nextTick(() => this.$refs.input.form.requestSubmit()) },
+                 sync(value) { this.value = value; this.label = [...this.$refs.list.querySelectorAll('[data-value]')].find((el) => el.dataset.value === value)?.dataset.label ?? '' } }"
+                 @click.outside="open = false" @keydown.escape="open = false" @live-filters:synced.window="sync($event.detail.params.get('participants') || '')">
+                <button type="button" class="lv-xsearch__trigger" @click="open = !open" aria-haspopup="listbox" :aria-expanded="open.toString()">
+                    <x-site.atoms.icon name="user-terracotta" :size="20" />
+                    <span class="lv-xsearch__text">
+                        <span class="lv-xsearch__label">{{ __('experiences.search.who') }}</span>
+                        <span class="lv-xsearch__value" :class="{ 'is-placeholder': !value }" x-text="label || @js(__('experiences.search.any_travellers'))">{{ $whoLabel ?: __('experiences.search.any_travellers') }}</span>
+                    </span>
+                    <x-site.atoms.icon name="chevron-down-muted" :size="16" class="lv-xsearch__chevron" ::class="{ 'is-open': open }" />
+                </button>
+                <input type="hidden" name="participants" :value="value" x-ref="input">
+                <ul class="lv-xmenu" x-ref="list" role="listbox" x-show="open" x-cloak x-transition.opacity.duration.150ms data-lenis-prevent>
+                    <li><button type="button" role="option" class="lv-xmenu__item" :class="{ 'is-selected': !value }" :aria-selected="(!value).toString()" @click="pick('', '')">{{ __('experiences.search.any_travellers') }}</button></li>
                     @foreach($page->travellers() as $option)
-                        <option value="{{ $option['value'] }}" @selected((string) $page->filters->participants === $option['value'])>{{ $option['label'] }}</option>
+                        <li><button type="button" role="option" class="lv-xmenu__item" :class="{ 'is-selected': value === @js($option['value']) }" :aria-selected="(value === @js($option['value'])).toString()" data-value="{{ $option['value'] }}" data-label="{{ $option['label'] }}" @click="pick(@js($option['value']), @js($option['label']))">{{ $option['label'] }}</button></li>
                     @endforeach
-                </select>
-            </label>
+                </ul>
+            </div>
             <button type="submit" class="lv-xsearch__submit lv-t-label-m">
                 <x-site.atoms.icon name="search-white" :size="16" />
                 <span>{{ __('experiences.search.submit') }}</span>

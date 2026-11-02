@@ -19,6 +19,8 @@ export function liveFilters({ defaults = {} } = {}) {
         request: null,
 
         init() {
+            // Nested x-data blocks (the sticky search bar) change what `$root` means, so keep the real root.
+            this.rootEl = this.$el;
             this.onPopState = () => this.load(window.location.href, { history: 'none', syncForm: true });
             window.addEventListener('popstate', this.onPopState);
         },
@@ -93,7 +95,7 @@ export function liveFilters({ defaults = {} } = {}) {
         },
 
         fragment(key) {
-            return this.$root.querySelector(`[data-fragment="${key}"]`);
+            return this.rootEl.querySelector(`[data-fragment="${key}"]`);
         },
 
         render(parts) {
@@ -167,18 +169,20 @@ export function liveFilters({ defaults = {} } = {}) {
         },
 
         scrollToTop() {
-            if (reducedMotion()) this.$root.scrollIntoView();
-            else window.dispatchEvent(new CustomEvent('lv:scroll-to', { detail: { target: this.$root } }));
+            if (reducedMotion()) this.rootEl.scrollIntoView();
+            else window.dispatchEvent(new CustomEvent('lv:scroll-to', { detail: { target: this.rootEl } }));
         },
 
         /** Back / forward: put the URL's filters back into every named field. */
         syncForm(url) {
-            this.$root.querySelectorAll('input[name], select[name]').forEach((field) => {
+            this.rootEl.querySelectorAll('input[name], select[name]').forEach((field) => {
                 if (field.type === 'hidden') return;
                 const values = url.searchParams.getAll(field.name);
                 if (field.type === 'checkbox' || field.type === 'radio') field.checked = values.includes(field.value);
                 else field.value = values[0] ?? defaults[field.name] ?? '';
             });
+            // Fields that keep their own state (the search bar's menus) re-read the URL.
+            window.dispatchEvent(new CustomEvent('live-filters:synced', { detail: { params: url.searchParams } }));
         },
 
         withoutKeys(url, keys) {
