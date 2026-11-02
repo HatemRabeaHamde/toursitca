@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'timezone' => 'Africa/Casablanca',
     // How long an unpaid booking holds seats before auto-cancellation.
     'unpaid_ttl_hours' => env('BOOKING_UNPAID_TTL_HOURS', 24),
 
