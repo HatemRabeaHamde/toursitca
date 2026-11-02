@@ -67,6 +67,9 @@
                     </a>
                 @endforeach
             </nav>
+            @if($content->preview && request()->boolean('content_edit'))
+            <div class="sc-destination-records">@foreach($slides as $slide)<x-site.admin-record kind="destinations" :record-id="$slide['destination_id']" :label="$slide['name'] ?: __('content.manage_records')" />@endforeach</div>
+            @endif
         @endif
     </div>
 </section>

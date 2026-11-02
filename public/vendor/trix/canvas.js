@@ -17,7 +17,7 @@
  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
  nodes.forEach(node => {
   const keys=candidates.get(node.textContent.trim());
-  if (!keys || keys.length !== 1 || !node.parentElement || node.parentElement.closest('[data-content-key],script,style')) return;
+  if (!keys || keys.length !== 1 || !node.parentElement || node.parentElement.closest('[data-admin-record-container],[data-content-key],script,style')) return;
   const span=document.createElement('span'); span.textContent=node.textContent;
   node.replaceWith(span); register(span,keys[0]);
  });
@@ -26,9 +26,12 @@
  });
  const style = document.createElement('style');
  style.textContent = 'html .lv [data-reveal],html .lv [data-reveal] *,html .lv [data-hero-title] span{opacity:1!important;visibility:visible!important;transform:none!important} [data-content-key]{cursor:pointer!important} [data-content-key]:hover{outline:2px dashed #d7a54b;outline-offset:5px} [data-content-key]:focus{outline:2px solid #d7a54b}';
+ style.textContent += '.sc-record-button{position:relative;z-index:80;padding:7px 11px;margin:8px 0;background:#fffdf8;color:#173d35;border:1px solid #a6baa6;border-radius:6px;font:600 12px system-ui;cursor:pointer;max-width:100%;text-align:start}.lv article[data-admin-record-container]{position:relative}.lv article>.sc-record-button{position:absolute;top:8px;right:8px;max-width:85%}.sc-destination-records{display:flex;flex-wrap:wrap;gap:8px}.lv-faq>.sc-record-button{margin-top:12px}';
  document.head.append(style);
  document.addEventListener('submit', event => { event.preventDefault(); event.stopImmediatePropagation(); }, true);
  document.addEventListener('click', event => {
+  const record=event.target.closest('[data-admin-record-url]') || (!event.target.closest('[data-content-key]') && event.target.closest('[data-admin-record-container]')?.querySelector('[data-admin-record-url]'));
+  if(record) {event.preventDefault();event.stopImmediatePropagation();parent.postMessage({type:'site-content-record',url:record.dataset.adminRecordUrl,label:record.dataset.adminRecordLabel},location.origin);return;}
   let target = event.target.closest('[data-content-key]') || event.target.closest('a')?.querySelector('[data-content-key]');
   const hero=event.target.closest('[data-hero]');
   if (!target && hero) {

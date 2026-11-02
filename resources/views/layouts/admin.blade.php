@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/trix/admin-workspace.css') }}">
     @stack('styles')
 </head>
-<body>
+<body @class(['adm-record-frame'=>request()->boolean('content_frame'), 'adm-focused-record'=>isset($canvasRecord)])>
 <div class="adm-shell" x-data="{ adminNavOpen: false }" :class="{ 'adm-nav-open': adminNavOpen }" @keydown.escape.window="adminNavOpen = false">
     <button class="adm-sidebar-backdrop" x-show="adminNavOpen" x-cloak @click="adminNavOpen = false" aria-label="{{ __('content.close') }}"></button>
 
@@ -218,6 +218,10 @@
     </div>
 
 </div>
+    @if(request()->boolean('content_frame'))
+    <script>window.siteContentRecord = @js($canvasRecord ?? null); window.siteContentRecordSaved = @js((bool) session('success'));</script>
+    <script src="{{ asset('vendor/trix/record-frame.js') }}" defer></script>
+    @endif
     @stack('scripts')
 </body>
 </html>

@@ -60,6 +60,7 @@ final class HostCards
         // Portrait cards need a photo; hosts without one stay off the discovery pages.
         return $query->active()->whereNotNull('photo_url')->sorted()->limit($limit)->get()
             ->map(fn (Host $host): array => [
+                'id' => $host->id,
                 'href' => route('site.hosts.show', ['locale' => $locale, 'host' => $host->slug]),
                 'name' => $host->name,
                 'role' => trim($host->getTranslation('role', $locale, true).($host->city ? ' · '.$host->city : '')),

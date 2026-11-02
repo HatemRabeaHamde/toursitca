@@ -5,7 +5,8 @@
 
 @section('content')
 
-<div x-data="testimonialsManager()" x-init="load()" class="adm-grid-3-2">
+<div x-data="testimonialsManager()" x-init="await load(); if (window.siteContentRecord) { items = [window.siteContentRecord]; startEdit(items[0]); }" class="adm-grid-3-2">
+    @if(isset($canvasRecord))<p class="adm-flash" x-show="toast" x-text="toast" role="status" style="grid-column:1/-1"></p>@endif
 
     {{-- Add form --}}
     <div>
@@ -130,21 +131,21 @@
 
                     <div x-show="editingId === item.id" style="display:flex;flex-direction:column;gap:7px;">
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                            <input type="text" x-model.trim="editForm.author_name_en" class="adm-input" placeholder="Author EN" required style="font-size:.8rem;padding:5px 8px;">
-                            <input type="text" x-model="editForm.author_country" class="adm-input" placeholder="Country" style="font-size:.8rem;padding:5px 8px;">
+                            <label class="sc-record-field"><span>Author EN</span><input type="text" x-model.trim="editForm.author_name_en" class="adm-input" placeholder="Author EN" required style="font-size:.8rem;padding:5px 8px;"></label>
+                            <label class="sc-record-field"><span>Country</span><input type="text" x-model="editForm.author_country" class="adm-input" placeholder="Country" style="font-size:.8rem;padding:5px 8px;"></label>
                         </div>
-                        <input type="text" x-model="editForm.author_name_fr" class="adm-input" placeholder="Author FR" style="font-size:.8rem;padding:5px 8px;">
-                        <input type="text" x-model="editForm.author_name_nl" class="adm-input" placeholder="Author NL" style="font-size:.8rem;padding:5px 8px;">
-                        <textarea x-model.trim="editForm.body_en" class="adm-textarea" rows="2" placeholder="Quote EN" required style="font-size:.8rem;padding:5px 8px;"></textarea>
-                        <textarea x-model="editForm.body_fr" class="adm-textarea" rows="2" placeholder="Quote FR" style="font-size:.8rem;padding:5px 8px;"></textarea>
-                        <textarea x-model="editForm.body_nl" class="adm-textarea" rows="2" placeholder="Quote NL" style="font-size:.8rem;padding:5px 8px;"></textarea>
+                        <label class="sc-record-field"><span>Author FR</span><input type="text" x-model="editForm.author_name_fr" class="adm-input" placeholder="Author FR" style="font-size:.8rem;padding:5px 8px;"></label>
+                        <label class="sc-record-field"><span>Author NL</span><input type="text" x-model="editForm.author_name_nl" class="adm-input" placeholder="Author NL" style="font-size:.8rem;padding:5px 8px;"></label>
+                        <label class="sc-record-field"><span>Quote EN</span><textarea x-model.trim="editForm.body_en" class="adm-textarea" rows="2" placeholder="Quote EN" required style="font-size:.8rem;padding:5px 8px;"></textarea></label>
+                        <label class="sc-record-field"><span>Quote FR</span><textarea x-model="editForm.body_fr" class="adm-textarea" rows="2" placeholder="Quote FR" style="font-size:.8rem;padding:5px 8px;"></textarea></label>
+                        <label class="sc-record-field"><span>Quote NL</span><textarea x-model="editForm.body_nl" class="adm-textarea" rows="2" placeholder="Quote NL" style="font-size:.8rem;padding:5px 8px;"></textarea></label>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                            <input type="text" x-model="editForm.experience_title" class="adm-input" placeholder="Experience title" style="font-size:.8rem;padding:5px 8px;">
-                            <input type="url" x-model="editForm.avatar_url" class="adm-input" placeholder="Avatar URL" style="font-size:.8rem;padding:5px 8px;">
+                            <label class="sc-record-field"><span>Experience title</span><input type="text" x-model="editForm.experience_title" class="adm-input" placeholder="Experience title" style="font-size:.8rem;padding:5px 8px;"></label>
+                            <label class="sc-record-field"><span>Avatar URL</span><input type="url" x-model="editForm.avatar_url" class="adm-input" placeholder="Avatar URL" style="font-size:.8rem;padding:5px 8px;"></label>
                         </div>
                         <div style="display:flex;gap:8px;align-items:center;">
-                            <input type="number" x-model.number="editForm.rating" class="adm-input" min="1" max="5" step="0.1" placeholder="Rating" style="font-size:.8rem;padding:5px 8px;width:80px;">
-                            <input type="number" x-model.number="editForm.sort_order" class="adm-input" min="0" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:70px;">
+                            <label class="sc-record-field"><span>Rating</span><input type="number" x-model.number="editForm.rating" class="adm-input" min="1" max="5" step="0.1" placeholder="Rating" style="font-size:.8rem;padding:5px 8px;width:80px;"></label>
+                            <label class="sc-record-field"><span>Sort</span><input type="number" x-model.number="editForm.sort_order" class="adm-input" min="0" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:70px;"></label>
                             <div style="margin-left:auto;display:flex;gap:6px;">
                                 <button @click="cancelEdit()" class="adm-btn adm-btn--ghost adm-btn--sm">Cancel</button>
                                 <button @click="update(item)" :disabled="saving" class="adm-btn adm-btn--success adm-btn--sm">Save</button>
@@ -255,7 +256,7 @@ function testimonialsManager() {
             } catch(e) { this.showToast('Network error.', false); }
         },
 
-        showToast(msg, ok=true) { this.toast=msg; this.toastOk=ok; setTimeout(()=>this.toast='',3500); },
+        showToast(msg, ok=true) { if(ok) window.dispatchEvent(new CustomEvent('site-record-saved')); this.toast=msg; this.toastOk=ok; setTimeout(()=>this.toast='',3500); },
     };
 }
 </script>

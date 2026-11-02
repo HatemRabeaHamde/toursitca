@@ -6,11 +6,12 @@
     $summary = implode(' · ', array_merge($card->tags, $card->features));
 @endphp
 
-<article {{ $attributes->class([
+<article data-admin-record-container {{ $attributes->class([
     'lv-tile relative flex flex-col justify-between',
     'lv-tile--lead min-h-[560px] p-7 lg:min-h-[624px] lg:px-9 lg:pb-9' => $lead,
     'lv-tile--featured aspect-[288/300] p-[18px] sm:p-[22px]' => ! $lead,
-]) }}>
+ ]) }}>
+    <x-site.admin-record kind="experiences" :record-id="$card->id" :label="$card->title" />
     <img src="{{ $card->thumbnailUrl ?: config('landing.images.card_fallback') }}" alt="" loading="lazy" width="{{ $lead ? 576 : 288 }}" height="{{ $lead ? 624 : 300 }}">
 
     <span class="flex flex-wrap gap-2">

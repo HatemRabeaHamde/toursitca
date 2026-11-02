@@ -3,7 +3,8 @@
 
 @php($icons = config('landing_v2.icons'))
 
-<div class="lv-faq">
+<div class="lv-faq" data-admin-record-container>
+    <x-site.admin-record kind="faqs" :record-id="$faq['id'] ?? null" :label="$faq['question']" />
     <h3>
         <button type="button" class="flex min-h-[84px] w-full items-center justify-between gap-6 py-5 text-start"
             @click="open = open === {{ $index }} ? null : {{ $index }}"

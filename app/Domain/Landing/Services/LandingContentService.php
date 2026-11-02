@@ -21,6 +21,7 @@ final class LandingContentService
             ->limit($limit)
             ->get()
             ->map(fn (ExperienceCategory $category): array => [
+                'id' => $category->id,
                 'slug' => $category->slug,
                 'name' => $category->getTranslation('name', app()->getLocale(), false),
                 'image_url' => $category->image_url,
@@ -35,6 +36,7 @@ final class LandingContentService
             ->limit($limit)
             ->get()
             ->map(fn (Destination $destination): array => [
+                'id' => $destination->id,
                 'slug' => $destination->slug,
                 'name' => $destination->getTranslation('name', app()->getLocale(), false),
                 'city' => $destination->city,
@@ -87,6 +89,7 @@ final class LandingContentService
             ->limit($limit)
             ->get()
             ->map(fn (LandingFaq $faq): array => [
+                'id' => $faq->id,
                 'question' => $faq->getTranslation('question', app()->getLocale(), false),
                 'answer' => $faq->getTranslation('answer', app()->getLocale(), false),
             ]);
@@ -115,6 +118,7 @@ final class LandingContentService
             ->limit($limit)
             ->get()
             ->map(fn (Testimonial $testimonial): array => [
+                'id' => $testimonial->id,
                 'author_name' => $testimonial->getTranslation('author_name', app()->getLocale(), false),
                 'author_country' => $testimonial->author_country,
                 'body' => $testimonial->getTranslation('body', app()->getLocale(), false),

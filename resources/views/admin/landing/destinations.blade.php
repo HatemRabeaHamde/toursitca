@@ -5,7 +5,8 @@
 
 @section('content')
 
-<div x-data="destinationsManager()" x-init="load()" class="adm-grid-3-2">
+<div x-data="destinationsManager()" x-init="await load(); if (window.siteContentRecord) { items = [window.siteContentRecord]; startEdit(items[0]); }" class="adm-grid-3-2">
+    @if(isset($canvasRecord))<p class="adm-flash" x-show="toast" x-text="toast" role="status" style="grid-column:1/-1"></p>@endif
 
     {{-- Add form --}}
     <div>
@@ -107,13 +108,13 @@
                                     <div style="font-size:.7rem;color:var(--adm-text-muted);" x-text="item.city"></div>
                                 </div>
                                 <div x-show="editingId === item.id" style="display:flex;flex-direction:column;gap:5px;">
-                                    <input type="text" x-model.trim="editForm.name_en" class="adm-input" placeholder="Name EN" required style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model="editForm.name_fr" class="adm-input" placeholder="Name FR" style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model="editForm.name_nl" class="adm-input" placeholder="Name NL" style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model.trim="editForm.city" class="adm-input" placeholder="City" required style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="url" x-model="editForm.image_url" class="adm-input" placeholder="Image URL" style="font-size:.8rem;padding:5px 8px;">
+                                    <label class="sc-record-field"><span>Name EN</span><input type="text" x-model.trim="editForm.name_en" class="adm-input" placeholder="Name EN" required style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Name FR</span><input type="text" x-model="editForm.name_fr" class="adm-input" placeholder="Name FR" style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Name NL</span><input type="text" x-model="editForm.name_nl" class="adm-input" placeholder="Name NL" style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>City</span><input type="text" x-model.trim="editForm.city" class="adm-input" placeholder="City" required style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Image URL</span><input type="url" x-model="editForm.image_url" class="adm-input" placeholder="Image URL" style="font-size:.8rem;padding:5px 8px;"></label>
                                     <div style="display:flex;gap:6px;">
-                                        <input type="number" x-model.number="editForm.sort_order" class="adm-input" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:60px;">
+                                        <label class="sc-record-field"><span>Sort</span><input type="number" x-model.number="editForm.sort_order" class="adm-input" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:60px;"></label>
                                         <select x-model="editForm.is_featured" class="adm-select" style="font-size:.8rem;padding:5px 8px;">
                                             <option value="0">Not featured</option>
                                             <option value="1">Featured</option>
@@ -244,7 +245,7 @@ function destinationsManager() {
             } catch(e) { this.showToast('Network error.', false); }
         },
 
-        showToast(msg, ok=true) { this.toast = msg; this.toastOk = ok; setTimeout(() => this.toast = '', 3500); },
+        showToast(msg, ok=true) { if(ok) window.dispatchEvent(new CustomEvent('site-record-saved')); this.toast = msg; this.toastOk = ok; setTimeout(() => this.toast = '', 3500); },
     };
 }
 </script>

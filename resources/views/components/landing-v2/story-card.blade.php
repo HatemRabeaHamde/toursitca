@@ -6,7 +6,8 @@
     $bookUrl = route('site.experiences.index', ['locale' => app()->getLocale(), 'search' => $story['experience_title']]);
 @endphp
 
-<article class="lv-card flex h-full flex-col overflow-hidden">
+<article data-admin-record-container class="lv-card flex h-full flex-col overflow-hidden">
+    <x-site.admin-record kind="testimonials" :record-id="$story['id'] ?? null" :label="$story['author_name']" />
     <img src="{{ $story['cover_url'] }}" alt="{{ $story['cover_alt'] ?? '' }}" loading="lazy" width="384" height="140" class="h-[140px] w-full object-cover">
 
     <div class="flex-1 px-[26px] py-[22px]">

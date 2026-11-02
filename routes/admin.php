@@ -13,15 +13,17 @@ use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Middleware\EmbedSiteContentRecord;
 use App\Http\Middleware\RedirectLegacyContentSettings;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
     ->as('admin.')
-    ->middleware(['auth', 'user.not_banned', 'role:admin'])
+    ->middleware(['auth', 'user.not_banned', 'role:admin', EmbedSiteContentRecord::class])
     ->group(function (): void {
         Route::redirect('/', '/admin/dashboard')->name('home');
         Route::get('/site-content', [SiteContentController::class, 'index'])->name('site-content.index');
+        Route::get('/site-content/records/{kind}/{record}/edit', [SiteContentController::class, 'record'])->whereNumber('record')->name('site-content.record');
         Route::get('/site-content/{page}/settings/{panel}', [SiteContentController::class, 'settings'])->name('site-content.settings');
         Route::post('/site-content/{page}/settings/{panel}', [SiteContentController::class, 'update'])->name('site-content.settings.update');
         Route::get('/site-content/{page}', [SiteContentController::class, 'edit'])->middleware(RedirectLegacyContentSettings::class)->name('site-content.edit');

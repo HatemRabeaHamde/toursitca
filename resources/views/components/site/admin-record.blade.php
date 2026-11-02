@@ -1,0 +1,1 @@
+<button type="button" class="sc-record-button" data-admin-record-url="{{ $url }}" data-admin-record-label="{{ $label }}" data-admin-record-kind="{{ $kind }}" title="{{ $persisted ? __('content.edit_live_record') : __('content.manage_demo_record') }}">{{ $persisted ? __('content.edit_record', ['label'=>$label]) : __('content.manage_records', ['label'=>$label]) }}</button>

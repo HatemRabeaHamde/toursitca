@@ -36,6 +36,7 @@ final readonly class HomeV2ViewModel
             ->take($this->limit('hero_cities'))
             ->values()
             ->map(fn (array $city): array => [
+                'id' => $city['id'] ?? null,
                 'name' => $city['name'],
                 'url' => $this->discover['cities'][mb_strtolower($city['name'])] ?? $city['url'],
                 'image_url' => $city['image_url'],
@@ -64,6 +65,7 @@ final readonly class HomeV2ViewModel
             $image = $content->get($key);
 
             return [
+                'destination_id' => $city['id'] ?? null,
                 'name' => $content->get('hero.slide_'.$slot.'_label') ?: $city['name'],
                 'url' => $content->get('hero.slide_'.$slot.'_url') ?: $city['url'],
                 'image_url' => $index === 0 || ! empty($image['url']) || ! empty($image['removed']) ? $image['url'] : $city['image_url'],
@@ -104,6 +106,7 @@ final readonly class HomeV2ViewModel
     public function hosts(): Collection
     {
         return collect($this->hosts)->map(fn (array $host): array => [
+            'id' => $host['id'] ?? null,
             'name' => $host['name'],
             'role' => $host['role'],
             'quote' => $host['quote'],

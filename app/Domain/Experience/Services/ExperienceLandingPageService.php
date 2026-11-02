@@ -282,6 +282,7 @@ final class ExperienceLandingPageService
         $slug = (string) $category['slug'];
 
         return [
+            'id' => $category['id'] ?? null,
             'slug' => $slug,
             'name' => $category['name'],
             'experiences_count' => (int) ($counts[$slug] ?? 0),
@@ -298,6 +299,7 @@ final class ExperienceLandingPageService
         $city = (string) $destination['city'];
 
         return [
+            'id' => $destination['id'] ?? null,
             'name' => $destination['name'],
             'experiences_count' => (int) ($counts[mb_strtolower($city)] ?? 0),
             'url' => route('site.experiences.index', [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SiteContent\EditSiteContentRecordAction;
 use App\Actions\SiteContent\RestoreSiteContentAction;
 use App\Actions\SiteContent\SaveSiteContentAction;
 use App\Actions\SiteContent\ShowSiteContentAction;
@@ -22,6 +23,11 @@ final class SiteContentController extends Controller
     public function edit(ManageSiteContentRequest $request, ShowSiteContentAction $action, string $page): View
     {
         return $action->execute($page);
+    }
+
+    public function record(ManageSiteContentRequest $request, EditSiteContentRecordAction $action, string $kind, int $record): View
+    {
+        return $action->execute($kind, $record);
     }
 
     public function settings(ManageSiteContentRequest $request, ShowSiteContentSettingsAction $action, string $page, string $panel): View

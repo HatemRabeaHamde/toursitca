@@ -1,7 +1,8 @@
 {{-- Verified local host portrait on the landing (data: HomeV2ViewModel::hosts()). --}}
 @props(['host'])
 
-<article class="lv-card lv-card--shadow relative h-full overflow-hidden">
+<article data-admin-record-container class="lv-card lv-card--shadow relative h-full overflow-hidden">
+    <x-site.admin-record kind="hosts" :record-id="$host['id'] ?? null" :label="$host['name']" />
     <div class="relative">
         <img src="{{ $host['image_url'] }}" alt="{{ $host['name'] }}" loading="lazy" width="220" height="236" class="lv-host-img">
         <span class="lv-host-badge absolute -bottom-6 start-4" aria-hidden="true">

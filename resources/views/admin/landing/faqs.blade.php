@@ -5,7 +5,8 @@
 
 @section('content')
 
-<div x-data="faqsManager()" x-init="load()" class="adm-grid-3-2">
+<div x-data="faqsManager()" x-init="await load(); if (window.siteContentRecord) { items = [window.siteContentRecord]; startEdit(items[0]); }" class="adm-grid-3-2">
+    @if(isset($canvasRecord))<p class="adm-flash" x-show="toast" x-text="toast" role="status" style="grid-column:1/-1"></p>@endif
 
     {{-- Add form --}}
     <div>
@@ -99,12 +100,12 @@
                     </div>
 
                     <div x-show="editingId === item.id" style="display:flex;flex-direction:column;gap:8px;">
-                        <input type="text" x-model.trim="editForm.question_en" class="adm-input" placeholder="Question EN" required style="font-size:.82rem;padding:6px 10px;">
-                        <input type="text" x-model="editForm.question_fr" class="adm-input" placeholder="Question FR" style="font-size:.82rem;padding:6px 10px;">
-                        <input type="text" x-model="editForm.question_nl" class="adm-input" placeholder="Question NL" style="font-size:.82rem;padding:6px 10px;">
-                        <textarea x-model.trim="editForm.answer_en" class="adm-textarea" rows="3" placeholder="Answer EN" required style="font-size:.82rem;padding:6px 10px;"></textarea>
-                        <textarea x-model="editForm.answer_fr" class="adm-textarea" rows="2" placeholder="Answer FR" style="font-size:.82rem;padding:6px 10px;"></textarea>
-                        <textarea x-model="editForm.answer_nl" class="adm-textarea" rows="2" placeholder="Answer NL" style="font-size:.82rem;padding:6px 10px;"></textarea>
+                        <label class="sc-record-field"><span>Question EN</span><input type="text" x-model.trim="editForm.question_en" class="adm-input" placeholder="Question EN" required style="font-size:.82rem;padding:6px 10px;"></label>
+                        <label class="sc-record-field"><span>Question FR</span><input type="text" x-model="editForm.question_fr" class="adm-input" placeholder="Question FR" style="font-size:.82rem;padding:6px 10px;"></label>
+                        <label class="sc-record-field"><span>Question NL</span><input type="text" x-model="editForm.question_nl" class="adm-input" placeholder="Question NL" style="font-size:.82rem;padding:6px 10px;"></label>
+                        <label class="sc-record-field"><span>Answer EN</span><textarea x-model.trim="editForm.answer_en" class="adm-textarea" rows="3" placeholder="Answer EN" required style="font-size:.82rem;padding:6px 10px;"></textarea></label>
+                        <label class="sc-record-field"><span>Answer FR</span><textarea x-model="editForm.answer_fr" class="adm-textarea" rows="2" placeholder="Answer FR" style="font-size:.82rem;padding:6px 10px;"></textarea></label>
+                        <label class="sc-record-field"><span>Answer NL</span><textarea x-model="editForm.answer_nl" class="adm-textarea" rows="2" placeholder="Answer NL" style="font-size:.82rem;padding:6px 10px;"></textarea></label>
                         <div style="display:flex;gap:8px;justify-content:flex-end;">
                             <button @click="cancelEdit()" class="adm-btn adm-btn--ghost adm-btn--sm">Cancel</button>
                             <button @click="update(item)" :disabled="saving" class="adm-btn adm-btn--success adm-btn--sm">Save Changes</button>
@@ -210,7 +211,7 @@ function faqsManager() {
             } catch(e) { this.showToast('Network error.', false); }
         },
 
-        showToast(msg, ok=true) { this.toast=msg; this.toastOk=ok; setTimeout(()=>this.toast='',3500); },
+        showToast(msg, ok=true) { if(ok) window.dispatchEvent(new CustomEvent('site-record-saved')); this.toast=msg; this.toastOk=ok; setTimeout(()=>this.toast='',3500); },
     };
 }
 </script>

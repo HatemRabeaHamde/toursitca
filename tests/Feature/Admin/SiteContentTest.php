@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Domain\Landing\Models\LandingFaq;
 use App\Models\SiteContent;
 use App\Models\User;
 use App\Services\SiteContentReader;
@@ -257,5 +258,26 @@ class SiteContentTest extends TestCase
             $this->get('/admin/site-content/home/settings/'.$panel)->assertForbidden();
             $this->post('/admin/site-content/home/settings/'.$panel, ['mode' => 'publish'])->assertForbidden();
         }
+    }
+
+    public function test_home_record_editor_uses_real_sources_and_protects_routes(): void
+    {
+        $faq = LandingFaq::create([
+            'question' => ['en' => 'Original question'], 'answer' => ['en' => 'Original answer'],
+            'is_active' => true, 'sort_order' => 1,
+        ]);
+        $url = "/admin/site-content/records/faqs/{$faq->id}/edit?content_frame=1";
+        $this->get('/en')->assertOk()->assertDontSee('data-admin-record-url', false);
+        $this->actingAs(User::factory()->create())->get($url)->assertForbidden();
+        $this->actingAs($this->admin());
+        $this->get($url)->assertOk()->assertViewHas('canvasRecord', fn ($record) => $record['id'] === $faq->id)
+            ->assertSee('record-frame.js')->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        $this->get('/admin/site-content/records/users/1/edit')->assertNotFound();
+        $this->get('/admin/site-content/records/faqs/999999/edit')->assertNotFound();
+        $this->get('/en?content_preview=1&content_edit=1')->assertOk()
+            ->assertSee('data-admin-record-url', false)->assertSee('/site-content/records/faqs/'.$faq->id.'/edit', false)
+            ->assertDontSee('/experiences/-1/edit', false);
+        $this->patchJson('/admin/landing/faqs/'.$faq->id, ['question' => ['en' => 'Updated source question'], 'answer' => ['en' => 'Updated source answer'], 'sort_order' => 1, 'is_active' => true])->assertSuccessful();
+        $this->get('/en')->assertOk()->assertSee('Updated source question');
     }
 }

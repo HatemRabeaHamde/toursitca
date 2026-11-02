@@ -7,7 +7,7 @@
 
 <div
     x-data="categoriesManager()"
-    x-init="load()"
+    x-init="await load(); if (window.siteContentRecord) { items = [window.siteContentRecord]; startEdit(items[0]); }"
     class="adm-grid-3-2"
 >
     {{-- Add form --}}
@@ -105,11 +105,11 @@
                                     </div>
                                 </div>
                                 <div x-show="editingId === item.id" style="display:flex;flex-direction:column;gap:6px;">
-                                    <input type="text" x-model.trim="editForm.name_en" class="adm-input" placeholder="Name EN" required style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model="editForm.name_fr" class="adm-input" placeholder="Name FR" style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model="editForm.name_nl" class="adm-input" placeholder="Name NL" style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="text" x-model="editForm.image_url" class="adm-input" placeholder="Image URL" style="font-size:.8rem;padding:5px 8px;">
-                                    <input type="number" x-model.number="editForm.sort_order" class="adm-input" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:80px;">
+                                    <label class="sc-record-field"><span>Name EN</span><input type="text" x-model.trim="editForm.name_en" class="adm-input" placeholder="Name EN" required style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Name FR</span><input type="text" x-model="editForm.name_fr" class="adm-input" placeholder="Name FR" style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Name NL</span><input type="text" x-model="editForm.name_nl" class="adm-input" placeholder="Name NL" style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Image URL</span><input type="text" x-model="editForm.image_url" class="adm-input" placeholder="Image URL" style="font-size:.8rem;padding:5px 8px;"></label>
+                                    <label class="sc-record-field"><span>Sort</span><input type="number" x-model.number="editForm.sort_order" class="adm-input" placeholder="Sort" style="font-size:.8rem;padding:5px 8px;width:80px;"></label>
                                 </div>
                             </td>
                             <td style="font-size:.75rem;font-family:monospace;color:var(--adm-text-muted);" x-text="item.slug"></td>
@@ -260,7 +260,7 @@ function categoriesManager() {
             }
         },
 
-        showToast(msg, ok = true) {
+        showToast(msg, ok=true) { if(ok) window.dispatchEvent(new CustomEvent('site-record-saved'));
             this.toast = msg; this.toastOk = ok;
             setTimeout(() => this.toast = '', 3500);
         },
