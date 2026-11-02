@@ -10,3 +10,7 @@
 @foreach($seo['hreflang'] ?? [] as $language => $url)
 <link rel="alternate" hreflang="{{ $language }}" href="{{ $url }}">
 @endforeach
+
+@if(!empty($seo['google_verification']))
+<meta name="google-site-verification" content="{{ $seo['google_verification'] }}">
+@endif

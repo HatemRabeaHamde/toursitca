@@ -17,6 +17,7 @@
  @if($errors->any())<div role="alert" class="mb-4 rounded border border-red-700 p-4"><p>Content could not be saved:</p><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
  <form method="POST" enctype="multipart/form-data" action="{{ route('admin.site-content.update', $page) }}" @submit="dirty = false">
  @csrf
+ <input type="hidden" name="context" value="canvas">
  <div class="sc-toolbar">
   <button class="adm-btn adm-btn--ghost" name="mode" value="draft">Save draft</button>
   <button class="adm-btn adm-btn--primary" name="mode" value="publish">Publish</button>

@@ -8,7 +8,7 @@
  @else
   <div role="tablist" aria-label="{{ $field['label'] }} language" class="mb-3 flex gap-2">
    @foreach(['en','fr','nl'] as $language)
-    <button type="button" role="tab" :aria-selected="language === '{{ $language }}'" @click="language = '{{ $language }}'" class="rounded border px-3 py-2">{{ strtoupper($language) }} {{ empty($field['translations'][$language]) ? '· Empty' : '' }}</button>
+    <button type="button" role="tab" :aria-selected="language === '{{ $language }}'" @click="language = '{{ $language }}'; $dispatch('site-content-language', { locale: '{{ $language }}' })" class="rounded border px-3 py-2">{{ strtoupper($language) }} {{ empty($field['translations'][$language]) ? '· Empty' : '' }}</button>
    @endforeach
   </div>
   @foreach(['en','fr','nl'] as $language)

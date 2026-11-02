@@ -1,4 +1,4 @@
 <script>
-window.siteContentCanvas = @js(['values'=>$content->values, 'types'=>$content->types]);
+window.siteContentCanvas = @js($canvasContent);
 </script>
 <script src="{{ asset('vendor/trix/canvas.js') }}" defer></script>

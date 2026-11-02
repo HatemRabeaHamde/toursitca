@@ -508,3 +508,16 @@ Once live, monitor:
 - Sitemap coverage: submitted vs indexed ratio
 
 The first 3 months of data tells you which keywords to double down on.
+
+
+## Homepage settings in the admin workspace (2026-11-02)
+
+The home page has three separate settings screens: Search & sharing (`/admin/site-content/home/settings/search`), Publisher identity (`.../publisher`), and Clear answers (`.../answers`). The homepage canvas edits page content only. Each screen saves its own drafts and publishes only its own section; publishing metadata never publishes an unrelated homepage or publisher draft. Legacy `?field=seo.*`, `geo.*` and `aeo.*` links redirect to these screens.
+
+Search & sharing manages the title, description, robots directives, Open Graph/Twitter sharing data, optional snippet allowances and an optional Google HTML verification token. Canonical URLs and EN/FR/NL/x-default alternates come from real routes. Tokens must come from the operator’s own account; storing a token does not report ownership as verified. Search/social previews are approximations, with character counts as editorial guidance rather than ranking scores.
+
+Publisher identity manages truthful Organization properties and official profiles. Clear answers manages the visible homepage answer summary and optional question, sources, reviewer and real review date. Review details must reflect a review of the actual homepage and answer. Existing questions remain in the FAQ manager. No arbitrary JSON-LD, fabricated ratings, fake credentials or automatic claim generation is allowed.
+
+The interface links to official guidance and provides examples that are never automatically published. Manual checks cover crawl access, sitemap URLs, Search Console URL inspection, mobile performance and structured-data validation. These are not completed-audit badges. Google’s AI search guidance states that special AI markup is not required; no setting guarantees indexing, rankings, rich results or AI citations.
+
+References: [Google AI search guidance](https://developers.google.com/search/docs/appearance/ai-features), [titles](https://developers.google.com/search/docs/appearance/title-link), [snippets](https://developers.google.com/search/docs/appearance/snippet), [Organization data](https://developers.google.com/search/docs/appearance/structured-data/organization), [robots directives](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag).

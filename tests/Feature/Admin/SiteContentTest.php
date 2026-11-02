@@ -49,7 +49,7 @@ class SiteContentTest extends TestCase
     public function test_draft_preview_is_admin_only(): void
     {
         $this->actingAs($this->admin());
-        $this->save(['hero__title_line_1' => ['text' => ['en' => 'Draft heading']]])->assertRedirect();
+        $this->save(['hero__title_line_1' => ['text' => ['en' => 'Draft heading']]])->assertRedirect()->assertSessionHasNoErrors();
         $this->get('/en')->assertDontSee('Draft heading');
         $this->get('/en?content_preview=1')->assertOk()->assertSee('Draft heading')->assertHeader('X-Robots-Tag', 'noindex, nofollow');
         auth()->logout();
@@ -95,7 +95,7 @@ class SiteContentTest extends TestCase
     {
         Storage::fake('public');
         $this->actingAs($this->admin());
-        $this->save(['hero__image' => ['upload' => UploadedFile::fake()->image('photo.jpg'), 'alt' => ['en' => 'Sunset', 'fr' => 'Soir']]])->assertRedirect();
+        $this->save(['hero__image' => ['upload' => UploadedFile::fake()->image('photo.jpg'), 'alt' => ['en' => 'Sunset', 'fr' => 'Soir']]])->assertRedirect()->assertSessionHasNoErrors();
         $row = SiteContent::firstOrFail();
         $this->assertCount(1, $row->media);
         $this->assertSame('Soir', $row->getTranslations('draft_value')['fr']['alt']);
@@ -190,5 +190,72 @@ class SiteContentTest extends TestCase
     {
         $this->actingAs($this->admin())->get('/admin/site-content')->assertOk()->assertSee('Open page editor')->assertSee('admin-workspace.css')->assertSee('admin-sidebar')->assertSee('Publisher identity');
         $this->get('/admin/site-content/home?field=hero.slide_3_image')->assertOk()->assertSee('Slide 3 image')->assertSee('Footer background artwork')->assertSee('Logo light');
+    }
+
+    public function test_settings_have_distinct_pages_and_legacy_links_redirect(): void
+    {
+        $this->actingAs($this->admin());
+        foreach (['search' => 'Search & sharing', 'publisher' => 'Publisher identity', 'answers' => 'Clear answers'] as $panel => $title) {
+            $this->get('/admin/site-content/home/settings/'.$panel)->assertOk()->assertSee($title)->assertSee('Scope: Home page only')->assertDontSee('<iframe', false)->assertSee('Practical guidance')->assertSee('Manual checks');
+            $this->postJson('/admin/site-content/home/settings/'.$panel, ['mode' => 'publish', 'fields' => ['unknown' => ['text' => ['en' => 'bad']]]])->assertUnprocessable();
+        }
+        $this->get('/admin/site-content/home?field=geo.name')->assertRedirect('/admin/site-content/home/settings/publisher');
+        $this->get('/admin/site-content/home/settings/missing')->assertNotFound();
+    }
+
+    public function test_settings_publish_is_scoped_and_cannot_submit_other_sections(): void
+    {
+        $this->actingAs($this->admin());
+        $this->save(['hero__title_line_1' => ['text' => ['en' => 'Private home draft']]]);
+        $this->post('/admin/site-content/home/settings/publisher', ['mode' => 'draft', 'fields' => ['geo__name' => ['text' => ['en' => 'Private publisher draft']]]])->assertRedirect()->assertSessionHasNoErrors();
+        $this->post('/admin/site-content/home/settings/search', ['mode' => 'publish', 'fields' => ['seo__title' => ['text' => ['en' => 'Published search title']]]])->assertRedirect()->assertSessionHasNoErrors();
+        $this->get('/en')->assertSee('Published search title')->assertDontSee('Private home draft')->assertDontSee('Private publisher draft');
+        $this->postJson('/admin/site-content/home/settings/search', ['mode' => 'draft', 'fields' => ['hero__title_line_1' => ['text' => ['en' => 'Wrong page']]]])->assertUnprocessable();
+        $this->post('/admin/site-content/home', ['context' => 'canvas', 'mode' => 'publish', 'fields' => []])->assertRedirect()->assertSessionHasNoErrors();
+        $this->get('/en')->assertSee('Private home draft')->assertDontSee('Private publisher draft');
+    }
+
+    public function test_advanced_search_controls_render_and_validate(): void
+    {
+        $this->actingAs($this->admin());
+        $url = '/admin/site-content/home/settings/search';
+        $this->post($url, ['mode' => 'publish', 'fields' => [
+            'seo__max_snippet' => ['text' => ['en' => '160']],
+            'seo__max_image_preview' => ['text' => ['en' => 'large']],
+            'seo__max_video_preview' => ['text' => ['en' => '30']],
+            'seo__google_verification' => ['text' => ['en' => 'owned_token-123']],
+            'seo__twitter_card' => ['text' => ['en' => 'summary']],
+        ]])->assertRedirect()->assertSessionHasNoErrors();
+        $this->get('/en')->assertSee('max-snippet:160')->assertSee('max-image-preview:large')->assertSee('max-video-preview:30')->assertSee('name="google-site-verification" content="owned_token-123"', false)->assertSee('name="twitter:card" content="summary"', false);
+        $this->get('/en?content_preview=1')->assertDontSee('max-snippet:160');
+        $this->postJson($url, ['mode' => 'draft', 'fields' => ['seo__google_verification' => ['text' => ['en' => '<script>bad</script>']]]])->assertUnprocessable();
+    }
+
+    public function test_answer_sources_review_and_entity_details_are_truthful_visible_fields(): void
+    {
+        $this->actingAs($this->admin());
+        $this->post('/admin/site-content/home/settings/answers', ['mode' => 'publish', 'fields' => [
+            'aeo__question' => ['text' => ['en' => 'How are bookings confirmed?']],
+            'aeo__summary' => ['text' => ['en' => 'Bookings are confirmed manually after a request.']],
+            'aeo__reviewer' => ['text' => ['en' => 'Tourstica editorial team']],
+            'aeo__reviewer_type' => ['text' => ['en' => 'Organization']],
+            'aeo__reviewed_on' => ['text' => ['en' => '2026-01-01']],
+            'aeo__source_1_label' => ['text' => ['en' => 'Booking process']],
+            'aeo__source_1_url' => ['text' => ['en' => 'https://example.com/booking-process']],
+        ]])->assertRedirect()->assertSessionHasNoErrors();
+        $this->get('/en')->assertSee('How are bookings confirmed?')->assertSee('Tourstica editorial team')->assertSee('2026-01-01')->assertSee('Booking process')->assertSee('lastReviewed')->assertSee('citation');
+        $this->postJson('/admin/site-content/home/settings/answers', ['mode' => 'draft', 'fields' => ['aeo__reviewed_on' => ['text' => ['en' => '2999-01-01']]]])->assertUnprocessable();
+        $this->postJson('/admin/site-content/home/settings/publisher', ['mode' => 'draft', 'fields' => ['geo__email' => ['text' => ['en' => 'invalid email']]]])->assertUnprocessable();
+        $this->post('/admin/site-content/home/settings/publisher', ['mode' => 'publish', 'fields' => ['geo__legal_name' => ['text' => ['en' => 'Registered operator name']], 'geo__email' => ['text' => ['en' => 'public@example.com']]]])->assertRedirect()->assertSessionHasNoErrors();
+        $this->get('/en')->assertSee('legalName')->assertSee('Registered operator name')->assertSee('public@example.com');
+    }
+
+    public function test_non_admin_cannot_read_or_write_any_settings_panel(): void
+    {
+        $this->actingAs(User::factory()->create());
+        foreach (['search', 'publisher', 'answers'] as $panel) {
+            $this->get('/admin/site-content/home/settings/'.$panel)->assertForbidden();
+            $this->post('/admin/site-content/home/settings/'.$panel, ['mode' => 'publish'])->assertForbidden();
+        }
     }
 }
