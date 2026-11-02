@@ -320,6 +320,13 @@ export function experienceBookingCard(config) {
             if (this.canRequest()) this.store.startCheckout(this.store.activeOption);
         },
 
+        /** A child's age must sit inside the chosen package's child band (0–17 when the host set none). */
+        childAgeAllowed(age) {
+            const option = this.chosenOption();
+
+            return age >= (option?.childMinAge ?? 0) && age <= (option?.childMaxAge ?? 17);
+        },
+
         canAdd() {
             return this.store.participantCount() < (this.store.config.maxParticipants || Infinity);
         },

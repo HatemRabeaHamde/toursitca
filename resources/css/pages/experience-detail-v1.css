@@ -79,11 +79,6 @@
 
 /* ── Booking card ─────────────────────────────────────────── */
 .lv-v1-bcard { gap: 16px; background: var(--lv-card); box-shadow: 0 16px 40px rgba(10, 41, 33, .08); }
-.lv-v1-stepper { display: inline-flex; align-self: flex-start; overflow: hidden; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius-sm); }
-.lv-v1-stepper button { display: grid; width: 48px; height: 48px; place-items: center; cursor: pointer; transition: background-color .25s ease; }
-.lv-v1-stepper button:hover:not(:disabled) { background: var(--lv-cream); }
-.lv-v1-stepper button:disabled { opacity: .35; cursor: not-allowed; }
-.lv-v1-stepper output { display: grid; width: 72px; place-items: center; border-inline: 1px solid var(--lv-line); }
 .lv-v1-total { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; background: var(--lv-beige); border-radius: var(--lv-radius-sm); }
 
 /* ── Pairs well with ──────────────────────────────────────── */
@@ -141,11 +136,6 @@
 .lv-v1-bcard .lv-booking-summary__price > span { margin-inline-start: 6px; }
 .lv-v1-bcard .lv-bcard__amount { font-size: clamp(34px, 2.8vw, 42px); }
 .lv-v1-bcard .lv-bfield__control { height: 54px; }
-.lv-v1-travellers { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
-.lv-v1-travellers .lv-v1-stepper { align-self: auto; border-radius: 999px; }
-.lv-v1-stepper button { width: 44px; height: 44px; }
-.lv-v1-stepper output { width: 52px; border-inline: 0; }
-
 /* Total: label and price on one line, notes below at full width */
 .lv-v1-total { flex-direction: column; align-items: stretch; gap: 6px; padding: 18px 20px; border-radius: var(--lv-radius); }
 .lv-v1-total__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }

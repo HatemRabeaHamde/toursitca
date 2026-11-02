@@ -16,18 +16,7 @@
         </button>
     </x-site.molecules.booking-field>
     <x-site.molecules.booking-time />
-    @if($booking['hasChildPricing'])
-        @include('site.experiences.detail.partials.travellers')
-    @else
-        <div class="lv-bfield lv-v1-travellers">
-            <span class="lv-t-label-m lv-tone-ink" id="booking-travellers-label">{{ __('experiences.detail.booking.travellers') }}</span>
-            <div class="lv-v1-stepper" role="group" aria-labelledby="booking-travellers-label">
-                <button type="button" @click="stepTravellers(-1)" :disabled="store.adults <= 1" aria-label="{{ __('experiences.detail.booking.decrease', ['label' => __('experiences.detail.booking.travellers')]) }}"><x-site.atoms.icon name="minus-ink" :size="16" /></button>
-                <output class="lv-t-label-l lv-tone-ink" x-text="store.adults" aria-live="polite">1</output>
-                <button type="button" @click="stepTravellers(1)" :disabled="!canAdd()" aria-label="{{ __('experiences.detail.booking.increase', ['label' => __('experiences.detail.booking.travellers')]) }}"><x-site.atoms.icon name="plus-ink" :size="16" /></button>
-            </div>
-        </div>
-    @endif
+    @include('site.experiences.detail.partials.travellers')
     @if($booking['supportsPrivate'])
         <fieldset class="lv-bfield" x-show="!isGroupPriced()">
             <legend class="lv-t-label-m lv-tone-ink mb-2">{{ __('experiences.detail.v1.booking.group_type') }}</legend>

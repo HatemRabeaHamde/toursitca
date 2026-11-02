@@ -272,8 +272,6 @@ final class ExperiencePageService
             'hasDates' => $summary['has_future_availability'],
             'supportsPrivate' => $supportsPrivate,
             'pickup' => $summary['pickup_enabled'] ? __('experiences.detail.booking.pickup_place', ['city' => $experience->location_city]) : null,
-            'hasChildPricing' => collect($detail->experienceOptions)
-                ->contains(fn (array $option): bool => collect($option['prices'])->contains('type', 'child')),
             'cancellationHours' => collect($detail->experienceOptions)->pluck('cancellation_hours')->filter()->first(),
             'hostName' => $experience->publicHost() ? Str::before(trim($experience->publicHost()->name), ' ') : null,
             'maxGroup' => (int) $experience->max_group_size,
