@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\CompleteLoginAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -22,13 +23,9 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, CompleteLoginAction $action): RedirectResponse
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-
-        return redirect()->intended($this->redirectPath());
+        return redirect($action->execute($request));
     }
 
     /**
@@ -43,22 +40,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
-    }
-
-    private function redirectPath(): string
-    {
-        $user = Auth::user();
-
-        if ($user?->hasRole('admin')) {
-            return route('admin.dashboard', absolute: false);
-        }
-
-        if ($user?->agency !== null) {
-            return $user->agency->status === 'active'
-                ? route('agency.home', absolute: false)
-                : route('agency.pending', absolute: false);
-        }
-
-        return route('site.dashboard.bookings', ['locale' => app()->getLocale()], absolute: false);
     }
 }

@@ -3,9 +3,11 @@
 use App\Http\Middleware\EnsureAgencyApproved;
 use App\Http\Middleware\EnsureUserNotBanned;
 use App\Http\Middleware\SetLocale;
+use App\Services\DashboardDestination;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -17,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectUsersTo(fn (Request $request): string => app(DashboardDestination::class)->forUser($request->user()));
         $middleware->alias([
             'set.locale' => SetLocale::class,
             'agency.approved' => EnsureAgencyApproved::class,

@@ -6,6 +6,9 @@
 
 ## Current MVP Audit — 2026-08-05
 
+### Login dashboard routing — 2026-11-02
+- 🚧 Route successful regular sign-in and authenticated visits to guest-only auth pages to the correct role dashboard; discard stale intended URLs for regular login. Preserve the separate checkout login flow and pending/suspended agency handling. Test and deploy.
+
 ### Rich admin QA fixtures — 2026-11-02
 - ✅ Added and ran explicit `AdminQaSeeder` on the requested Hostinger test domain after a private MySQL backup. Creates 29 dedicated role-correct accounts (1 admin, 8 agency owners, 20 clients), 8 agencies (active/pending/suspended), 16 inactive unverified hosts, 24 draft experiences, 72 packages, 384 availability slots, 96 bookings across four statuses, 48 payout fixtures and 24 hidden reviews. Existing data and credentials remain untouched; no notifications or real transfers. Transactional, collision-safe, repeat run preserves edits. PHPUnit 176 tests / 914 assertions and Pint pass; Larastan still exits 1 silently. Browser verified QA admin login/dashboard, server verified passwords/roles and 200 dashboard responses for all three new account types. Password supplied at execution only; temporary password files removed. Usage documented in docs/DEPLOY.md.
 
