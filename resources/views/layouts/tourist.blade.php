@@ -17,7 +17,7 @@
     {{-- ── Mobile topbar ───────────────────────────────── --}}
     <header class="td-mobile-bar">
         <a href="{{ route('site.home', ['locale' => $locale]) }}" class="td-mobile-logo">
-            {{ config('brand.name_first') }}<em>{{ config('brand.name_second') }}</em>
+            <x-brand.logo variant="dark" :height="26" />
         </a>
         <button type="button" class="td-mobile-toggle" @click="navOpen = ! navOpen" :aria-expanded="navOpen" aria-label="{{ __('ui.actions.open_menu') }}">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -28,7 +28,7 @@
     <aside class="td-sidebar" :class="{ 'is-open': navOpen }">
 
         <a href="{{ route('site.home', ['locale' => $locale]) }}" class="td-logo">
-            {{ config('brand.name_first') }}<em>{{ config('brand.name_second') }}</em>
+            <x-brand.logo variant="dark" :height="30" />
         </a>
 
         <div class="td-user">

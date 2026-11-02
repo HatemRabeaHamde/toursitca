@@ -31,7 +31,7 @@
 <body>
 <div class="wrap">
   <div class="header">
-    <div class="logo">{{ config('brand.name_first') }}<em>{{ config('brand.name_second') }}.</em></div>
+    <img src="{{ asset('images/brand/logo-light.png') }}" alt="{{ config('app.name') }}" width="180" height="32" style="display:inline-block;width:180px;height:auto;border:0">
   </div>
   <div class="body">
     @yield('content')

@@ -200,9 +200,18 @@
 .lv-guide-card--framed .lv-guide-card__image { height: 180px; border-radius: 14px; }
 .lv-guide-card--framed .lv-guide-card__body { gap: 6px; padding: 8px 8px 0; }
 
-/* CTA band */
-.lv-cta-band { background: var(--lv-forest); padding-block: 64px; }
-@media (min-width: 1024px) { .lv-cta-band { padding-block: 80px; } }
+/* CTA band: copy left, one large action right, a faint zellige texture behind the right side */
+.lv-cta-band { position: relative; isolation: isolate; overflow: hidden; background: var(--lv-forest); padding-block: 72px; }
+@media (min-width: 1024px) { .lv-cta-band { padding-block: 96px; } }
+.lv-cta-band__pattern { position: absolute; inset: 0 0 0 auto; z-index: -1; width: min(52%, 720px); background-size: 120px 120px; opacity: .1; pointer-events: none; -webkit-mask-image: linear-gradient(to left, #000 35%, transparent); mask-image: linear-gradient(to left, #000 35%, transparent); }
+.lv-cta-band__inner { display: grid; gap: 32px; }
+@media (min-width: 1024px) { .lv-cta-band__inner { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 72px; } }
+.lv-cta-band__copy { display: flex; max-width: 760px; flex-direction: column; gap: 16px; }
+.lv-cta-band__title { color: var(--lv-on-dark); text-wrap: balance; }
+.lv-cta-band__title em { color: var(--lv-gold); }
+.lv-cta-band__lede { max-width: 54ch; color: var(--lv-on-dark-78); font-size: 1.125rem; }
+.lv-cta-band__button { min-height: 60px; padding-inline: 32px; font-size: 1.0625rem; }
+@media (max-width: 639px) { .lv-cta-band__button { width: 100%; } }
 
 /* A closing CTA band runs behind the footer's rounded top so no cream shows in the corners. */
 .lv-cta-band:has(+ .lv-footer) { padding-bottom: calc(64px + 40px); margin-bottom: -40px; }

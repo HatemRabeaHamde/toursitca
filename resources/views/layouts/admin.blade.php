@@ -17,7 +17,7 @@
     <aside id="admin-sidebar" class="adm-sidebar" x-trap.inert.noscroll="adminNavOpen">
 
         <a href="{{ route('admin.dashboard') }}" class="adm-logo">
-            {{ config('brand.name_first') }}<strong>{{ config('brand.name_second') }}</strong><span class="adm-logo-dot"></span>
+            <x-brand.logo variant="light" :height="30" />
             <span class="adm-logo-label">Admin</span>
         </a>
 

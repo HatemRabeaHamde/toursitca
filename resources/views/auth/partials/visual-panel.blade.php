@@ -1,5 +1,5 @@
 <div class="auth-visual">
-    <a href="{{ route('site.experiences.index', ['locale' => app()->getLocale()]) }}" class="auth-logo">{{ config('brand.name_first') }}<em>{{ config('brand.name_second') }}</em></a>
+    <a href="{{ route('site.experiences.index', ['locale' => app()->getLocale()]) }}" class="auth-logo"><x-brand.logo variant="light" :height="34" /></a>
 
     <div class="auth-postcard">
         <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1100&q=90" alt="{{ __('ui.auth.visual_alt') }}">

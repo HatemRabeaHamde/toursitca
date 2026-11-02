@@ -8,7 +8,7 @@
     <body>
         <main class="auth-agency-page">
             <nav class="agency-top-nav">
-                <a href="{{ route('site.experiences.index', ['locale' => app()->getLocale()]) }}" class="agency-logo">{{ config('brand.name_first') }}<em>{{ config('brand.name_second') }}</em></a>
+                <a href="{{ route('site.experiences.index', ['locale' => app()->getLocale()]) }}" class="agency-logo"><x-brand.logo variant="dark" :height="32" /></a>
                 <a href="{{ route('login') }}" class="auth-switch">{{ __('ui.auth.agency_already_partner') }} <strong>{{ __('ui.auth.sign_in') }}</strong></a>
             </nav>
 

@@ -15,7 +15,7 @@
     <aside class="ag-sidebar">
 
         <a href="{{ route('agency.dashboard') }}" class="ag-logo">
-            {{ config('brand.name_first') }}<strong>{{ config('brand.name_second') }}</strong><span class="ag-logo-dot"></span>
+            <x-brand.logo variant="dark" :height="30" />
         </a>
 
         <nav class="ag-nav" aria-label="{{ __('ui.nav.main') }}">
