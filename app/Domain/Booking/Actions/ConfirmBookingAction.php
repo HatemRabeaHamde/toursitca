@@ -2,16 +2,15 @@
 
 namespace App\Domain\Booking\Actions;
 
-use App\Domain\Booking\Events\BookingConfirmed;
 use App\Domain\Booking\Models\Booking;
-use App\Domain\Payout\Actions\CreatePayoutFromBookingAction;
+use App\Domain\Booking\Services\BookingConfirmationService;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 final class ConfirmBookingAction
 {
     public function __construct(
-        private readonly CreatePayoutFromBookingAction $createPayoutFromBookingAction,
+        private readonly BookingConfirmationService $confirmation,
     ) {}
 
     public function execute(Booking $booking): Booking
@@ -26,11 +25,7 @@ final class ConfirmBookingAction
                 throw new InvalidArgumentException('Only pending bookings can be confirmed.');
             }
 
-            $lockedBooking->forceFill(['status' => 'confirmed'])->save();
-            $this->createPayoutFromBookingAction->execute($lockedBooking);
-            BookingConfirmed::dispatch($lockedBooking);
-
-            return $lockedBooking->refresh();
+            return $this->confirmation->confirm($lockedBooking);
         });
     }
 }

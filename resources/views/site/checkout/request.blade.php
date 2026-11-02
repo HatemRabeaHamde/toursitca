@@ -19,7 +19,7 @@
             <h1 class="lv-t-h1 lv-tone-ink lv-flow__title">{{ __('account.checkout.title') }} <em class="lv-italic">{{ __('account.checkout.accent') }}</em></h1>
             <p class="lv-t-body-l lv-tone-muted">{{ __('account.checkout.lede', ['name' => $host]) }}</p>
 
-            @include('site.checkout.sections.steps', ['current' => 1])
+            @include('site.checkout.sections.steps', ['current' => 2])
 
             @foreach(['checkout_session', 'availability_id', 'contact', 'auth'] as $problem)
                 @error($problem)<p class="lv-flow__alert lv-t-body-s" role="alert">{{ $message }}</p>@enderror

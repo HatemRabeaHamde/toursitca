@@ -205,7 +205,7 @@ return [
             'confirmed_total' => 'Totaal voor je datum',
             'breakdown' => ':price × :count',
             'breakdown_flat' => 'Privégroep',
-            'request' => 'Boekingsaanvraag',
+            'request' => 'Nu boeken',
             'requesting' => 'Een moment…',
             'checking' => 'Beschikbaarheid controleren…',
             'reassurance' => 'Geen online betaling · Gratis annuleren',

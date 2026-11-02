@@ -120,7 +120,7 @@ return [
             'share' => ['title' => 'Partager', 'body' => 'Racontez-le après le voyage, pour le prochain voyageur.'],
         ],
         'reassurance_strong' => 'Aucun compte pour commencer.',
-        'reassurance' => 'Aucune carte avant la confirmation de l’hôte.',
+        'reassurance' => 'Confirmation immédiate. Aucun paiement en ligne.',
     ],
 
     'know' => [

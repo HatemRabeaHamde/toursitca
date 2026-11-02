@@ -205,7 +205,7 @@ return [
             'confirmed_total' => 'Total for your date',
             'breakdown' => ':price × :count',
             'breakdown_flat' => 'Private group',
-            'request' => 'Request to book',
+            'request' => 'Book now',
             'requesting' => 'One moment…',
             'checking' => 'Checking availability…',
             'reassurance' => 'No online payment · Free cancellation',

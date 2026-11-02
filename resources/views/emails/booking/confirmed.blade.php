@@ -44,8 +44,8 @@
     </div>
     @endif
     <div class="box-row">
-        <span class="box-label">Total paid</span>
-        <span class="box-value">{{ number_format((float)$booking->total_price, 0) }} MAD</span>
+        <span class="box-label">Booking total</span>
+        <span class="box-value">{{ $booking->total_price }} MAD</span>
     </div>
     <div class="box-row">
         <span class="box-label">Reference</span>
@@ -60,12 +60,14 @@
 </div>
 @endif
 
-@if($booking->notes)
+@if($booking->special_notes)
 <div class="box" style="margin-top:-8px;">
     <div style="font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A89F97;margin-bottom:8px;">Your notes</div>
-    <div style="font-size:13.5px;color:#3D3530;line-height:1.6;">{{ $booking->notes }}</div>
+    <div style="font-size:13.5px;color:#3D3530;line-height:1.6;">{{ $booking->special_notes }}</div>
 </div>
 @endif
+
+<p>No online payment has been taken. Booking confirmation does not mark this booking as paid.</p>
 
 <hr class="divider">
 <p style="font-size:13px;color:#8B7B72;line-height:1.6;margin:0;">

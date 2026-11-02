@@ -37,7 +37,7 @@ Controller → Form Request → Action → Service → Model → DTO → ViewMod
 ## Business rules
 
 1. Group price = `price_per_person × participants_count`, books requested seats. Private = flat `private_price`, sets `booked_seats = max_seats`; hidden when `private_price` is NULL.
-2. Bookings start `pending`; admin confirms; cron marks `completed` after the trip date.
+2. Available slots create `confirmed` bookings immediately at checkout (user-approved 2026-11-02). Admin may still confirm legacy pending records; cron marks `completed` after the trip date. Payment status is independent.
 3. Reviews only after `completed`, one per booking.
 4. Admin cancel = full refund. Tourist cancel = `hours_before` + `refund_percentage` from the policy.
 5. Payout auto-created on confirmation; admin marks it paid after a manual bank transfer. Platform agency (`is_platform = true`) never gets a payout.

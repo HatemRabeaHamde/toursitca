@@ -53,7 +53,7 @@ class CheckoutContactTest extends TestCase
 
         $booking = Booking::query()->firstOrFail();
         $this->assertSame($user->id, $booking->user_id);
-        $this->assertSame('pending', $booking->status);
+        $this->assertSame('confirmed', $booking->status);
         $this->assertSame('Hatem Ali', $booking->guest_name);
         $this->assertSame('WhatsApp preferred.', $booking->special_notes);
     }
@@ -90,7 +90,7 @@ class CheckoutContactTest extends TestCase
             ->assertSee('value="Sarah"', false)
             ->assertSee('value="Mitchell"', false)
             ->assertSee('value="Canada"', false)
-            ->assertSee('Send request to your host');
+            ->assertSee('Confirm booking');
     }
 
     public function test_guest_sees_sign_in_instead_of_the_contact_form(): void

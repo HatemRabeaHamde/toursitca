@@ -1,4 +1,5 @@
 # Morocco Tourism Platform — Architecture Plan
+> Product update (2026-11-02): available slots confirm immediately at checkout, without host/admin approval. Capacity is checked live under a row lock. Confirmation creates snapshot-based agency payouts and dispatches notifications after commit. Payment status stays separate; no online payment. Old pending records remain reviewable. This supersedes manual-confirmation descriptions below.
 > Last updated: 2026-05-13
 
 ---

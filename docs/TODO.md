@@ -2,6 +2,9 @@
 > Last updated: 2026-08-05
 > Legend: ✅ Done | 🔲 Pending | 🚧 In Progress
 
+### Instant booking — 2026-11-02
+- 🚧 Implemented user-approved product change: all available slots confirm immediately when checkout completes, without admin/host approval. Update both creation paths, atomic capacity checks, snapshot-based payouts and confirmation notifications; align EN/FR/NL checkout, confirmation and dashboard copy. Retain manual confirmation only for existing pending records; do not bulk-convert old bookings. Online payments remain out of scope. PHPUnit: 201 tests / 1,017 assertions pass, including unavailable/full/inactive/past slots, expired/repeated checkout, private/platform payouts and post-commit events/rollback. Pint and Blade compilation pass. Larastan still exits 1 silently. Browser automation is unavailable in this turn; visual checkout verification remains outstanding. Deployment pending.
+
 ---
 
 ## Current MVP Audit — 2026-08-05
@@ -40,7 +43,7 @@ This section is the current source of truth until the older phase tables below a
 |------|------------------|
 | Brand | `tourstica` / TourstiCa styling system is active across public and dashboard surfaces |
 | Stack | Laravel + Blade + Tailwind CSS + Alpine.js only |
-| MVP payments | No real online payment gateway. Checkout confirms a pending/manual booking only |
+| MVP payments | No real online payment gateway. Available dates confirm instantly at checkout; legacy pending records remain reviewable |
 | Supported locales | `en`, `fr`, `nl` in `config/locales.php` |
 | Locale files | `lang/nl/*` exists; old `lang/pl/*` has been removed |
 

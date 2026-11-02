@@ -4,12 +4,15 @@ namespace Tests\Feature\Site;
 
 use App\Domain\Agency\Models\Agency;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Checkout\Actions\ConfirmCheckoutSessionAction;
 use App\Domain\Checkout\Models\CheckoutSession;
 use App\Domain\Experience\Models\Availability;
 use App\Domain\Experience\Models\Experience;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CheckoutSendRequestTest extends TestCase
@@ -82,6 +85,9 @@ class CheckoutSendRequestTest extends TestCase
         $this->assertSame('hatem@example.com', $booking->guest_email);
         $this->assertSame('manual', $booking->payment_method);
         $this->assertSame('pending', $booking->payment_status);
+        $this->assertSame('confirmed', $booking->status);
+        $this->assertNull($booking->reserved_until);
+        $this->assertDatabaseHas('payouts', ['booking_id' => $booking->id, 'amount' => '170.00', 'status' => 'pending']);
         $this->assertSame('200.00', $booking->total_price);
         $this->assertSame('30.00', $booking->commission_amount);
     }
@@ -118,6 +124,71 @@ class CheckoutSendRequestTest extends TestCase
             'special_requests' => 'WhatsApp preferred.',
             'terms' => '1',
         ])->assertForbidden();
+    }
+
+    #[DataProvider('unavailableSlots')]
+    public function test_confirmation_rechecks_live_availability_and_rolls_back(string $scenario): void
+    {
+        [$session, $availability] = $this->createCheckoutSession(['user_id' => User::factory()->create()->id]);
+        match ($scenario) {
+            'inactive' => $availability->update(['is_active' => false]),
+            'past' => $availability->update(['date' => now()->subDay()]),
+            'full' => $availability->update(['booked_seats' => 10]),
+            'missing_hold' => $availability->update(['held_seats' => 0]),
+            'unpublished' => $availability->experience->update(['status' => 'draft']),
+            'suspended' => $availability->experience->agency->update(['status' => 'suspended']),
+            'expired' => $session->update(['reserved_until' => now()->subMinute()]),
+        };
+        $before = $availability->fresh()->only(['held_seats', 'booked_seats']);
+
+        try {
+            app(ConfirmCheckoutSessionAction::class)->execute($session);
+            $this->fail('Unavailable checkout must not confirm.');
+        } catch (ValidationException) {
+            $this->assertDatabaseCount('bookings', 0);
+            $this->assertDatabaseCount('payouts', 0);
+            $this->assertSame($before, $availability->fresh()->only(['held_seats', 'booked_seats']));
+            $this->assertSame('active', $session->fresh()->status);
+        }
+    }
+
+    public static function unavailableSlots(): array
+    {
+        return array_map(fn (string $scenario): array => [$scenario], ['inactive', 'past', 'full', 'missing_hold', 'unpublished', 'suspended', 'expired']);
+    }
+
+    public function test_completed_checkout_cannot_create_a_second_booking_or_payout(): void
+    {
+        [$session, $availability] = $this->createCheckoutSession(['user_id' => User::factory()->create()->id]);
+        $action = app(ConfirmCheckoutSessionAction::class);
+        $action->execute($session);
+
+        try {
+            $action->execute($session);
+            $this->fail('Completed checkout must not be submitted again.');
+        } catch (ValidationException) {
+            $this->assertDatabaseCount('bookings', 1);
+            $this->assertDatabaseCount('payouts', 1);
+            $this->assertSame(2, $availability->fresh()->booked_seats);
+        }
+    }
+
+    public function test_private_platform_booking_confirms_without_creating_a_payout(): void
+    {
+        [$session, $availability] = $this->createCheckoutSession([
+            'user_id' => User::factory()->create()->id,
+            'booking_type' => 'private',
+            'charged_seats' => 10,
+        ], ['held_seats' => 10]);
+        $availability->experience->agency->update(['is_platform' => true]);
+
+        $booking = app(ConfirmCheckoutSessionAction::class)->execute($session);
+
+        $this->assertSame('confirmed', $booking->status);
+        $this->assertSame(10, $availability->fresh()->booked_seats);
+        $this->assertSame(0, $availability->fresh()->held_seats);
+        $this->assertDatabaseCount('payouts', 0);
+        $this->assertSame('pending', $booking->payment_status);
     }
 
     private function createCheckoutSession(array $sessionOverrides = [], array $availabilityOverrides = []): array

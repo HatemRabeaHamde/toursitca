@@ -40,7 +40,7 @@ class ExperienceShowTest extends TestCase
             ->assertSee('Marrakech Balloon Ride')
             ->assertSee('Fly over Marrakech at sunrise.')
             ->assertSee('Choose a date')
-            ->assertSee('Request to book')
+            ->assertSee('Book now')
             ->assertSee('value="private"', false)
             ->assertSee('Your host confirms the exact pick-up time with you.')
             ->assertSee('Select dates')

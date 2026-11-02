@@ -205,7 +205,7 @@ return [
             'confirmed_total' => 'Total pour votre date',
             'breakdown' => ':price × :count',
             'breakdown_flat' => 'Groupe privé',
-            'request' => 'Demander à réserver',
+            'request' => 'Réserver maintenant',
             'requesting' => 'Un instant…',
             'checking' => 'Vérification des disponibilités…',
             'reassurance' => 'Aucun paiement en ligne · Annulation gratuite',

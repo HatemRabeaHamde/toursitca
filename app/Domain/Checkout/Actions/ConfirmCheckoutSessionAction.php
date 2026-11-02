@@ -3,6 +3,7 @@
 namespace App\Domain\Checkout\Actions;
 
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Services\BookingConfirmationService;
 use App\Domain\Checkout\Models\CheckoutSession;
 use App\Domain\Experience\Models\Availability;
 use Brick\Math\BigDecimal;
@@ -12,6 +13,8 @@ use Illuminate\Validation\ValidationException;
 
 final class ConfirmCheckoutSessionAction
 {
+    public function __construct(private readonly BookingConfirmationService $confirmation) {}
+
     public function execute(CheckoutSession $checkoutSession): Booking
     {
         if (! $checkoutSession->isActive()) {
@@ -49,7 +52,15 @@ final class ConfirmCheckoutSessionAction
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($availability->held_seats < $lockedSession->charged_seats) {
+            $availability->loadMissing('experience.agency');
+            if (! $availability->is_active
+                || $availability->date->isBefore(today())
+                || $availability->experience->status !== 'published'
+                || $availability->experience->agency->status !== 'active'
+                || $availability->held_seats < $lockedSession->charged_seats
+                || $availability->booked_seats + $availability->held_seats > $availability->max_seats
+                || ($lockedSession->booking_type === 'private' && ($availability->booked_seats > 0 || $lockedSession->charged_seats !== $availability->max_seats))
+            ) {
                 throw ValidationException::withMessages([
                     'availability_id' => __('ui.messages.booking_slot_unavailable'),
                 ]);
@@ -57,7 +68,7 @@ final class ConfirmCheckoutSessionAction
 
             $availability->forceFill([
                 'held_seats' => max(0, $availability->held_seats - $lockedSession->charged_seats),
-                'booked_seats' => min($availability->max_seats, $availability->booked_seats + $lockedSession->charged_seats),
+                'booked_seats' => $availability->booked_seats + $lockedSession->charged_seats,
             ])->save();
 
             $lockedSession->loadMissing('experience.agency');
@@ -87,18 +98,18 @@ final class ConfirmCheckoutSessionAction
                 'price_snapshot' => $lockedSession->price_snapshot,
                 'payment_method' => $lockedSession->payment_method,
                 'payment_status' => $lockedSession->payment_status,
-                'status' => 'pending',
+                'status' => 'confirmed',
                 'guest_name' => trim($lockedSession->contact_first_name.' '.$lockedSession->contact_last_name),
                 'guest_email' => $lockedSession->contact_email,
                 'guest_phone' => $lockedSession->contact_phone,
                 'contact_country' => $lockedSession->contact_country,
                 'special_notes' => $lockedSession->special_requests,
-                'reserved_until' => $lockedSession->reserved_until,
+                'reserved_until' => null,
             ]);
 
             $lockedSession->forceFill(['status' => 'completed'])->save();
 
-            return $booking;
+            return $this->confirmation->confirm($booking);
         });
     }
 

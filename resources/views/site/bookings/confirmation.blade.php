@@ -1,4 +1,4 @@
-{{-- Request sent (Figma "12 · Booking — Request sent"). Data: array $page. --}}
+{{-- Booking confirmation. Data is resolved by BookingRequestPageService. --}}
 @extends('layouts.site-v2')
 
 @section('nav_active', 'experiences')
@@ -15,22 +15,25 @@
             <x-site.atoms.ornament class="lv-flow__leaves lv-flow__leaves--center" />
             <div class="lv-container lv-sent">
                 <span class="lv-flow-tick"><x-site.atoms.icon name="check-dot" :size="28" /></span>
-                <x-site.atoms.eyebrow>{{ __('account.sent.eyebrow') }}</x-site.atoms.eyebrow>
-                <h1 class="lv-t-h1 lv-tone-ink">{{ __('account.sent.title') }} <em class="lv-italic">{{ $page['hostName'] }}</em></h1>
-                <p class="lv-t-body-l lv-tone-muted lv-sent__lede">{{ __('account.sent.lede', ['email' => $page['email']]) }}</p>
+                <x-site.atoms.eyebrow>{{ $page['status'] === 'confirmed' ? __('account.sent.eyebrow') : __('booking.status.'.$page['status']) }}</x-site.atoms.eyebrow>
+                <h1 class="lv-t-h1 lv-tone-ink">{{ $page['status'] === 'confirmed' ? __('account.sent.title') : __('instant_booking.status_title') }} <em class="lv-italic">{{ $page['hostName'] }}</em></h1>
+                <p class="lv-t-body-l lv-tone-muted lv-sent__lede">{{ $page['status'] === 'confirmed' ? __('account.sent.lede', ['email' => $page['email']]) : __('instant_booking.status_body', ['status' => __('booking.status.'.$page['status'])]) }}</p>
+                @if($page['status'] !== 'confirmed')<p class="lv-t-body-s lv-tone-muted">{{ $page['email'] }}</p>@endif
 
                 <div class="lv-sent__card">
                     <div class="flex flex-col gap-4">
                         <h2 class="lv-t-h4 lv-serif lv-tone-ink">{{ __('account.sent.next') }}</h2>
+                        @if($page['status'] === 'confirmed')
                         <ol class="lv-timeline">
                             <li class="is-done"><p class="lv-t-label-m lv-tone-ink">{{ __('account.sent.step1') }}</p><p class="lv-t-body-s lv-tone-muted">{{ __('account.sent.step1_body') }}</p></li>
-                            <li class="is-current">
-                                <p class="flex flex-wrap items-center gap-2 lv-t-label-m lv-tone-ink">{{ __('account.sent.step2') }} <span class="lv-pill lv-pill--wait lv-t-micro">{{ __('account.sent.waiting') }}</span></p>
+                            <li>
+                                <p class="flex flex-wrap items-center gap-2 lv-t-label-m lv-tone-ink">{{ __('account.sent.step2') }}</p>
                                 <p class="lv-t-body-s lv-tone-muted">{{ __('account.sent.step2_body') }}</p>
                             </li>
                             <li><p class="lv-t-label-m lv-tone-muted">{{ __('account.sent.step3') }}</p><p class="lv-t-body-s lv-tone-muted">{{ __('account.sent.step3_body', ['total' => $trip['total']]) }}</p></li>
                             <li><p class="lv-t-label-m lv-tone-muted">{{ __('account.sent.step4') }}</p><p class="lv-t-body-s lv-tone-muted">{{ __('account.sent.step4_body', ['date' => $trip['date']->translatedFormat('M j')]) }}</p></li>
                         </ol>
+                        @endif
                     </div>
                     <div class="lv-sent__trip">
                         <img src="{{ $trip['image'] }}" alt="" width="254" height="118" class="lv-flow-summary__image">

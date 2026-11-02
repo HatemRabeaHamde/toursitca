@@ -31,6 +31,10 @@ class AdminBookingFlowTest extends TestCase
             guestEmail: 'guest@example.com',
         ));
 
+        // Existing requests retain the legacy manual confirmation path.
+        $booking->forceFill(['status' => 'pending'])->save();
+        Payout::query()->where('booking_id', $booking->id)->delete();
+
         $this->actingAs($admin)
             ->get(route('admin.bookings.index'))
             ->assertOk()
@@ -71,7 +75,7 @@ class AdminBookingFlowTest extends TestCase
             ->assertRedirect(route('admin.bookings.index'))
             ->assertSessionHas('error');
 
-        $this->assertDatabaseCount('payouts', 0);
+        $this->assertDatabaseCount('payouts', 1);
     }
 
     public function test_admin_can_update_booking_payment_status(): void

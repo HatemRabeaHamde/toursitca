@@ -120,7 +120,7 @@ return [
             'share' => ['title' => 'Share', 'body' => 'Write it down after the trip, for the next traveller.'],
         ],
         'reassurance_strong' => 'No account to start.',
-        'reassurance' => 'No card until a host confirms.',
+        'reassurance' => 'Instant confirmation. No online payment.',
     ],
 
     'know' => [

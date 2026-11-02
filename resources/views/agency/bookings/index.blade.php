@@ -16,6 +16,8 @@
 
 @section('content')
 
+    <p class="ag-flash">{{ __('instant_booking.notice') }}</p>
+
     <div class="ag-card">
 
         <div class="ag-card-header">

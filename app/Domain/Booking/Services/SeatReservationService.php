@@ -14,12 +14,14 @@ final class SeatReservationService
             ->lockForUpdate()
             ->firstOrFail();
 
-        if (! $lockedAvailability->is_active) {
+        if (! $lockedAvailability->is_active || $lockedAvailability->date->isBefore(today())
+            || $lockedAvailability->experience->status !== 'published'
+            || $lockedAvailability->experience->agency->status !== 'active') {
             throw new InvalidArgumentException('Selected slot is not active.');
         }
 
         if ($bookingType === 'private') {
-            if ($lockedAvailability->booked_seats > 0) {
+            if ($lockedAvailability->booked_seats > 0 || $lockedAvailability->held_seats > 0) {
                 throw new InvalidArgumentException('Selected slot is not available for private booking.');
             }
 

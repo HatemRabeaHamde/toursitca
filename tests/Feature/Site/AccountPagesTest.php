@@ -30,7 +30,7 @@ class AccountPagesTest extends TestCase
             ->assertSee('Requests (1)')
             ->assertSee('Past (1)')
             ->assertSee('Upcoming (0)')
-            ->assertSeeInOrder(['Waiting for confirmation', 'Waiting for host', 'Past trips', 'Completed'])
+            ->assertSeeInOrder(['Waiting for confirmation', 'Awaiting platform review', 'Past trips', 'Completed'])
             ->assertSee('Leave a review');
 
         $this->actingAs($user)->get(route('site.dashboard.bookings', ['locale' => 'en', 'tab' => 'past']))
@@ -60,7 +60,8 @@ class AccountPagesTest extends TestCase
 
         $this->actingAs($user)->get(route('site.bookings.confirmation', ['locale' => 'en', 'booking' => $booking->id]))
             ->assertOk()
-            ->assertSee('Your request is with')
+            ->assertSee('Booking status')
+            ->assertDontSee('Your booking is confirmed.')
             ->assertSee('Desert Nights')
             ->assertSee($booking->guest_email);
 

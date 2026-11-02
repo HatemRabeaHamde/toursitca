@@ -4,6 +4,7 @@ namespace App\Domain\Booking\Actions;
 
 use App\Domain\Booking\DTOs\BookingData;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Booking\Services\BookingConfirmationService;
 use App\Domain\Booking\Services\CommissionCalculator;
 use App\Domain\Booking\Services\SeatReservationService;
 use App\Domain\Experience\Models\Availability;
@@ -15,6 +16,7 @@ final class CreateBookingAction
     public function __construct(
         private readonly SeatReservationService $seatReservationService,
         private readonly CommissionCalculator $commissionCalculator,
+        private readonly BookingConfirmationService $confirmation,
     ) {}
 
     public function execute(BookingData $data): Booking
@@ -45,7 +47,7 @@ final class CreateBookingAction
                 $data->participantsCount,
             );
 
-            return Booking::query()->create([
+            $booking = Booking::query()->create([
                 'user_id' => $data->userId,
                 'experience_id' => $lockedAvailability->experience_id,
                 'availability_id' => $lockedAvailability->id,
@@ -56,13 +58,15 @@ final class CreateBookingAction
                 'commission_rate' => $price['commission_rate'],
                 'commission_amount' => $price['commission_amount'],
                 'agency_amount' => $price['agency_amount'],
-                'status' => 'pending',
+                'status' => 'confirmed',
                 'guest_name' => $data->guestName,
                 'guest_email' => $data->guestEmail,
                 'guest_phone' => $data->guestPhone,
                 'special_notes' => $data->specialNotes,
-                'reserved_until' => now()->addHours((int) config('booking.unpaid_ttl_hours')),
+                'reserved_until' => null,
             ]);
+
+            return $this->confirmation->confirm($booking);
         });
     }
 }

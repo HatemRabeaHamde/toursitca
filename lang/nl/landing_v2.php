@@ -120,7 +120,7 @@ return [
             'share' => ['title' => 'Delen', 'body' => 'Schrijf het op na de reis, voor de volgende reiziger.'],
         ],
         'reassurance_strong' => 'Geen account nodig om te beginnen.',
-        'reassurance' => 'Geen kaart tot een gastheer bevestigt.',
+        'reassurance' => 'Directe bevestiging. Geen online betaling.',
     ],
 
     'know' => [
