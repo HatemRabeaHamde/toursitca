@@ -6,6 +6,9 @@
 
 ## Current MVP Audit — 2026-08-05
 
+### Rich admin QA fixtures — 2026-11-02
+- 🚧 Add an explicit, transactional and repeat-safe QA seeder: dedicated admin/agency/client accounts, eight agencies, sixteen hosts, twenty-four draft experiences with packages/availability, and booking/review/payout scenarios. Preserve existing records; keep synthetic content out of public listings; back up and run on the requested server.
+
 ### Booking fixes — 2026-11-02
 - ✅ Diagnosed the reported Erg Chigaga trip: zero package records meant the options section was omitted. Trips without separate packages now expose their real base booking choice (null option ID, existing price/availability/quote/checkout); real packages remain unchanged. Date selection reveals the section even for one choice. Isolated pickup Leaflet panes/controls inside their map stage. PHPUnit 174 tests / 883 assertions, Pint and Vite production build pass; browser verified date → base option → pickup checkout and map stacking. Larastan still exits 1 silently. Verified existing login hashes and access without changing accounts; credentials are not stored in this document. Agency demo account has no agency relation and redirects to pending. Deployed `2febc79` with a code/assets backup; live browser verified the reported Erg Chigaga URL shows its MAD 3,200 base choice after choosing 4 November. No account passwords, roles or ownership were changed.
 

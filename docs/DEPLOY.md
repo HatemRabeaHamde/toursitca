@@ -60,3 +60,18 @@ Never run `migrate:fresh` here.
 
 ## Updating later
 Repeat step 1 and the rsync from step 2, then on the server: `composer install --no-dev -o`, `php artisan migrate --force`, and the four `*:cache` commands.
+
+## Explicit dashboard QA batch
+
+`AdminQaSeeder` is never included in the default seeder. Run it only on the requested test domain after a database backup:
+
+```bash
+read -s -p 'QA fixture password (16+ characters): ' QA_SEED_PASSWORD
+export QA_SEED_PASSWORD
+php artisan db:seed --class=AdminQaSeeder --force
+unset QA_SEED_PASSWORD
+```
+
+Creates 1 QA admin, 8 agency owners/agencies, 20 clients, 16 inactive unverified hosts, 24 draft experiences, 72 packages, 384 availability rows, 96 booking scenarios, 48 payout fixtures and 24 hidden reviews. All records carry `[TEST]` names/notes and dedicated `qa-*` emails/slugs. No notifications, real transfers or public listings are created. All fixture accounts share the supplied QA password. The active agency test account is `qa-agent01@tourstica.test`; admin is `qa-admin@tourstica.test`; client is `qa-client01@tourstica.test`. Agencies 7 and 8 demonstrate pending and suspended states.
+
+The whole batch runs in one transaction. Account collisions abort without resetting existing users. If the QA admin already exists, rerunning is a no-op and preserves any manual edits. A new password argument never rotates existing credentials. Do not publish synthetic fixtures as real travel offers.
