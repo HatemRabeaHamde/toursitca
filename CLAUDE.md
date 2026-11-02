@@ -41,7 +41,8 @@ Controller → Form Request → Action → Service → Model → DTO → ViewMod
 3. Reviews only after `completed`, one per booking.
 4. Admin cancel = full refund. Tourist cancel = `hours_before` + `refund_percentage` from the policy.
 5. Payout auto-created on confirmation; admin marks it paid after a manual bank transfer. Platform agency (`is_platform = true`) never gets a payout.
-6. Slots with confirmed bookings cannot be deleted; `max_seats` can only increase.
+6. Slots with bookings or active checkout holds cannot move or be deleted, and capacity cannot decrease. Private bookings stay exclusive when capacity increases.
+7. Agencies submit new experiences and published changes for admin review; only an admin can approve/publish. Pending content/options/media stay private while the approved version remains public. Hosts remain agency-managed profiles.
 
 ## Scope
 

@@ -75,3 +75,14 @@ unset QA_SEED_PASSWORD
 Creates 1 QA admin, 8 agency owners/agencies, 20 clients, 16 inactive unverified hosts, 24 draft experiences, 72 packages, 384 availability rows, 96 booking scenarios, 48 payout fixtures and 24 hidden reviews. All records carry `[TEST]` names/notes and dedicated `qa-*` emails/slugs. No notifications, real transfers or public listings are created. All fixture accounts share the supplied QA password. The active agency test account is `qa-agent01@tourstica.test`; admin is `qa-admin@tourstica.test`; client is `qa-client01@tourstica.test`. Agencies 7 and 8 demonstrate pending and suspended states.
 
 The whole batch runs in one transaction. Account collisions abort without resetting existing users. If the QA admin already exists, rerunning is a no-op and preserves any manual edits. A new password argument never rotates existing credentials. Do not publish synthetic fixtures as real travel offers.
+
+
+### Booking/review workflow release (prepared locally 2026-11-03)
+
+Runtime commit: `47cca02`. Not deployed. Read tasks/plan.md and the C08 limitations in docs/TODO.md first. The built-in browser currently reports local browser use disabled in Work settings; desktop and 375px QA remain unverified. Real parallel-connection MySQL capacity tests are also outstanding, and Larastan still exits 1 silently under local PHP 8.5.
+
+Before release, back up MySQL, code and uploads privately. Check for duplicate non-null bookings.checkout_session_id values before applying its new unique index; do not merge or delete any bookings automatically. Apply the experience-review workflow and cancelled-payout/checkout-uniqueness migrations, upload the rebuilt assets and refresh autoload/config/routes/views. Existing published experiences retain their publication and receive no invented reviewer/date; existing unpublished rows start in draft review state. New authoring always starts as a draft. Never re-run broad seeders during this release.
+
+Verify: agency creates and submits → anonymous detail/quote still denied → admin inspects real-page draft preview and approves → published date/time/package quote → checkout hold/contact → instant confirmation → client, agency and admin booking details. Test a staged published edit, withdrawal, rejection reason, stale decision, private departure, child age limits, repeated submit, expiry and cancelled payouts. Confirm selected host/package/time/policy stay unchanged on an old booking after later publication edits.
+
+The cancelled payout enum is intentionally retained by rollback so cancelled financial history cannot silently become payable. Disable new authoring/checkout if rollback compatibility cannot be demonstrated; preserve schema/data and reconcile existing cancelled/paid records manually. No gateway, transfer or customer email is run by migration/backfill.
