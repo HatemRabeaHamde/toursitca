@@ -1,4 +1,5 @@
 {{-- Side drawer with the less-used filters. Fields belong to #xp-filters via the form attribute. --}}
+<template x-teleport="[data-lv-motion]">
     <div class="lv lv-drawer" x-show="open" x-cloak role="dialog" aria-modal="true" aria-labelledby="xp-drawer-title" @keydown.escape="open = false">
         <div class="lv-drawer__backdrop" x-show="open" x-transition.opacity.duration.300ms @click="open = false"></div>
         <div class="lv-drawer__panel" x-show="open" x-trap.inert="open" data-lenis-prevent
@@ -45,3 +46,4 @@
             </div>
         </div>
     </div>
+</template>

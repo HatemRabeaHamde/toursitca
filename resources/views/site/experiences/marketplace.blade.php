@@ -11,6 +11,7 @@
 @section('page')
     <div id="content" x-data="experienceMarketplace" @click="navigate($event)">
         @include('site.experiences.marketplace.sections.hero')
+        @include('site.experiences.marketplace.sections.sticky-bar')
         @include('site.experiences.marketplace.sections.results')
     </div>
 
