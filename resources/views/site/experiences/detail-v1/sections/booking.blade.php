@@ -24,7 +24,7 @@
         </div>
     @endif
     @if($booking['supportsPrivate'])
-        <fieldset class="lv-bfield">
+        <fieldset class="lv-bfield" x-show="!isGroupPriced()">
             <legend class="lv-t-label-m lv-tone-ink mb-2">{{ __('experiences.detail.v1.booking.group_type') }}</legend>
             <div class="grid grid-cols-2 gap-2.5">
                 @foreach(['group' => ['small_group', 'small_group_hint'], 'private' => ['private', 'private_hint']] as $type => [$label, $hint])

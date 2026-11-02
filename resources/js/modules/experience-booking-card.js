@@ -69,6 +69,15 @@ export function experienceBookingCard(config) {
                 || this.store.activePricing()?.priceType === 'per_group';
         },
 
+        /** A package priced per group is a private group, whatever the group-type toggle says. */
+        isGroupPriced() {
+            return this.store.activePricing()?.priceType === 'per_group';
+        },
+
+        isPrivateTrip() {
+            return this.isGroupPriced() || this.store.bookingType === 'private';
+        },
+
         travellersLabel() {
             const parts = [plural(strings.adults, this.store.adults)];
             if (this.store.children > 0) parts.push(plural(strings.children, this.store.children));

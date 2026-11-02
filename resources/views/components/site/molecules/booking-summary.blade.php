@@ -12,7 +12,7 @@
         </div>
         <span class="lv-booking-summary__type lv-t-label-s" aria-live="polite">
             <x-site.atoms.icon name="user-terracotta" :size="16" />
-            <span x-text="store.bookingType === 'private' ? @js(__('experiences.detail.v1.booking.private')) : @js(__('booking_flow.card.shared_group'))">{{ __('booking_flow.card.shared_group') }}</span>
+            <span x-text="isPrivateTrip() ? @js(__('experiences.detail.v1.booking.private')) : @js(__('booking_flow.card.shared_group'))">{{ __('booking_flow.card.shared_group') }}</span>
         </span>
     </div>
     @if($rating !== null && $reviews > 0)
