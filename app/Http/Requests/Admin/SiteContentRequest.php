@@ -42,6 +42,12 @@ final class SiteContentRequest extends FormRequest
                 $rules[$base.'.text'] = ['sometimes', 'array:en,fr,nl'];
                 foreach (['en', 'fr', 'nl'] as $locale) {
                     $rules[$base.'.text.'.$locale] = ['nullable', 'string', 'max:'.$field['max']];
+                    if (isset($field['allowed'])) {
+                        $rules[$base.'.text.'.$locale][] = Rule::in($field['allowed']);
+                    }
+                    if (! empty($field['absolute'])) {
+                        $rules[$base.'.text.'.$locale][] = 'url:http,https';
+                    }
                     if ($field['type'] === 'link') {
                         $rules[$base.'.text.'.$locale][] = 'regex:~^(https?://|/[^/]|#[a-zA-Z0-9_-])~';
                     }

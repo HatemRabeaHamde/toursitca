@@ -36,4 +36,23 @@ $sections['seo'] = ['label' => 'Search engines', 'fields' => [
     'description' => ['label' => 'Meta description', 'type' => 'textarea', 'max' => 320, 'hint' => 'A short, accurate summary for search results.', 'config' => 'seo.default_description'],
 ]];
 
+$sections['seo']['fields'] += [
+    'robots' => ['label' => 'Search visibility', 'type' => 'text', 'max' => 32, 'allowed' => ['index, follow', 'noindex, follow', 'noindex, nofollow'], 'hint' => 'Use index, follow for a public homepage. noindex removes it from search.', 'default' => 'index, follow'],
+    'social_title' => ['label' => 'Social sharing title', 'type' => 'text', 'max' => 160, 'hint' => 'Optional. Uses the SEO title when empty.', 'default' => ''],
+    'social_description' => ['label' => 'Social sharing description', 'type' => 'textarea', 'max' => 320, 'hint' => 'Optional. Uses the meta description when empty.', 'default' => ''],
+    'social_image' => ['label' => 'Social sharing image', 'type' => 'image', 'max' => 5120, 'hint' => 'JPEG, PNG or WebP, up to 5 MB. Add an image description for each language.', 'config' => 'seo.default_image'],
+];
+$sections['geo'] = ['label' => 'Publisher identity (GEO)', 'fields' => [
+    'name' => ['label' => 'Publisher name', 'type' => 'text', 'max' => 160, 'hint' => 'The real organization operating this marketplace.', 'config' => 'seo.organization.name'],
+    'description' => ['label' => 'About the publisher', 'type' => 'textarea', 'max' => 1000, 'hint' => 'Accurate description of the organization. No unsupported credentials or claims.', 'default' => ''],
+    'url' => ['label' => 'Official website', 'type' => 'link', 'absolute' => true, 'max' => 2048, 'hint' => 'The official https website for the publisher.', 'config' => 'seo.organization.url'],
+    'logo' => ['label' => 'Publisher logo', 'type' => 'image', 'max' => 5120, 'hint' => 'JPEG, PNG or WebP, up to 5 MB.', 'config' => 'seo.organization.logo'],
+]];
+foreach (['instagram', 'facebook', 'linkedin'] as $network) {
+    $sections['geo']['fields'][$network] = ['label' => ucfirst($network).' official profile', 'type' => 'link', 'absolute' => true, 'max' => 2048, 'hint' => 'Optional. Only an official profile belonging to this organization.', 'default' => ''];
+}
+$sections['aeo'] = ['label' => 'Clear answers (AEO)', 'fields' => [
+    'summary' => ['label' => 'Short answer: what does Tourstica offer?', 'type' => 'textarea', 'max' => 600, 'hint' => 'A concise factual answer, shown publicly above the homepage FAQs. Leave empty to hide. Existing FAQ questions and answers stay in the FAQs editor.', 'default' => ''],
+]];
+
 return ['upload_max_kb' => 5120, 'pages' => ['home' => ['label' => 'Home', 'view' => 'site.home-v2', 'route' => 'site.home', 'sections' => $sections]]];
