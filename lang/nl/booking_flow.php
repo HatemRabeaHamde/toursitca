@@ -23,18 +23,12 @@ return [
         'reviews' => ':count review|:count reviews',
 
         'option' => 'Optie',
-        'option_below' => 'Kies hieronder je optie',
         'option_empty' => 'Kies een datum en daarna je optie',
-        'change' => 'Wijzigen',
-        'choose' => 'Kiezen',
     ],
     'options' => [
-        'tab' => 'Opties',
         'title' => 'Kies je optie',
         'for_date' => 'Prijzen voor :date',
         'change_date' => 'Datum wijzigen',
-        'pick_date_title' => 'Kies een datum om de opties te zien',
-        'pick_date_body' => 'Beschikbaarheid en prijzen hangen af van de dag en het aantal reizigers.',
         'pickup' => 'Ophalen inbegrepen',
         'private' => 'Privé mogelijk',
         'cancellation' => 'Gratis annuleren tot :hours u vooraf',

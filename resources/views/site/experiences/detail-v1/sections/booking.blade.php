@@ -1,6 +1,11 @@
 {{-- Booking card v1. Same logic as before: experienceBooking store (date → quote → checkout) through experienceBookingCard. --}}
 @php($booking = $page->booking)
-<div class="lv-bcard lv-v1-bcard">
+<div class="lv-v1-backdrop" x-show="sheetOpen" x-cloak x-transition.opacity.duration.250ms @click="sheetOpen = false" aria-hidden="true"></div>
+<div class="lv-bcard lv-v1-bcard" :class="{ 'is-sheet-open': sheetOpen }" x-trap.noscroll="sheetOpen">
+    <div class="lv-v1-sheet__head">
+        <p class="lv-t-h5 lv-serif lv-tone-ink">{{ __('experiences.detail.booking.label') }}</p>
+        <button type="button" class="lv-dialog__close" @click="sheetOpen = false" aria-label="{{ __('experiences.detail.booking.close') }}">×</button>
+    </div>
     <x-site.molecules.booking-summary :price="$booking['priceFrom']" :rating="$booking['rating']" :reviews="$page->hero['reviews']" />
     <x-site.molecules.booking-field :label="__('experiences.detail.v1.booking.dates')">
         <button type="button" class="lv-bfield__control" @click="openDates()" aria-haspopup="dialog" :aria-expanded="dateOpen.toString()">
@@ -42,19 +47,17 @@
         </fieldset>
     @endif
 
-    @if($booking['options'])
-        {{-- The package itself is chosen in the "Choose your option" section; here is only what was picked. --}}
-        <div class="lv-v1-picked" :class="{ 'is-empty': needsOption() }">
-            <div class="min-w-0">
-                <p class="lv-t-label-s lv-tone-ink">{{ __('booking_flow.card.option') }}</p>
-                <p class="lv-t-caption lv-tone-muted" x-show="chosenOption()" x-text="chosenOption()?.title"></p>
-                <p class="lv-t-caption lv-tone-muted" x-show="!chosenOption()" x-cloak
-                   x-text="store.selectedDate ? @js(__('booking_flow.card.option_below')) : @js(__('booking_flow.card.option_empty'))">{{ __('booking_flow.card.option_empty') }}</p>
-            </div>
-            <a href="#options" class="lv-t-label-s lv-tone-terracotta" x-show="store.selectedDate" x-cloak>
-                <span x-text="chosenOption() ? @js(__('booking_flow.card.change')) : @js(__('booking_flow.card.choose'))"></span>
-            </a>
-        </div>
+    @if(count($booking['options']) > 1)
+        {{-- Packages open in a dialog so the traveller never has to leave the form. --}}
+        <x-site.molecules.booking-field :label="__('booking_flow.card.option')">
+            <button type="button" class="lv-bfield__control lv-v1-optfield" :class="{ 'is-attention': store.selectedDate && needsOption() }"
+                    @click="openOptions()" aria-haspopup="dialog" :aria-expanded="optionsOpen.toString()">
+                <x-site.atoms.icon name="sparkle-terracotta" :size="18" />
+                <span class="lv-bfield__value" :class="{ 'lv-tone-muted': !chosenOption() }"
+                      x-text="chosenOption()?.title || @js(__('booking_flow.cta.choose_option'))">{{ __('booking_flow.cta.choose_option') }}</span>
+                <x-site.atoms.icon name="chevron-down-muted" :size="16" />
+            </button>
+        </x-site.molecules.booking-field>
     @endif
 
     <template x-if="languageChoices().length > 1">

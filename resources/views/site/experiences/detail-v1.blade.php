@@ -18,11 +18,10 @@
 
             <div class="lv-container lv-v1"
                  x-data="experienceBookingCard(@js(['store' => $page->booking['store'], 'card' => $page->booking['card'], 'options' => $page->booking['options']]))"
-                 @keydown.escape.window="dateOpen = false; closeGuests()">
+                 @keydown.escape.window="closeLayers()">
                 <div class="lv-v1__main">
                     @include('site.experiences.detail-v1.sections.tabs')
                     @if($page->highlights)@include('site.experiences.detail-v1.sections.highlights')@endif
-                    @if($page->booking['options'])@include('site.experiences.detail-v1.sections.options')@endif
                     @if($page->itinerary)@include('site.experiences.detail-v1.sections.itinerary')@endif
                     @if($page->included['items'])@include('site.experiences.detail-v1.sections.included')@endif
                     @if($page->host)@include('site.experiences.detail-v1.sections.host')@endif
@@ -35,6 +34,7 @@
                     @if($page->related)@include('site.experiences.detail-v1.sections.pairs')@endif
                 </aside>
 
+                @if(count($page->booking['options']) > 1)@include('site.experiences.detail-v1.sections.options-modal')@endif
                 @include('site.experiences.detail-v1.sections.mobile-bar')
             </div>
         </div>

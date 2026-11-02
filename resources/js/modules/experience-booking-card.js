@@ -16,6 +16,8 @@ export function experienceBookingCard(config) {
     return {
         options: config.options || [],
         dateOpen: false,
+        optionsOpen: false,
+        sheetOpen: false,
         calendarMonth: 0,
         guestsOpen: false,
         formatter: null,
@@ -25,6 +27,11 @@ export function experienceBookingCard(config) {
             this.store.configure(config.store);
 
             (config.options || []).forEach((option) => this.store.registerOptionPricing(option.id, option));
+
+            // Links to the booking form (#book) open the sheet on phones, where the form is not in the page flow.
+            const openFromHash = () => { if (window.location.hash === '#book' && window.matchMedia('(max-width: 1023px)').matches) this.sheetOpen = true; };
+            openFromHash();
+            window.addEventListener('hashchange', openFromHash);
 
         },
 
@@ -245,10 +252,32 @@ export function experienceBookingCard(config) {
             if (this.store.activeOption === null && open.length === 1) await this.selectOption(open[0]);
         },
 
+        /** After a date, a traveller with several packages picks one in the dialog. */
         revealOptions() {
-            if (this.options.length === 0) return;
+            if (this.options.length > 1 && !this.chosenOption()) this.optionsOpen = true;
+        },
 
-            this.$nextTick(() => document.getElementById('options')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        openOptions() {
+            if (!this.store.selectedDate) return this.openDates();
+
+            this.optionsOpen = true;
+        },
+
+        async chooseOption(option) {
+            await this.selectOption(option);
+            if (this.chosenOption()?.id === option.id) this.optionsOpen = false;
+        },
+
+        /** Escape closes the top layer only: a dialog first, then the phone sheet. */
+        closeLayers() {
+            if (this.dateOpen || this.optionsOpen) {
+                this.dateOpen = false;
+                this.optionsOpen = false;
+                return;
+            }
+
+            this.closeGuests();
+            this.sheetOpen = false;
         },
 
         languageChoices() {
