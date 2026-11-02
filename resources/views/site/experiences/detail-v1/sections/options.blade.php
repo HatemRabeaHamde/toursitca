@@ -34,7 +34,7 @@
                             <span class="lv-t-h5 lv-serif lv-tone-ink" x-text="option.title"></span>
                             <ul class="lv-opt__chips lv-t-caption lv-tone-muted">
                                 <li x-show="option.duration"><x-site.atoms.icon name="clock" :size="14" /><span x-text="option.duration"></span></li>
-                                <li x-show="option.languages.length"><x-site.atoms.icon name="globe" :size="14" /><span x-text="option.languages.map((l) => l.label).join(', ')"></span></li>
+                                <li x-show="option.languages.length"><x-site.atoms.icon name="globe" :size="14" class="lv-icon--ink" /><span x-text="option.languages.map((l) => l.label).join(', ')"></span></li>
                                 <li x-show="option.pickup"><x-site.atoms.icon name="pin" :size="14" />{{ __('booking_flow.options.pickup') }}</li>
                                 <li x-show="option.private"><x-site.atoms.icon name="user-terracotta" :size="14" />{{ __('booking_flow.options.private') }}</li>
                                 <li x-show="option.cancellationHours"><x-site.atoms.icon name="calendar-terracotta" :size="14" /><span x-text="@js(__('booking_flow.options.cancellation')).replace(':hours', option.cancellationHours)"></span></li>

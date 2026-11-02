@@ -14,7 +14,7 @@
     @if($booking['hasChildPricing'])
         @include('site.experiences.detail.partials.travellers')
     @else
-        <div class="lv-bfield">
+        <div class="lv-bfield lv-v1-travellers">
             <span class="lv-t-label-m lv-tone-ink" id="booking-travellers-label">{{ __('experiences.detail.booking.travellers') }}</span>
             <div class="lv-v1-stepper" role="group" aria-labelledby="booking-travellers-label">
                 <button type="button" @click="stepTravellers(-1)" :disabled="store.adults <= 1" aria-label="{{ __('experiences.detail.booking.decrease', ['label' => __('experiences.detail.booking.travellers')]) }}"><x-site.atoms.icon name="minus-ink" :size="16" /></button>
@@ -60,7 +60,7 @@
     <template x-if="languageChoices().length > 1">
         <x-site.molecules.booking-field :label="__('experiences.detail.booking.language')" for="booking-language">
             <span class="lv-bfield__control">
-                <x-site.atoms.icon name="globe" :size="18" />
+                <x-site.atoms.icon name="globe" :size="18" class="lv-icon--ink" />
                 <select id="booking-language" class="lv-bfield__select" @change="setLanguage($event.target.value)">
                     <template x-for="language in languageChoices()" :key="language.code">
                         <option :value="language.code" :selected="language.code === store.selectedLanguage" x-text="language.label"></option>
@@ -72,12 +72,12 @@
     </template>
 
     <div class="lv-v1-total" x-show="!(store.selectedDate && needsOption())">
-        <div class="flex min-w-0 flex-col gap-0.5">
+        <div class="lv-v1-total__row">
             <p class="lv-t-label-m lv-tone-ink" x-text="store.quote ? @js(__('experiences.detail.booking.confirmed_total')) : @js(__('experiences.detail.booking.total'))">{{ __('experiences.detail.booking.total') }}</p>
-            <p class="lv-t-micro lv-tone-muted" x-text="breakdown()"></p>
-            <p class="lv-t-micro lv-tone-muted">{{ __('experiences.detail.v1.booking.final_note') }}</p>
+            <p class="lv-bcard__total" x-text="money(total())">{{ $booking['priceFrom'] }}</p>
         </div>
-        <p class="lv-bcard__total" x-text="money(total())">{{ $booking['priceFrom'] }}</p>
+        <p class="lv-t-caption lv-tone-muted" x-text="breakdown()"></p>
+        <p class="lv-t-caption lv-tone-muted">{{ __('experiences.detail.v1.booking.final_note') }}</p>
     </div>
 
     <p class="lv-t-caption lv-tone-muted" x-show="store.isQuoting" x-cloak role="status">{{ __('experiences.detail.booking.checking') }}</p>

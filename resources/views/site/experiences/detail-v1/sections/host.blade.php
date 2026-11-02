@@ -20,7 +20,7 @@
                     <li class="flex items-center gap-2"><x-site.atoms.icon name="card-ink" :size="17" />{{ __('experiences.detail.host.licence', ['number' => $host['licence']]) }}</li>
                 @endif
                 @if($host['languages'])
-                    <li class="flex items-center gap-2"><x-site.atoms.icon name="globe" :size="17" />{{ $host['languages'] }}</li>
+                    <li class="flex items-center gap-2"><x-site.atoms.icon name="globe" :size="17" class="lv-icon--ink" />{{ $host['languages'] }}</li>
                 @endif
             </ul>
         </div>
