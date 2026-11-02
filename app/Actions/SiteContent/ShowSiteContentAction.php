@@ -2,29 +2,26 @@
 
 namespace App\Actions\SiteContent;
 
-use App\Models\SiteContent;
+use App\Services\SiteContentEditorData;
 use App\Services\SiteContentRegistry;
 use Illuminate\View\View;
 
 final class ShowSiteContentAction
 {
-    public function __construct(private SiteContentRegistry $registry) {}
+    public function __construct(private SiteContentRegistry $registry, private SiteContentEditorData $editor) {}
 
     public function execute(?string $page = null): View
     {
         if ($page === null) {
-            return view('admin.site-content.index', ['pages' => $this->registry->pages()]);
+            return view('admin.site-content.index', ['pages' => $this->registry->pages(), 'seo' => ['title' => 'Website studio | Tourstica admin', 'robots' => 'noindex, nofollow']]);
         }
-        $definition = $this->registry->page($page);
-        $rows = SiteContent::with(['revisions' => fn ($q) => $q->latest('id')->limit(20)])->where('page', $page)->get()->keyBy(fn ($r) => $r->section.'.'.$r->key);
-        $fields = [];
-        $defaults = collect(['en', 'fr', 'nl'])->mapWithKeys(fn ($locale) => [$locale => $this->registry->defaults($page, $locale)])->all();
-        foreach ($this->registry->fields($page) as $key => $field) {
-            $row = $rows->get($key);
-            $translations = $row ? ($row->getRawOriginal('draft_value') !== null ? $row->getTranslations('draft_value') : $row->getTranslations('value')) : [];
-            $fields[$key] = [...$field, 'key' => $key, 'encoded' => str_replace('.', '__', $key), 'translations' => $translations, 'defaults' => array_map(fn ($values) => $values[$key], $defaults), 'revisions' => $row?->revisions ?? collect()];
-        }
+        $settingsSections = collect(config('site_content.panels'))->pluck('sections')->flatten()->all();
+        $canvasSections = array_diff(array_keys($this->registry->page($page)['sections']), $settingsSections);
+        $data = $this->editor->get($page, $canvasSections);
+        $data['seo'] = ['title' => 'Homepage editor | Tourstica admin', 'robots' => 'noindex, nofollow'];
+        $data['definition']['sections'] = array_diff_key($data['definition']['sections'], array_flip($settingsSections));
+        $data['fields'] = array_filter($data['fields'], fn ($field) => ! in_array(explode('.', $field['key'])[0], $settingsSections, true));
 
-        return view('admin.site-content.edit', compact('page', 'definition', 'fields'));
+        return view('admin.site-content.edit', $data);
     }
 }

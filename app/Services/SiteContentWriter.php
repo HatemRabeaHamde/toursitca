@@ -30,7 +30,7 @@ final class SiteContentWriter
                 $row->save();
             }
             if ($data['mode'] === 'publish') {
-                foreach (SiteContent::where('page', $page)->lockForUpdate()->get() as $row) {
+                foreach (SiteContent::where('page', $page)->when($data['sections'] ?? null, fn ($query, $sections) => $query->whereIn('section', $sections))->lockForUpdate()->get() as $row) {
                     if ($row->getRawOriginal('draft_value') === null) {
                         continue;
                     }

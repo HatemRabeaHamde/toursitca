@@ -11,6 +11,6 @@ final class SaveSiteContentAction
 
     public function execute(SiteContentUpdateData $data): void
     {
-        $this->writer->save($data->page, ['mode' => $data->mode, 'fields' => $data->fields], $data->userId);
+        $this->writer->save($data->page, ['mode' => $data->mode, 'fields' => $data->fields, 'sections' => $data->sections], $data->userId);
     }
 }

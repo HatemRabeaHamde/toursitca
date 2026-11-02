@@ -93,4 +93,14 @@ $sections['aeo'] = ['label' => 'Clear answers (AEO)', 'fields' => [
     'summary' => ['label' => 'Short answer: what does Tourstica offer?', 'type' => 'textarea', 'max' => 600, 'hint' => 'A concise factual answer, shown publicly above the homepage FAQs. Leave empty to hide. Existing FAQ questions and answers stay in the FAQs editor.', 'default' => ''],
 ]];
 
-return ['upload_max_kb' => 5120, 'pages' => ['home' => ['label' => 'Home', 'view' => 'site.home-v2', 'route' => 'site.home', 'sections' => $sections]]];
+$settings = require __DIR__.'/site_content_settings.php';
+$settings['panels']['search']['groups'] = ['basics' => ['seo.title', 'seo.description', 'seo.robots'], 'sharing' => ['seo.social_title', 'seo.social_description', 'seo.social_image', 'seo.twitter_card'], 'advanced' => ['seo.max_snippet', 'seo.max_image_preview', 'seo.max_video_preview', 'seo.google_verification']];
+$settings['panels']['publisher']['groups'] = ['identity' => ['geo.name', 'geo.legal_name', 'geo.alternate_name', 'geo.description', 'geo.url', 'geo.logo', 'geo.about_url'], 'profiles' => ['geo.email', 'geo.phone', 'geo.instagram', 'geo.facebook', 'geo.linkedin', 'geo.youtube']];
+$settings['panels']['answers']['groups'] = ['summary_group' => ['aeo.question', 'aeo.summary'], 'evidence' => ['aeo.reviewer', 'aeo.reviewer_type', 'aeo.reviewed_on', 'aeo.source_1_label', 'aeo.source_1_url', 'aeo.source_2_label', 'aeo.source_2_url']];
+foreach ($settings['fields'] as $section => $fields) {
+    foreach ($fields as $key => $definition) {
+        $sections[$section]['fields'][$key] = array_replace($sections[$section]['fields'][$key] ?? [], $definition);
+    }
+}
+
+return ['upload_max_kb' => 5120, 'panels' => $settings['panels'], 'pages' => ['home' => ['label' => 'Home', 'view' => 'site.home-v2', 'route' => 'site.home', 'sections' => $sections]]];

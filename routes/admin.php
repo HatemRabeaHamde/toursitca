@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Middleware\RedirectLegacyContentSettings;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -21,7 +22,9 @@ Route::prefix('admin')
     ->group(function (): void {
         Route::redirect('/', '/admin/dashboard')->name('home');
         Route::get('/site-content', [SiteContentController::class, 'index'])->name('site-content.index');
-        Route::get('/site-content/{page}', [SiteContentController::class, 'edit'])->name('site-content.edit');
+        Route::get('/site-content/{page}/settings/{panel}', [SiteContentController::class, 'settings'])->name('site-content.settings');
+        Route::post('/site-content/{page}/settings/{panel}', [SiteContentController::class, 'update'])->name('site-content.settings.update');
+        Route::get('/site-content/{page}', [SiteContentController::class, 'edit'])->middleware(RedirectLegacyContentSettings::class)->name('site-content.edit');
         Route::post('/site-content/{page}', [SiteContentController::class, 'update'])->name('site-content.update');
         Route::post('/site-content/{page}/revisions/{revision}', [SiteContentController::class, 'restore'])->name('site-content.restore');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

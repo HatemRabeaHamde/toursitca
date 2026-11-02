@@ -38,7 +38,7 @@ final class Footer extends Component
     /** @return array<string, string> network => url */
     public function socials(): array
     {
-        return array_filter(collect(config('landing_v2.social_urls', []))->map(fn ($url, $network) => landing_link('footer.social_'.$network, $url))->all());
+        return array_filter(collect(config('landing_v2.social_urls', []))->map(fn ($url, $network) => landing_link('footer.social_'.$network, landing_link('geo.'.$network, $url)))->all());
     }
 
     public function brand(): string
