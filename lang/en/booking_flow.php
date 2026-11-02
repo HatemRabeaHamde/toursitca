@@ -23,12 +23,18 @@ return [
         'reviews' => ':count review|:count reviews',
 
         'option' => 'Option',
+        'option_below' => 'Choose your option below',
         'option_empty' => 'Pick a date, then choose your option',
+        'change' => 'Change',
+        'choose' => 'Choose',
     ],
     'options' => [
+        'tab' => 'Options',
         'title' => 'Choose your option',
         'for_date' => 'Prices for :date',
         'change_date' => 'Change date',
+        'pick_date_title' => 'Pick a date to see the options',
+        'pick_date_body' => 'Availability and prices depend on the day and the number of travellers.',
         'pickup' => 'Pick-up included',
         'private' => 'Private available',
         'cancellation' => 'Free cancellation up to :hours h',

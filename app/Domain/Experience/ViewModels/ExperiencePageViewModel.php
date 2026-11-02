@@ -56,6 +56,7 @@ final readonly class ExperiencePageViewModel
     {
         return array_values(array_filter([
             $this->highlights ? ['id' => 'overview', 'label' => __('experiences.detail.tabs.overview')] : null,
+            $this->booking['options'] !== [] ? ['id' => 'options', 'label' => __('booking_flow.options.tab')] : null,
             $this->itinerary ? ['id' => 'itinerary', 'label' => __('experiences.detail.tabs.itinerary')] : null,
             $this->included['items'] ? ['id' => 'included', 'label' => __('experiences.detail.included.title')] : null,
             $this->host ? ['id' => 'host', 'label' => __('experiences.detail.v1.tabs.host')] : null,

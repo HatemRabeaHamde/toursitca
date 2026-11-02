@@ -33,6 +33,9 @@ export function experienceBookingCard(config) {
             openFromHash();
             window.addEventListener('hashchange', openFromHash);
 
+            // Coming back from checkout (back button / bfcache) must not leave the form stuck on "One moment…".
+            window.addEventListener('pageshow', (event) => { if (event.persisted) this.store.isStartingCheckout = false; });
+
         },
 
         get store() {
@@ -252,8 +255,15 @@ export function experienceBookingCard(config) {
             if (this.store.activeOption === null && open.length === 1) await this.selectOption(open[0]);
         },
 
-        /** After a date, a traveller with several packages picks one in the dialog. */
+        /** After a date: the options section on wide screens, the options dialog on phones. */
         revealOptions() {
+            if (this.options.length === 0) return;
+
+            if (window.matchMedia('(min-width: 1024px)').matches) {
+                this.$nextTick(() => document.getElementById('options')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+                return;
+            }
+
             if (this.options.length > 1 && !this.chosenOption()) this.optionsOpen = true;
         },
 

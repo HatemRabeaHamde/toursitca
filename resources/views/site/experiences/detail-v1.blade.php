@@ -22,6 +22,7 @@
                 <div class="lv-v1__main">
                     @include('site.experiences.detail-v1.sections.tabs')
                     @if($page->highlights)@include('site.experiences.detail-v1.sections.highlights')@endif
+                    @if($page->booking['options'])@include('site.experiences.detail-v1.sections.options')@endif
                     @if($page->itinerary)@include('site.experiences.detail-v1.sections.itinerary')@endif
                     @if($page->included['items'])@include('site.experiences.detail-v1.sections.included')@endif
                     @if($page->host)@include('site.experiences.detail-v1.sections.host')@endif

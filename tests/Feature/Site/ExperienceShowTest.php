@@ -127,7 +127,7 @@ class ExperienceShowTest extends TestCase
             ->assertSeeInOrder(['5 ★', '75%', '4 ★', '25%', '3 ★', '0%'], false);
     }
 
-    public function test_options_open_in_a_dialog_from_the_booking_form(): void
+    public function test_options_have_a_section_on_desktop_and_a_dialog_in_the_form(): void
     {
         $experience = $this->createExperience(['title' => ['en' => 'Atlas Days']]);
         $this->createMedia($experience);
@@ -137,9 +137,10 @@ class ExperienceShowTest extends TestCase
 
         $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
             ->assertOk()
-            ->assertDontSee('id="options"', false)
+            ->assertSee('id="options"', false)
             ->assertSee('id="booking-options-title"', false)
             ->assertSee('Choose your option')
+            ->assertSee('Pick a date to see the options')
             ->assertSee('@click="openOptions()"', false)
             ->assertSee('Private 3-day adventure')
             ->assertSee('Standard day trip')
@@ -156,7 +157,7 @@ class ExperienceShowTest extends TestCase
                     && $option['adultPrice'] === 100.0
                     && $option['childPrice'] === 60.0
                     && array_column($option['languages'], 'code') === ['en', 'fr']
-                    && ! in_array('options', array_column($page->tabsV1(), 'id'), true);
+                    && in_array('options', array_column($page->tabsV1(), 'id'), true);
             });
     }
 
@@ -167,6 +168,7 @@ class ExperienceShowTest extends TestCase
 
         $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
             ->assertOk()
+            ->assertSee('id="options"', false)
             ->assertDontSee('id="booking-options-title"', false)
             ->assertViewHas('page', function ($page) use ($experience): bool {
                 $options = $page->booking['options'];
@@ -174,7 +176,8 @@ class ExperienceShowTest extends TestCase
                 return count($options) === 1
                     && $options[0]['id'] === null
                     && $options[0]['title'] === $experience->getTranslation('title', 'en')
-                    && $options[0]['adultPrice'] === (string) $experience->price_per_person;
+                    && $options[0]['adultPrice'] === (string) $experience->price_per_person
+                    && in_array('options', array_column($page->tabsV1(), 'id'), true);
             });
     }
 

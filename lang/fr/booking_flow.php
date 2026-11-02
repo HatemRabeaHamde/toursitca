@@ -23,12 +23,18 @@ return [
         'reviews' => ':count avis|:count avis',
 
         'option' => 'Formule',
+        'option_below' => 'Choisissez votre formule ci-dessous',
         'option_empty' => 'Choisissez une date, puis votre formule',
+        'change' => 'Modifier',
+        'choose' => 'Choisir',
     ],
     'options' => [
+        'tab' => 'Formules',
         'title' => 'Choisissez votre formule',
         'for_date' => 'Tarifs pour le :date',
         'change_date' => 'Changer de date',
+        'pick_date_title' => 'Choisissez une date pour voir les formules',
+        'pick_date_body' => 'La disponibilité et les prix dépendent du jour et du nombre de voyageurs.',
         'pickup' => 'Prise en charge incluse',
         'private' => 'Privatisation possible',
         'cancellation' => 'Annulation gratuite jusqu’à :hours h avant',

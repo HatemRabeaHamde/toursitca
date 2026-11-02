@@ -47,9 +47,24 @@
         </fieldset>
     @endif
 
+    @if($booking['options'])
+        {{-- The package itself is chosen in the "Choose your option" section; here is only what was picked. --}}
+        <div class="lv-v1-picked lv-v1-desktop-only" :class="{ 'is-empty': needsOption() }">
+            <div class="min-w-0">
+                <p class="lv-t-label-s lv-tone-ink">{{ __('booking_flow.card.option') }}</p>
+                <p class="lv-t-caption lv-tone-muted" x-show="chosenOption()" x-text="chosenOption()?.title"></p>
+                <p class="lv-t-caption lv-tone-muted" x-show="!chosenOption()" x-cloak
+                   x-text="store.selectedDate ? @js(__('booking_flow.card.option_below')) : @js(__('booking_flow.card.option_empty'))">{{ __('booking_flow.card.option_empty') }}</p>
+            </div>
+            <a href="#options" class="lv-t-label-s lv-tone-terracotta" x-show="store.selectedDate" x-cloak>
+                <span x-text="chosenOption() ? @js(__('booking_flow.card.change')) : @js(__('booking_flow.card.choose'))"></span>
+            </a>
+        </div>
+    @endif
+
     @if(count($booking['options']) > 1)
         {{-- Packages open in a dialog so the traveller never has to leave the form. --}}
-        <x-site.molecules.booking-field :label="__('booking_flow.card.option')">
+        <x-site.molecules.booking-field class="lv-v1-sheet-only" :label="__('booking_flow.card.option')">
             <button type="button" class="lv-bfield__control lv-v1-optfield" :class="{ 'is-attention': store.selectedDate && needsOption() }"
                     @click="openOptions()" aria-haspopup="dialog" :aria-expanded="optionsOpen.toString()">
                 <x-site.atoms.icon name="sparkle-terracotta" :size="18" />
@@ -92,7 +107,6 @@
     <p class="lv-t-caption lv-tone-muted text-center" x-show="nextStepHint()" x-text="nextStepHint()" role="status">{{ __('booking_flow.hint.date') }}</p>
 
     <ul class="flex flex-col gap-2.5 lv-t-caption lv-tone-ink">
-        <li class="flex items-center gap-2.5"><x-site.atoms.icon name="card-ink" :size="17" />{{ __('experiences.detail.v1.booking.no_card') }}</li>
         <li class="flex items-center gap-2.5" x-show="chosenOption()?.cancellationHours !== null && chosenOption()?.cancellationHours !== undefined" x-cloak><x-site.atoms.icon name="calendar-terracotta" :size="17" /><span x-text="@js(__('experiences.detail.v1.booking.free_cancellation', ['hours' => ':hours'])).replace(':hours', chosenOption()?.cancellationHours)"></span></li>
     </ul>
 

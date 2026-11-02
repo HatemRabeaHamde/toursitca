@@ -175,3 +175,10 @@
 }
 @keyframes lv-sheet-up { from { opacity: 0; transform: translateY(28px); } }
 @media (prefers-reduced-motion: reduce) { .lv-v1-bcard.is-sheet-open { animation: none; } }
+
+/* Options live in their own section on wide screens and in the form's dialog on phones */
+.lv-opt-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 20px 24px; background: #fff; border: 1.5px dashed var(--lv-control); border-radius: var(--lv-radius); }
+.lv-v1-picked { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: var(--lv-sand); border: 1px solid transparent; border-radius: var(--lv-radius-sm); }
+.lv-v1-picked.is-empty { background: transparent; border: 1px dashed var(--lv-control); }
+@media (max-width: 1023px) { .lv .lv-v1-desktop-only { display: none; } }
+@media (min-width: 1024px) { .lv-v1-sheet-only { display: none; } }
