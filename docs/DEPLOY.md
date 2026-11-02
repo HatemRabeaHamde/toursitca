@@ -79,7 +79,7 @@ The whole batch runs in one transaction. Account collisions abort without resett
 
 ### Booking/review workflow release (prepared locally 2026-11-03)
 
-Runtime commit: `47cca02`. Not deployed. Read tasks/plan.md and the C08 limitations in docs/TODO.md first. The built-in browser currently reports local browser use disabled in Work settings; desktop and 375px QA remain unverified. Real parallel-connection MySQL capacity tests are also outstanding, and Larastan still exits 1 silently under local PHP 8.5.
+Runtime release: `89cfb95` (includes workflow `47cca02` and the Morocco timezone setting). Not deployed. Read tasks/plan.md and the C08 limitations in docs/TODO.md first. The built-in browser currently reports local browser use disabled in Work settings; desktop and 375px QA remain unverified. Real parallel-connection MySQL capacity tests are also outstanding, and Larastan still exits 1 silently under local PHP 8.5.
 
 Before release, back up MySQL, code and uploads privately. Check for duplicate non-null bookings.checkout_session_id values before applying its new unique index; do not merge or delete any bookings automatically. Apply the experience-review workflow and cancelled-payout/checkout-uniqueness migrations, upload the rebuilt assets and refresh autoload/config/routes/views. Existing published experiences retain their publication and receive no invented reviewer/date; existing unpublished rows start in draft review state. New authoring always starts as a draft. Never re-run broad seeders during this release.
 
