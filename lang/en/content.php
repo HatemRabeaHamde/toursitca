@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'workspace' => 'Website studio',
+    'home' => 'Homepage editor',
+    'search' => 'Search & sharing',
+    'publisher' => 'Publisher identity',
+    'answers' => 'Clear answers',
+    'open' => 'Open navigation',
+    'close' => 'Close navigation',
+    'view' => 'View website',
+    'edit' => 'Edit homepage',
+    'site_content' => 'Site content',
+    'studio' => 'Website studio',
+    'subtitle' => 'Content, imagery and search visibility in one workspace.',
+    'page_title' => 'Make the page yours.',
+    'intro' => 'Open a page, select its words or images, and edit in context. Save a private draft before you publish.',
+    'sections' => ':count fixed content sections · EN / FR / NL',
+    'open_editor' => 'Open page editor',
+    'details_title' => 'One place for the details.',
+    'details' => 'Hero slides, buttons, header, footer, logos and decorative images are available in the page editor.',
+    'search_details' => 'Use the search settings to edit page metadata, sharing images, publisher identity and the short answer summary.',
+    'managed' => 'Experiences, hosts, destinations and FAQs still have their own management pages.',
+    'slide_tip' => 'Hero images: select Slide 2–5 in the content menu, or hover a destination on the page to view and edit its image.',
+];

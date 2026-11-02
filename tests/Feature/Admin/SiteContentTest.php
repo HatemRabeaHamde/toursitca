@@ -152,4 +152,43 @@ class SiteContentTest extends TestCase
         $this->get('/admin/site-content/home')->assertOk()->assertSee('Editable homepage preview')->assertSee('visual-editor.js');
         $this->get('/en?content_preview=1&content_edit=1')->assertOk()->assertSee('window.siteContentCanvas', false)->assertHeader('X-Robots-Tag', 'noindex, nofollow');
     }
+
+    public function test_landing_header_footer_and_links_are_editable_without_affecting_other_pages(): void
+    {
+        $this->actingAs($this->admin());
+        $this->save([
+            'nav__experiences' => ['text' => ['en' => 'Browse our tours']],
+            'footer__tagline' => ['text' => ['en' => 'A managed footer message']],
+            'footer__link_privacy' => ['text' => ['en' => 'https://example.com/privacy']],
+            'hero__link_url' => ['text' => ['en' => '/en/experiences?sort=price_asc']],
+        ], 'publish')->assertRedirect();
+        $this->get('/en')->assertSee('Browse our tours')->assertSee('A managed footer message')->assertSee('https://example.com/privacy')->assertSee('/en/experiences?sort=price_asc', false);
+        $this->get('/en/experiences')->assertOk()->assertDontSee('A managed footer message')->assertDontSee('Browse our tours');
+    }
+
+    public function test_each_hero_slide_has_an_independent_image_override_and_reset(): void
+    {
+        Storage::fake('public');
+        $this->actingAs($this->admin());
+        $this->save([
+            'hero__slide_2_image' => ['upload' => UploadedFile::fake()->image('slide-two.jpg'), 'alt' => ['en' => 'Second slide photo']],
+            'hero__slide_2_label' => ['text' => ['en' => 'Landing destination']],
+            'hero__slide_2_url' => ['text' => ['en' => '/en/experiences']],
+        ])->assertRedirect();
+        $row = SiteContent::where('key', 'slide_2_image')->firstOrFail();
+        $url = $row->getTranslations('draft_value')['en']['url'];
+        $this->get('/en')->assertDontSee('Second slide photo');
+        $this->get('/en?content_preview=1')->assertSee('Second slide photo')->assertSee($url, false)->assertSee('Landing destination');
+        $this->save([], 'publish')->assertRedirect();
+        $this->get('/en')->assertSee('Second slide photo')->assertSee('data-content-key="hero.slide_2_image"', false);
+        $this->save(['hero__slide_2_image' => ['reset' => true]], 'publish')->assertRedirect();
+        $this->get('/en')->assertDontSee($url, false);
+        $this->assertDatabaseCount('media', 1);
+    }
+
+    public function test_admin_workspace_exposes_search_shortcuts_and_mobile_navigation(): void
+    {
+        $this->actingAs($this->admin())->get('/admin/site-content')->assertOk()->assertSee('Open page editor')->assertSee('admin-workspace.css')->assertSee('admin-sidebar')->assertSee('Publisher identity');
+        $this->get('/admin/site-content/home?field=hero.slide_3_image')->assertOk()->assertSee('Slide 3 image')->assertSee('Footer background artwork')->assertSee('Logo light');
+    }
 }

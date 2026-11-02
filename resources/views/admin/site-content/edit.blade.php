@@ -26,9 +26,10 @@
  <div class="sc-toolbar">
   <span class="sc-help">Click text or an image to edit. Layout is locked.</span>
   <label>Preview language <select x-model="locale" @change="changeLocale()"><option value="en">EN</option><option value="fr">FR</option><option value="nl">NL</option></select></label>
-  <label>Content &amp; search settings <select x-model="selected"><option value="">Choose a field…</option>@foreach($fields as $key=>$field)<option value="{{ $key }}">{{ $definition['sections'][explode('.', $key)[0]]['label'] }} — {{ $field['label'] }}</option>@endforeach</select></label>
+  <label>Content &amp; search settings <select x-model="selected"><option value="">Choose a field…</option>@foreach($definition['sections'] as $sectionKey=>$section)<optgroup label="{{ $section['label'] }}">@foreach($section['fields'] as $fieldKey=>$field)<option value="{{ $sectionKey.'.'.$fieldKey }}">{{ $field['label'] }}</option>@endforeach</optgroup>@endforeach</select></label>
  </div>
- <iframe x-ref="canvas" class="sc-frame" title="Editable homepage preview" src="{{ route($definition['route'], ['locale'=>'en','content_preview'=>1,'content_edit'=>1]) }}"></iframe>
+ <p class="sc-slide-tip">{{ __('content.slide_tip') }}</p>
+ <iframe x-ref="canvas" @load="$refs.canvas.contentWindow.postMessage({ type: 'site-content-reveal', key: selected }, location.origin)" class="sc-frame" title="Editable homepage preview" src="{{ route($definition['route'], ['locale'=>'en','content_preview'=>1,'content_edit'=>1]) }}"></iframe>
  <aside class="sc-inspector" x-show="selected" x-cloak aria-label="Selected content">
   <button type="button" class="adm-btn adm-btn--ghost" @click="selected = ''">Close editor ×</button>
   @foreach($fields as $key=>$field)

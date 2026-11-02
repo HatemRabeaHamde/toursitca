@@ -7,6 +7,8 @@
 ## Current MVP Audit — 2026-08-05
 
 ### Home content editor — 2026-11-02
+- ✅ Completed landing static-content coverage: independent hero slide image/label/link overrides (defaults still use managed destination data), shared header/footer copy and links, logos/icons/decorative artwork, static CTA destinations, plural count labels. Replaced ambiguous text targeting with isolated text spans so inline edits preserve adjacent prices, counters and heading markup.
+- ✅ Refreshed admin dashboard/sidebar styling, grouped content/search shortcuts, grouped field picker, image fallback previews, and a working mobile navigation drawer. Browser checked slide selection, desktop studio, 375px drawer and overflow. PHPUnit: 168 tests / 797 assertions. Pint and JS syntax checks pass; Larastan still exits silently with code 1 in the existing PHP 8.5 environment. Remote deployment remains pending.
 - ✅ Follow-up validation: 165 tests / 769 assertions; Pint passes. Browser verified inline text editing and draft persistence, contextual SEO settings, desktop and 375px layouts. Larastan remains blocked by the existing silent PHP 8.5 exit. No CMS package installed; fixed Blade layout retained.
 - ✅ Follow-up: replaced the long editor with the actual homepage canvas and contextual field editing; preserved fixed layouts and admin-only drafts.
 - ✅ Added home SEO/GEO/AEO controls: robots, social sharing image/alt/title/description, automatic canonical and locale alternates, publisher entity details/official links, and a visible concise answer summary. No arbitrary JSON-LD, fabricated claims, or guaranteed AI visibility.

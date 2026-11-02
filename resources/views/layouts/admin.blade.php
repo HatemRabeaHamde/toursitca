@@ -6,13 +6,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/admin-dashboard.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('vendor/trix/admin-workspace.css') }}">
     @stack('styles')
 </head>
 <body>
-<div class="adm-shell">
+<div class="adm-shell" x-data="{ adminNavOpen: false }" :class="{ 'adm-nav-open': adminNavOpen }" @keydown.escape.window="adminNavOpen = false">
+    <button class="adm-sidebar-backdrop" x-show="adminNavOpen" x-cloak @click="adminNavOpen = false" aria-label="{{ __('content.close') }}"></button>
 
     {{-- ── Sidebar ─────────────────────────────────────────── --}}
-    <aside class="adm-sidebar">
+    <aside id="admin-sidebar" class="adm-sidebar" x-trap.inert.noscroll="adminNavOpen">
 
         <a href="{{ route('admin.dashboard') }}" class="adm-logo">
             {{ config('brand.name_first') }}<strong>{{ config('brand.name_second') }}</strong><span class="adm-logo-dot"></span>
@@ -21,7 +23,7 @@
 
         <nav class="adm-nav" aria-label="{{ __('ui.nav.main') }}">
 
-            <a href="{{ route('admin.site-content.index') }}" class="adm-nav-link">Site content</a>
+            @include('admin.site-content.navigation')
             <span class="adm-nav-section">{{ __('ui.nav.platform') }}</span>
 
             <a href="{{ route('admin.dashboard') }}"
@@ -194,6 +196,7 @@
     <div class="adm-main">
 
         <header class="adm-topbar">
+            <button class="adm-mobile-toggle" type="button" @click="adminNavOpen = !adminNavOpen" :aria-expanded="adminNavOpen.toString()" aria-controls="admin-sidebar" aria-label="{{ __('content.open') }}">☰</button>
             <div class="adm-topbar-left">
                 <h1>@yield('page-title', __('ui.pages.admin_title'))</h1>
                 @hasSection('page-subtitle')
@@ -201,6 +204,7 @@
                 @endif
             </div>
             <div class="adm-topbar-actions">
+                <a class="adm-view-site" href="{{ route('site.home', ['locale'=>app()->getLocale()]) }}" target="_blank" rel="noopener">{{ __('content.view') }} ↗</a>
                 @yield('topbar-actions')
             </div>
         </header>

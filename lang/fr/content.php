@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'workspace' => 'Atelier du site',
+    'home' => 'Éditeur de la page d’accueil',
+    'search' => 'Recherche et partage',
+    'publisher' => 'Identité de l’éditeur',
+    'answers' => 'Réponses claires',
+    'open' => 'Ouvrir la navigation',
+    'close' => 'Fermer la navigation',
+    'view' => 'Voir le site',
+    'edit' => 'Modifier l’accueil',
+    'site_content' => 'Contenu du site',
+    'studio' => 'Atelier du site',
+    'subtitle' => 'Contenu, images et visibilité dans un seul espace.',
+    'page_title' => 'Personnalisez votre page.',
+    'intro' => 'Ouvrez une page et sélectionnez ses textes ou ses images. Enregistrez un brouillon privé avant de publier.',
+    'sections' => ':count sections fixes · EN / FR / NL',
+    'open_editor' => 'Ouvrir l’éditeur',
+    'details_title' => 'Tous les détails au même endroit.',
+    'details' => 'Les diapositives, boutons, en-tête, pied de page, logos et images décoratives sont disponibles dans l’éditeur.',
+    'search_details' => 'Modifiez les métadonnées, images de partage, informations de l’éditeur et le résumé dans les réglages de recherche.',
+    'managed' => 'Les expériences, hôtes, destinations et FAQ gardent leurs pages de gestion.',
+    'slide_tip' => 'Images du bandeau : choisissez une image 2–5 dans le menu ou survolez une destination pour modifier son image.',
+];

@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'workspace' => 'Websitewerkruimte',
+    'home' => 'Startpagina bewerken',
+    'search' => 'Zoeken en delen',
+    'publisher' => 'Identiteit van de uitgever',
+    'answers' => 'Duidelijke antwoorden',
+    'open' => 'Navigatie openen',
+    'close' => 'Navigatie sluiten',
+    'view' => 'Website bekijken',
+    'edit' => 'Startpagina bewerken',
+    'site_content' => 'Website-inhoud',
+    'studio' => 'Websitewerkruimte',
+    'subtitle' => 'Inhoud, afbeeldingen en vindbaarheid op één plek.',
+    'page_title' => 'Maak de pagina van jou.',
+    'intro' => 'Open een pagina en selecteer tekst of afbeeldingen. Sla een privéconcept op voordat je publiceert.',
+    'sections' => ':count vaste inhoudssecties · EN / FR / NL',
+    'open_editor' => 'Pagina-editor openen',
+    'details_title' => 'Alle details op één plek.',
+    'details' => 'Hero-afbeeldingen, knoppen, koptekst, voettekst, logo’s en decoratieve afbeeldingen staan in de editor.',
+    'search_details' => 'Bewerk metadata, deelafbeeldingen, uitgeversinformatie en het korte antwoord via de zoekinstellingen.',
+    'managed' => 'Ervaringen, gastheren, bestemmingen en veelgestelde vragen houden hun eigen beheerpagina’s.',
+    'slide_tip' => 'Hero-afbeeldingen: kies afbeelding 2–5 in het inhoudsmenu of beweeg over een bestemming om de afbeelding te bewerken.',
+];
