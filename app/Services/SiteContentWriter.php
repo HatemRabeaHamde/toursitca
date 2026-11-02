@@ -76,7 +76,7 @@ final class SiteContentWriter
             return collect($input['text'] ?? [])->filter(fn ($v) => $v !== null && $v !== '')->map(fn ($v) => $field['type'] === 'richtext' ? $this->sanitizer->clean($v) : $v)->all();
         }
         if (! empty($input['remove'])) {
-            return ['en' => ['url' => '', 'alt' => '']];
+            return ['en' => ['url' => '', 'alt' => '', 'removed' => true]];
         }
         $value = $row->getRawOriginal('draft_value') !== null ? $row->getTranslations('draft_value') : $row->getTranslations('value');
         $url = $value['en']['url'] ?? $this->registry->defaults($row->page, 'en')[$row->section.'.'.$row->key]['url'];

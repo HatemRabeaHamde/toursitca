@@ -14,7 +14,7 @@
                 <li class="flex items-center gap-2" data-reveal="pop" data-reveal-at="<0.14">
                     <span class="lv-route-stop">
                         <span class="lv-route-num">{{ $loop->iteration }}</span>
-                        {{ $stop }}
+                        <span data-content-key="featured.route.stops.{{ $loop->index }}">{{ $stop }}</span>
                     </span>
                     @unless($loop->last)<span class="h-px w-5 bg-[rgba(250,246,235,.4)]" aria-hidden="true"></span>@endunless
                 </li>
@@ -30,7 +30,7 @@
         </div>
         <a href="{{ route('site.experiences.index', ['locale' => app()->getLocale()]) }}" class="lv-btn lv-btn--gold h-[52px] px-[26px] text-base">
             {{ $route['cta'] }}
-            <img src="{{ asset(config('landing_v2.icons.arrow_dark')) }}" alt="" width="20" height="20" aria-hidden="true">
+            <img src="{{ landing_artwork('arrow_dark', config('landing_v2.icons.arrow_dark')) }}" alt="" width="20" height="20" aria-hidden="true">
         </a>
     </div>
 </div>

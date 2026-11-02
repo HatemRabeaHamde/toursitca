@@ -26,7 +26,7 @@
                 </div>
                 <a href="{{ $linkHref }}" class="lv-faq-link inline-flex items-center gap-2 self-start" data-reveal="fade">
                     {{ ($content ? $content->get('know.link') : __('landing_v2.know.link')) }}
-                    <img src="{{ asset($icons['arrow_link']) }}" alt="" width="15" height="15" aria-hidden="true">
+                    <img src="{{ landing_artwork('arrow_link', $icons['arrow_link']) }}" alt="" width="15" height="15" aria-hidden="true">
                 </a>
             </div>
         </div>

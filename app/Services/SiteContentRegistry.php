@@ -36,7 +36,7 @@ final class SiteContentRegistry
         $result = [];
         foreach ($this->fields($page) as $key => $field) {
             $value = isset($field['lang']) ? $this->translator->get($field['lang'], [], $locale) : (isset($field['config']) ? $this->config->get($field['config'], '') : ($field['default'] ?? ''));
-            $result[$key] = $field['type'] === 'image' ? ['url' => asset($value ?? ''), 'alt' => ! empty($field['alt_lang']) ? $this->translator->get($field['alt_lang'], [], $locale) : ''] : $value;
+            $result[$key] = $field['type'] === 'image' ? ['url' => ($value ? asset($value) : ''), 'alt' => ! empty($field['alt_lang']) ? $this->translator->get($field['alt_lang'], [], $locale) : ''] : $value;
         }
 
         return $result;

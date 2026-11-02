@@ -6,7 +6,7 @@
 @endphp
 @if($type === 'richtext' && is_string($value))
     {{-- Raw output is allowed here only because SiteContentReader prepared this output using the server-side allowlist sanitizer. --}}
-    {!! $value !!}
+    <div data-content-key="{{ $fieldPath }}">{!! $value !!}</div>
 @elseif(is_string($value))
     {{ $value }}
 @endif

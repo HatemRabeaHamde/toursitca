@@ -11,7 +11,7 @@
             <div class="lg:col-span-5" data-reveal-group>
                 <x-landing-v2.section-heading id="lv-soul-title" :eyebrow="site_content('home.soul.eyebrow')" :before="site_content('home.soul.title')" :accent="site_content('home.soul.title_accent')" />
                 <div class="lv-lede mt-6 max-w-[480px]" data-reveal="text" data-reveal-at="<0.35"><x-site.content key="home.soul.description" /></div>
-                <x-landing-v2.link-arrow :href="$page->discoverUrl()" class="mt-6" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.soul.link') }}</x-landing-v2.link-arrow>
+                <x-landing-v2.link-arrow :href="landing_link('soul.link_url', $page->discoverUrl())" class="mt-6" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.soul.link') }}</x-landing-v2.link-arrow>
             </div>
 
             <div class="grid grid-cols-2 gap-5 lg:col-span-7 lg:ps-10" data-reveal-group data-parallax="-8">
@@ -35,8 +35,8 @@
                 <li class="lv-pillar flex gap-[18px] pt-[22px]">
                     <span class="lv-pillar-num pt-[5px]">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
                     <div class="max-w-[290px]">
-                        <h3 class="lv-serif lv-pillar-title">{{ $pillar['title'] }}</h3>
-                        <p class="lv-body mt-2 text-[15.5px]">{{ $pillar['body'] }}</p>
+                        <h3 class="lv-serif lv-pillar-title"><span data-content-key="soul.pillars.{{ $index }}.title">{{ $pillar['title'] }}</span></h3>
+                        <p class="lv-body mt-2 text-[15.5px]"><span data-content-key="soul.pillars.{{ $index }}.body">{{ $pillar['body'] }}</span></p>
                     </div>
                 </li>
             @endforeach

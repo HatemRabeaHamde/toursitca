@@ -11,8 +11,8 @@
             aria-controls="lv-faq-{{ $index }}">
             <span class="lv-faq-q">{{ $faq['question'] }}</span>
             <span :class="{ 'is-open': open === {{ $index }} }" @class(['lv-faq-icon', 'is-open' => $index === 0]) aria-hidden="true">
-                <img src="{{ asset($icons['faq_plus']) }}" alt="" width="18" height="18" class="lv-faq-icon-plus">
-                <img src="{{ asset($icons['faq_open']) }}" alt="" width="25" height="25" class="lv-faq-icon-open">
+                <img src="{{ landing_artwork('faq_plus', $icons['faq_plus']) }}" alt="" width="18" height="18" class="lv-faq-icon-plus">
+                <img src="{{ landing_artwork('faq_open', $icons['faq_open']) }}" alt="" width="25" height="25" class="lv-faq-icon-open">
             </span>
         </button>
     </h3>

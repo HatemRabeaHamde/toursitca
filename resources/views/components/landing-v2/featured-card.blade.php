@@ -29,7 +29,7 @@
 
         @if($card->agencyName)
             <p @class(['flex items-center gap-2.5', 'mt-[18px] text-sm text-[color:var(--lv-on-dark)]' => $lead, 'lv-meta mt-2' => ! $lead])>
-                @if($lead)<img src="{{ asset($icons['shield_light']) }}" alt="" width="18" height="18" aria-hidden="true">@endif
+                @if($lead)<img src="{{ landing_artwork('shield_light', $icons['shield_light']) }}" alt="" width="18" height="18" aria-hidden="true">@endif
                 {{ $lead ? (request()->attributes->has('site_content') ? site_content('home.featured.hosted_by', ['agency' => $card->agencyName]) : __('landing_v2.featured.hosted_by', ['agency' => $card->agencyName])) : $card->agencyName }}
             </p>
         @endif
@@ -56,7 +56,7 @@
             @if($lead)
                 <span class="lv-btn lv-btn--clay lv-btn--md" aria-hidden="true">
                     {{ (request()->attributes->has('site_content') ? site_content('home.featured.cta') : __('landing_v2.featured.cta')) }}
-                    <img src="{{ asset($icons['arrow_white']) }}" alt="" width="20" height="20">
+                    <img src="{{ landing_artwork('arrow_white', $icons['arrow_white']) }}" alt="" width="20" height="20">
                 </span>
             @endif
         </div>

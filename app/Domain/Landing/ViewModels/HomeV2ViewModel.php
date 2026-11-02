@@ -42,6 +42,36 @@ final readonly class HomeV2ViewModel
             ]);
     }
 
+    /** Landing-only presentation overrides; destination records remain untouched. */
+    public function heroSlides(SiteContentPage $content): Collection
+    {
+        $cities = $this->heroCities();
+        if ($cities->isEmpty()) {
+            $cities = collect([['name' => '', 'url' => '', 'image_url' => '']]);
+        }
+
+        for ($slot = 2; $slot <= 5; $slot++) {
+            if (($content->get('hero.slide_'.$slot.'_image')['url'] ?? '') || $content->get('hero.slide_'.$slot.'_label')) {
+                while ($cities->count() < $slot) {
+                    $cities->push(['name' => '', 'url' => '', 'image_url' => '']);
+                }
+            }
+        }
+
+        return $cities->map(function (array $city, int $index) use ($content): array {
+            $slot = $index + 1;
+            $key = $index === 0 ? 'hero.image' : 'hero.slide_'.$slot.'_image';
+            $image = $content->get($key);
+
+            return [
+                'name' => $content->get('hero.slide_'.$slot.'_label') ?: $city['name'],
+                'url' => $content->get('hero.slide_'.$slot.'_url') ?: $city['url'],
+                'image_url' => $index === 0 || ! empty($image['url']) || ! empty($image['removed']) ? $image['url'] : $city['image_url'],
+                'alt' => $image['alt'] ?? '', 'image_key' => $key, 'index' => $index,
+            ];
+        });
+    }
+
     public function interests(): Collection
     {
         return $this->data->categories

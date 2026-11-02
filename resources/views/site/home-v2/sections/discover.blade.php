@@ -6,7 +6,7 @@
             </div>
             <div class="lg:w-[360px]">
                 <div class="lv-body text-[17px] leading-[1.6]" data-reveal="text" data-reveal-at="<0.4"><x-site.content key="home.discover.description" /></div>
-                <x-landing-v2.link-arrow :href="$page->discoverUrl()" class="mt-[18px]" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.discover.link') }}</x-landing-v2.link-arrow>
+                <x-landing-v2.link-arrow :href="landing_link('discover.link_url', $page->discoverUrl())" class="mt-[18px]" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.discover.link') }}</x-landing-v2.link-arrow>
             </div>
         </div>
 

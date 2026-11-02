@@ -21,10 +21,10 @@ final class Nav extends Component
         $home = route('site.home', ['locale' => $locale]);
 
         return [
-            ['key' => 'discover', 'href' => $this->routeOr('site.discover.index', $home.'#discover'), 'label' => __('site.nav.discover')],
-            ['key' => 'experiences', 'href' => route('site.experiences.index', ['locale' => $locale]), 'label' => __('site.nav.experiences')],
-            ['key' => 'hosts', 'href' => $this->routeOr('site.hosts.index', $home.'#people'), 'label' => __('site.nav.hosts')],
-            ['key' => 'how', 'href' => $home.'#plan', 'label' => __('site.nav.how_it_works')],
+            ['key' => 'discover', 'href' => landing_link('nav.link_discover', $this->routeOr('site.discover.index', $home.'#discover')), 'content_key' => 'nav.discover', 'label' => landing_text('site.nav.discover')],
+            ['key' => 'experiences', 'href' => landing_link('nav.link_experiences', route('site.experiences.index', ['locale' => $locale])), 'content_key' => 'nav.experiences', 'label' => landing_text('site.nav.experiences')],
+            ['key' => 'hosts', 'href' => landing_link('nav.link_hosts', $this->routeOr('site.hosts.index', $home.'#people')), 'content_key' => 'nav.hosts', 'label' => landing_text('site.nav.hosts')],
+            ['key' => 'how', 'href' => landing_link('nav.link_how', $home.'#plan'), 'content_key' => 'nav.how_it_works', 'label' => landing_text('site.nav.how_it_works')],
         ];
     }
 
@@ -32,8 +32,8 @@ final class Nav extends Component
     public function account(): array
     {
         return auth()->check()
-            ? ['href' => route('site.dashboard.bookings', ['locale' => app()->getLocale()]), 'label' => __('site.nav.dashboard')]
-            : ['href' => route('login'), 'label' => __('site.nav.sign_in')];
+            ? ['href' => route('site.dashboard.bookings', ['locale' => app()->getLocale()]), 'content_key' => 'nav.dashboard', 'label' => landing_text('site.nav.dashboard')]
+            : ['href' => route('login'), 'content_key' => 'nav.sign_in', 'label' => landing_text('site.nav.sign_in')];
     }
 
     public function homeUrl(): string

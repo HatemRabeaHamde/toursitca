@@ -6,7 +6,7 @@
             <div data-reveal-group>
                 <x-landing-v2.section-heading id="lv-people-title" size="lv-h2--md" :eyebrow="site_content('home.people.eyebrow')" :before="site_content('home.people.title')" :accent="site_content('home.people.title_accent')" />
                 <div class="lv-body mt-6 text-[17px] leading-[1.6]" data-reveal="text" data-reveal-at="<0.35"><x-site.content key="home.people.description" /></div>
-                <x-landing-v2.link-arrow :href="$page->discoverUrl('hosts')" class="mt-6" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.people.link') }}</x-landing-v2.link-arrow>
+                <x-landing-v2.link-arrow :href="landing_link('people.link_url', $page->discoverUrl('hosts'))" class="mt-6" data-reveal="fade" data-reveal-at="<0.2">{{ site_content('home.people.link') }}</x-landing-v2.link-arrow>
             </div>
 
             @if($page->hosts()->isNotEmpty())
@@ -31,10 +31,10 @@
             @foreach(site_content('home.people.trust') as $key => $trust)
                 <li class="lv-card p-6">
                     <div class="flex items-center gap-3.5">
-                        <span class="lv-icon-box"><img src="{{ asset($trustIcons[$key]) }}" alt="" width="23" height="23" aria-hidden="true"></span>
-                        <h4 class="lv-serif lv-trust-title">{{ $trust['title'] }}</h4>
+                        <span class="lv-icon-box"><img src="{{ landing_artwork('trust.'.$key, $trustIcons[$key]) }}" alt="" width="23" height="23" aria-hidden="true"></span>
+                        <h4 class="lv-serif lv-trust-title"><span data-content-key="people.trust.{{ $key }}.title">{{ $trust['title'] }}</span></h4>
                     </div>
-                    <p class="lv-body mt-3">{{ $trust['body'] }}</p>
+                    <p class="lv-body mt-3"><span data-content-key="people.trust.{{ $key }}.body">{{ $trust['body'] }}</span></p>
                 </li>
             @endforeach
         </ul>
@@ -45,8 +45,8 @@
                 <li class="flex gap-4">
                     <span class="lv-step-dot lv-serif">{{ $index + 1 }}</span>
                     <div class="max-w-[320px] pt-1.5">
-                        <p class="lv-step-title">{{ $step['title'] }}</p>
-                        <p class="lv-body mt-1">{{ $step['body'] }}</p>
+                        <p class="lv-step-title"><span data-content-key="people.steps.{{ $index }}.title">{{ $step['title'] }}</span></p>
+                        <p class="lv-body mt-1"><span data-content-key="people.steps.{{ $index }}.body">{{ $step['body'] }}</span></p>
                     </div>
                 </li>
             @endforeach

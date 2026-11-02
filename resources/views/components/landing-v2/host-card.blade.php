@@ -5,7 +5,7 @@
     <div class="relative">
         <img src="{{ $host['image_url'] }}" alt="{{ $host['name'] }}" loading="lazy" width="220" height="236" class="lv-host-img">
         <span class="lv-host-badge absolute -bottom-6 start-4" aria-hidden="true">
-            <img src="{{ asset(config('landing_v2.icons.trust.verified')) }}" alt="" width="22" height="22">
+            <img src="{{ landing_artwork('trust.verified', config('landing_v2.icons.trust.verified')) }}" alt="" width="22" height="22">
         </span>
     </div>
     <div class="px-5 pb-6 pt-[34px]">

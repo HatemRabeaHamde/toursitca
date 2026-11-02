@@ -2,11 +2,14 @@ document.addEventListener('alpine:init', () => {
  Alpine.data('siteContentEditor', () => ({
   dirty:false, selected:'', locale:'en', previewLocale:'en',
   init() {
+   this.selected = new URLSearchParams(location.search).get('field') || '';
+   this.$watch('selected', key => this.$refs.canvas.contentWindow.postMessage({type:'site-content-reveal', key}, location.origin));
    window.addEventListener('message',event => {
     if (event.origin !== location.origin || event.source !== this.$refs.canvas.contentWindow) return;
     const key = event.data.key;
     if (!Object.hasOwn(this.fields,key)) return;
-    if (event.data.type === 'site-content-select') this.selected=key;
+    if (event.data.type === 'site-content-select') { this.selected=key; this.$refs.canvas.contentWindow.postMessage({type:'site-content-reveal',key},location.origin); }
+    if (event.data.type === 'site-content-image-default') window.dispatchEvent(new CustomEvent('site-content-image-default',{detail:{key,url:event.data.url}}));
     if (event.data.type === 'site-content-input') {
      const input=document.getElementById(key.replaceAll('.','__')+'-'+this.locale);
      if(input) { input.value=event.data.value; this.dirty=true; }

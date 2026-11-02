@@ -31,6 +31,44 @@ foreach ([0, 1, 2] as $index) {
     $sections['stories']['fields']['image_'.$index] = ['label' => 'Story cover '.($index + 1), 'type' => 'image', 'max' => 5120, 'hint' => 'Static fallback cover. JPEG, PNG or WebP, maximum 5 MB.', 'config' => 'landing_v2.images.stories.'.$index];
 }
 $sections['hero']['fields']['film_url'] = ['label' => 'Film destination', 'type' => 'link', 'max' => 2048, 'hint' => 'Use an https URL, a site path or an anchor.', 'config' => 'landing_v2.film_url'];
+// Shared chrome is editable here for the landing page only.
+$chrome = require __DIR__.'/../lang/en/site.php';
+foreach (['nav' => 'Header', 'footer' => 'Footer', 'language' => 'Language selector'] as $section => $label) {
+    $sections[$section] = ['label' => $label, 'fields' => []];
+    foreach (Arr::dot($chrome[$section]) as $key => $value) {
+        if (is_string($value)) {
+            $sections[$section]['fields'][$key] = ['label' => ucfirst(str_replace(['_', '.'], ' ', $key)), 'type' => 'text', 'max' => 1000, 'hint' => 'Landing-page wording. Keep :year, :brand and other placeholders when present.', 'lang' => 'site.'.$section.'.'.$key];
+        }
+    }
+}
+for ($slide = 2; $slide <= 5; $slide++) {
+    $sections['hero']['fields']['slide_'.$slide.'_image'] = ['label' => 'Slide '.$slide.' image', 'type' => 'image', 'max' => 5120, 'hint' => 'Landing only. Uses the destination photo until you upload an override. JPEG, PNG or WebP, maximum 5 MB.', 'default' => ''];
+}
+for ($slide = 1; $slide <= 5; $slide++) {
+    foreach (['label' => 'text', 'url' => 'link'] as $key => $type) {
+        $sections['hero']['fields']['slide_'.$slide.'_'.$key] = ['label' => 'Slide '.$slide.' '.($key === 'label' ? 'destination label' : 'destination link'), 'type' => $type, 'max' => $key === 'label' ? 160 : 2048, 'hint' => 'Optional landing-only override. Leave empty for the destination default.', 'default' => ''];
+    }
+}
+foreach (['hero', 'soul', 'discover', 'people', 'know'] as $section) {
+    $sections[$section]['fields']['link_url'] = ['label' => 'Main link destination', 'type' => 'link', 'max' => 2048, 'hint' => 'Optional. Leave empty to keep the existing site destination.', 'default' => ''];
+}
+foreach (Arr::dot((require __DIR__.'/landing_v2.php')['icons']) as $key => $source) {
+    $sections['artwork']['label'] = 'Icons and logos';
+    $sections['artwork']['fields'][str_replace('.', '_', $key)] = ['label' => ucfirst(str_replace(['_', '.'], ' ', $key)), 'type' => 'image', 'max' => 5120, 'hint' => 'Static artwork. Existing SVG defaults are preserved; replacement uploads must be JPEG, PNG or WebP, maximum 5 MB.', 'config' => 'landing_v2.icons.'.$key];
+}
+foreach (['globe' => 'images/site/icons/globe.svg', 'chevron' => 'images/site/icons/chevron-down-light.svg'] as $key => $path) {
+    $sections['artwork']['fields'][$key] = ['label' => ucfirst($key).' icon', 'type' => 'image', 'max' => 5120, 'hint' => 'Decorative language selector icon. Raster replacements only, maximum 5 MB.', 'default' => $path];
+}
+$sections['footer']['fields']['pattern'] = ['label' => 'Footer background artwork', 'type' => 'image', 'max' => 5120, 'hint' => 'Decorative footer image. JPEG, PNG or WebP, maximum 5 MB.', 'config' => 'landing_v2.images.footer_pattern'];
+foreach (['instagram', 'facebook', 'youtube'] as $network) {
+    $sections['footer']['fields']['social_'.$network] = ['label' => ucfirst($network).' link', 'type' => 'link', 'max' => 2048, 'hint' => 'Optional. Overrides the footer profile link on the landing page.', 'default' => ''];
+}
+foreach (['about', 'careers', 'contact', 'destinations', 'experiences', 'guides', 'faqs', 'privacy', 'terms'] as $key) {
+    $sections['footer']['fields']['link_'.$key] = ['label' => ucfirst($key).' link destination', 'type' => 'link', 'max' => 2048, 'hint' => 'Optional. Leave empty for the current destination.', 'default' => ''];
+}
+foreach (['discover', 'experiences', 'hosts', 'how', 'contact'] as $key) {
+    $sections['nav']['fields']['link_'.$key] = ['label' => ucfirst($key).' link destination', 'type' => 'link', 'max' => 2048, 'hint' => 'Optional. Leave empty for the current destination.', 'default' => ''];
+}
 $sections['seo'] = ['label' => 'Search engines', 'fields' => [
     'title' => ['label' => 'SEO title', 'type' => 'text', 'max' => 160, 'hint' => 'Describe this homepage accurately.', 'config' => 'seo.default_title'],
     'description' => ['label' => 'Meta description', 'type' => 'textarea', 'max' => 320, 'hint' => 'A short, accurate summary for search results.', 'config' => 'seo.default_description'],
