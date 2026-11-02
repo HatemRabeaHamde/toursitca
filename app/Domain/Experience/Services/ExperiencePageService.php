@@ -217,6 +217,51 @@ final class ExperiencePageService
         $summary = $detail->bookingSummary;
         $currency = $summary['currency'];
 
+        $options = array_map(function (array $option): array {
+            $price = fn (string $type, string $key = 'price'): float => (float) (collect($option['prices'])->firstWhere('type', $type)[$key] ?? 0);
+
+            return [
+                'id' => $option['id'],
+                'title' => (string) $option['title'],
+                'priceType' => $option['price_type'],
+                'adultPrice' => $price('adult'),
+                'childPrice' => $price('child'),
+                'groupPrice' => $price('group'),
+                'adultOriginal' => $price('adult', 'original_price'),
+                'childOriginal' => $price('child', 'original_price'),
+                'groupOriginal' => $price('group', 'original_price'),
+                'currency' => $option['currency'],
+                'duration' => $option['duration_minutes'] ? $this->format->hours($option['duration_minutes'] / 60) : null,
+                'languages' => array_map(fn (string $code): array => ['code' => $code, 'label' => Str::ucfirst(Locale::getDisplayLanguage($code, app()->getLocale()))], $option['languages']),
+                'pickup' => (bool) $option['pickup_enabled'],
+                'private' => (bool) $option['private_available'],
+                'payLater' => (bool) $option['pay_later_enabled'],
+                'cancellationHours' => $option['cancellation_hours'],
+            ];
+        }, $detail->experienceOptions);
+
+        // Trips without separate packages still expose their actual base booking choice.
+        if ($options === []) {
+            $options = [[
+                'id' => null,
+                'title' => $detail->title,
+                'priceType' => 'per_person',
+                'adultPrice' => (string) $experience->price_per_person,
+                'childPrice' => (string) $experience->price_per_person,
+                'groupPrice' => null,
+                'adultOriginal' => $experience->original_price,
+                'childOriginal' => $experience->original_price,
+                'groupOriginal' => null,
+                'currency' => $currency,
+                'duration' => $this->format->hours($experience->duration_hours),
+                'languages' => $languages,
+                'pickup' => (bool) $summary['pickup_enabled'],
+                'private' => (bool) $summary['supports_private'],
+                'payLater' => false,
+                'cancellationHours' => null,
+            ]];
+        }
+
         return [
             'priceFrom' => $this->format->money((float) $experience->price_per_person, $currency, $locale),
             'rating' => $reviews->isNotEmpty() ? number_format((float) $reviews->avg('rating'), 1) : null,
@@ -230,28 +275,7 @@ final class ExperiencePageService
             'hostName' => $experience->publicHost() ? Str::before(trim($experience->publicHost()->name), ' ') : null,
             'maxGroup' => (int) $experience->max_group_size,
             'languages' => $languages,
-            'options' => array_map(function (array $option): array {
-                $price = fn (string $type, string $key = 'price'): float => (float) (collect($option['prices'])->firstWhere('type', $type)[$key] ?? 0);
-
-                return [
-                    'id' => $option['id'],
-                    'title' => (string) $option['title'],
-                    'priceType' => $option['price_type'],
-                    'adultPrice' => $price('adult'),
-                    'childPrice' => $price('child'),
-                    'groupPrice' => $price('group'),
-                    'adultOriginal' => $price('adult', 'original_price'),
-                    'childOriginal' => $price('child', 'original_price'),
-                    'groupOriginal' => $price('group', 'original_price'),
-                    'currency' => $option['currency'],
-                    'duration' => $option['duration_minutes'] ? $this->format->hours($option['duration_minutes'] / 60) : null,
-                    'languages' => array_map(fn (string $code): array => ['code' => $code, 'label' => Str::ucfirst(Locale::getDisplayLanguage($code, app()->getLocale()))], $option['languages']),
-                    'pickup' => (bool) $option['pickup_enabled'],
-                    'private' => (bool) $option['private_available'],
-                    'payLater' => (bool) $option['pay_later_enabled'],
-                    'cancellationHours' => $option['cancellation_hours'],
-                ];
-            }, $detail->experienceOptions),
+            'options' => $options,
             'store' => [
                 'checkoutUrl' => $summary['checkout_url'],
                 'quoteUrl' => $summary['quote_url'],

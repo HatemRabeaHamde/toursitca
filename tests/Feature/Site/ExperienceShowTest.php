@@ -155,14 +155,23 @@ class ExperienceShowTest extends TestCase
             });
     }
 
-    public function test_experience_without_options_has_no_options_section(): void
+    public function test_experience_without_packages_exposes_its_base_booking_choice(): void
     {
         $experience = $this->createExperience();
         $this->createMedia($experience);
 
         $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
             ->assertOk()
-            ->assertDontSee('id="options"', false);
+            ->assertSee('id="options"', false)
+            ->assertViewHas('page', function ($page) use ($experience): bool {
+                $options = $page->booking['options'];
+
+                return count($options) === 1
+                    && $options[0]['id'] === null
+                    && $options[0]['title'] === $experience->getTranslation('title', 'en')
+                    && $options[0]['adultPrice'] === (string) $experience->price_per_person
+                    && in_array('options', array_column($page->tabsV1(), 'id'), true);
+            });
     }
 
     public function test_draft_experience_show_page_returns_not_found(): void

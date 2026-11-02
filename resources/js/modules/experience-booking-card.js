@@ -189,7 +189,7 @@ export function experienceBookingCard(config) {
         },
 
         revealOptions() {
-            if (this.options.length < 2) return;
+            if (this.options.length === 0) return;
 
             this.$nextTick(() => document.getElementById('options')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
         },
