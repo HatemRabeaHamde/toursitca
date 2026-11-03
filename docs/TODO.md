@@ -2,6 +2,9 @@
 > Last updated: 2026-08-05
 > Legend: ✅ Done | 🔲 Pending | 🚧 In Progress
 
+### Latest release deployment — 2026-11-03
+- ✅ Deployed runtime `c0a85f5`, including reviewed publication/checkout and later booking, brand and search UI changes. PHPUnit 214 / 1,143 and 7 JavaScript tests, Pint and Vite build pass. Private MySQL/code/uploads backup: server `backups/latest-20261103T015608Z`; both migrations applied. Live MySQL rollback smoke verified submission → admin queue/real-page preview → approval → seat hold → instant confirmation → client/agency/admin details, duplicate-submit protection and payout creation, with no committed test records or notifications. Environment hash, original row counts and published inventory preserved. Root/EN/FR/NL, listing/detail and the current JS asset return 200; private review queue redirects guests to login. Remote manifest matches local SHA-256 and has no missing assets. Restored document-root traversal permission to 0755 after archive extraction. Browser visual QA, parallel MySQL concurrency and Larastan remain unverified.
+
 ### Booking form summary — 2026-11-02
 - ✅ Implemented locally: real rating and linked review count below the price, reactive Private/Shared group badge and explicit person/group price basis in the existing booking form, translated EN/FR/NL. No calendar/package changes. PHPUnit 201 tests / 1,021 assertions, Pint, Vite build and Blade compilation pass. Browser visual verification unavailable; Larastan retains its silent exit 1. Not deployed.
 

@@ -1,6 +1,6 @@
 # Guided booking and mandatory experience approval
 
-Date: 2026-11-03. Status: C01–C07 implemented locally; C08 automated/SQLite checks pass, with browser/MySQL/release checks outstanding. Not deployed.
+Date: 2026-11-03. Status: C01–C07 implemented locally; C08 automated/SQLite checks pass, with browser/MySQL/release checks outstanding. Deployed to the Hostinger test site as `c0a85f5` on 2026-11-03; live rollback smoke passed. Browser/parallel-lock/Larastan limitations remain.
 Task checklist: docs/TODO.md. Scope corrected after user feedback on 2026-11-02; the previous B01–B20 expansion is superseded by the bounded tasks below.
 
 ## Outcome and boundaries
@@ -121,3 +121,8 @@ Checkpoints: C01 identifies reused vs missing behaviour before schema changes; C
 - Back up code/MySQL/uploads; rehearse additive review migrations and audit existing published records without inventing historical approvals. Preserve all confirmed bookings and financial snapshots.
 - Implementation verification (2026-11-03): 214 PHPUnit tests / 1,140 assertions and seven Node interaction tests pass, plus Pint, Vite build and Blade/route compilation. An HTTP integration test covers agency submission, admin approval, client quote/checkout/confirmation and all role dashboards in EN/FR/NL. Both additive migrations were applied to the isolated local SQLite QA database.
 - Remaining release checks: Work settings disable browser automation, so desktop/375px visual verification is not claimed. No local MySQL runtime is available to prove parallel row-lock behaviour. Larastan still exits 1 silently on PHP 8.5. No remote deployment was made.
+
+
+## Deployment verification — 2026-11-03
+
+Release `c0a85f5` is live. Private database/code/uploads backups preceded both migrations. A real MySQL transaction exercised review/submission/approval, private page preview, checkout hold/confirmation, idempotency, payouts and all role detail pages, then rolled back all test records and notifications. Original environment hash, counts and published IDs match the pre-release baseline. Root/EN/FR/NL and listing/detail HTTP checks pass, with manifest checksum matching the local build. This is a serial live smoke test, not proof of parallel locking or browser visual behaviour.
