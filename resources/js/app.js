@@ -21,6 +21,7 @@ import { hostDirectory } from './modules/host-directory.js';
 import { liveFilters } from './modules/live-filters.js';
 import { experienceBookingCard } from './modules/experience-booking-card.js';
 import { photoViewer } from './modules/photo-viewer.js';
+import { searchDate } from './modules/search-date.js';
 
 Alpine.plugin(intersect);
 Alpine.plugin(focus);
@@ -44,6 +45,7 @@ Alpine.data('reviewDirectory', () => liveFilters({ defaults: { sort: 'recent' } 
 Alpine.data('checkoutPickupMap', checkoutPickupMap);
 Alpine.data('experienceBookingCard', experienceBookingCard);
 Alpine.data('photoViewer', photoViewer);
+Alpine.data('searchDate', searchDate);
 
 window.Alpine = Alpine;
 Alpine.start();

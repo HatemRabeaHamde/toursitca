@@ -16,6 +16,8 @@ return [
         'any_destination' => 'Toutes destinations',
         'when' => 'Quand',
         'add_dates' => 'Ajouter une date',
+        'clear_date' => 'Effacer',
+        'today' => 'Aujourd’hui',
         'who' => 'Qui',
         'travellers' => ':count voyageur|:count voyageurs',
         'any_travellers' => 'Ajouter des voyageurs',

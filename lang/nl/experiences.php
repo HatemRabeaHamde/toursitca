@@ -16,6 +16,8 @@ return [
         'any_destination' => 'Elke bestemming',
         'when' => 'Wanneer',
         'add_dates' => 'Datum kiezen',
+        'clear_date' => 'Wissen',
+        'today' => 'Vandaag',
         'who' => 'Wie',
         'travellers' => ':count reiziger|:count reizigers',
         'any_travellers' => 'Reizigers toevoegen',

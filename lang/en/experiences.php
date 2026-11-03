@@ -16,6 +16,8 @@ return [
         'any_destination' => 'Any destination',
         'when' => 'When',
         'add_dates' => 'Add dates',
+        'clear_date' => 'Clear',
+        'today' => 'Today',
         'who' => 'Who',
         'travellers' => ':count traveller|:count travellers',
         'any_travellers' => 'Add travellers',
