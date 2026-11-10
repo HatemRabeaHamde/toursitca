@@ -3,6 +3,7 @@
 <meta name="robots" content="{{ $seo['robots'] ?? 'index, follow' }}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+@include('partials.head.icons')
 
 @if(!empty($seo['canonical']))
 <link rel="canonical" href="{{ $seo['canonical'] }}">
