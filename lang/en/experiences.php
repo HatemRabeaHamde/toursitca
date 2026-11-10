@@ -104,7 +104,7 @@ return [
             'included' => 'Included',
             'excluded' => 'Not included',
             'meet_host' => 'Meet your host',
-            'location' => ['title' => 'Location & meeting point', 'meet' => 'We’ll meet in :place', 'map' => 'View map'],
+            'location' => ['title' => 'Location & meeting point', 'meet' => 'We’ll meet in :place', 'map' => 'View map', 'meeting_point' => 'Meeting point', 'stop' => 'Stop', 'route' => 'Map of the trip route'],
             'reviews' => ['title' => 'Traveller reviews', 'based_on' => 'Based on :count review|Based on :count reviews', 'all' => 'See all reviews', 'travelled' => 'Travelled in :date'],
             'hero' => ['play' => 'Play video', 'photos' => 'photos'],
             'booking' => [

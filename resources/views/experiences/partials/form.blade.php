@@ -17,9 +17,6 @@
     @endif
 
     @php
-        $locationLat = old('location_lat', $experience?->location_lat);
-        $locationLng = old('location_lng', $experience?->location_lng);
-
         $inclusionsText = old('inclusions_text');
         if ($inclusionsText === null && $experience?->inclusions) {
             $inclusionsText = implode(PHP_EOL, (array) $experience->getTranslation('inclusions', 'en', false));
@@ -294,14 +291,12 @@
                         </label>
                     </div>
 
-                    <div class="xp-itinerary-map-picker mt-4" x-data="itineraryMapPicker(item)">
-                        <button type="button" class="xp-map-toggle" @click="toggle($refs.map)">
-                            <span x-text="open ? 'Hide stop map' : 'Pick stop on map'"></span>
-                        </button>
-                        <div class="xp-itinerary-map-shell" x-show="open" x-transition x-cloak>
-                            <p class="xp-map-hint">Click on the map to fill this stop latitude and longitude.</p>
-                            <div x-ref="map" class="xp-map xp-map--compact"></div>
-                        </div>
+                    <div class="xp-itinerary-map-picker mt-4">
+                        @include('experiences.partials.map-picker', [
+                            'options' => "lat: item.location_lat, lng: item.location_lng, variant: 'stop', follow: 'item', read: () => [item.location_lat, item.location_lng], onPick: (lat, lng) => { item.location_lat = lat; item.location_lng = lng }",
+                            'hint' => __('ui.map.stop_hint'),
+                            'lazy' => true,
+                        ])
                     </div>
                 </div>
             </template>
@@ -336,18 +331,11 @@
             />
         </div>
 
-        {{-- Morocco map picker --}}
-        <div
-            class="xp-map-wrap"
-            x-data="mapPicker({
-                lat: @js(filled($locationLat) ? (float) $locationLat : 31.7917),
-                lng: @js(filled($locationLng) ? (float) $locationLng : -7.0926)
-            })"
-            x-init="init()"
-        >
-            <p class="xp-map-hint">Click on the map to set the exact meeting point coordinates.</p>
-            <div id="xp-map" class="xp-map"></div>
-        </div>
+        @include('experiences.partials.map-picker', [
+            'options' => "inputs: ['location_lat', 'location_lng'], variant: 'meet'",
+            'hint' => __('ui.map.meet_hint'),
+            'route' => true,
+        ])
 
         <div class="mt-5">
             <x-ui.textarea name="meeting_point" :label="__('ui.fields.meeting_point')" :value="old('meeting_point', $experience?->meeting_point)" placeholder="Meeting point instructions for guests — be specific." />
@@ -461,43 +449,6 @@
 
 @push('scripts')
 <script>
-async function ensureLeafletAssets() {
-    if (!document.querySelector('link[href*="leaflet"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-        document.head.appendChild(link);
-    }
-
-    if (typeof L !== 'undefined') {
-        return;
-    }
-
-    await new Promise((resolve, reject) => {
-        const existing = document.querySelector('script[src*="leaflet"]');
-        if (existing) {
-            existing.addEventListener('load', resolve, { once: true });
-            existing.addEventListener('error', reject, { once: true });
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
-}
-
-function experienceMapIcon() {
-    return L.divIcon({
-        className: '',
-        html: '<div class="xp-map-pin"></div>',
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-    });
-}
-
 function experienceFormGuard() {
     return {
         message: '',
@@ -514,124 +465,6 @@ function experienceFormGuard() {
             invalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
             invalid.reportValidity?.();
             setTimeout(() => invalid.focus({ preventScroll: true }), 250);
-        },
-    };
-}
-
-/* ── Map picker (Leaflet lazy-loaded + Alpine.js) ──────────── */
-function mapPicker({ lat, lng }) {
-    return {
-        map: null,
-        marker: null,
-        async init() {
-            await ensureLeafletAssets();
-
-            const startLat = lat || 31.7917;
-            const startLng = lng || -7.0926;
-            const zoom = (lat && lng) ? 11 : 6;
-
-            this.map = L.map('xp-map').setView([startLat, startLng], zoom);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
-                maxZoom: 19,
-            }).addTo(this.map);
-
-            const icon = experienceMapIcon();
-
-            if (lat && lng) {
-                this.marker = L.marker([lat, lng], { icon, draggable: true }).addTo(this.map);
-                this.marker.on('dragend', e => this._setCoords(e.target.getLatLng()));
-            }
-
-            this.map.on('click', e => {
-                this._setCoords(e.latlng);
-                if (this.marker) {
-                    this.marker.setLatLng(e.latlng);
-                } else {
-                    this.marker = L.marker(e.latlng, { icon, draggable: true }).addTo(this.map);
-                    this.marker.on('dragend', ev => this._setCoords(ev.target.getLatLng()));
-                }
-            });
-
-            /* sync from inputs → map */
-            ['location_lat', 'location_lng'].forEach(id => {
-                document.getElementById(id)?.addEventListener('change', () => this._syncFromInputs());
-            });
-        },
-        _setCoords({ lat, lng }) {
-            document.getElementById('location_lat').value = lat.toFixed(7);
-            document.getElementById('location_lng').value = lng.toFixed(7);
-        },
-        _syncFromInputs() {
-            const la = parseFloat(document.getElementById('location_lat').value);
-            const ln = parseFloat(document.getElementById('location_lng').value);
-            if (!isNaN(la) && !isNaN(ln)) {
-                if (this.marker) this.marker.setLatLng([la, ln]);
-                this.map.setView([la, ln], Math.max(this.map.getZoom(), 11));
-            }
-        },
-    };
-}
-
-function itineraryMapPicker(item) {
-    return {
-        open: false,
-        map: null,
-        marker: null,
-        async toggle(element) {
-            this.open = !this.open;
-
-            if (!this.open) {
-                return;
-            }
-
-            await new Promise(resolve => requestAnimationFrame(resolve));
-            await this.init(element);
-        },
-        async init(element) {
-            await ensureLeafletAssets();
-
-            const lat = parseFloat(item.location_lat);
-            const lng = parseFloat(item.location_lng);
-            const hasCoords = !Number.isNaN(lat) && !Number.isNaN(lng);
-            const startLat = hasCoords ? lat : 31.7917;
-            const startLng = hasCoords ? lng : -7.0926;
-            const zoom = hasCoords ? 12 : 6;
-
-            if (this.map) {
-                this.map.invalidateSize();
-                return;
-            }
-
-            this.map = L.map(element).setView([startLat, startLng], zoom);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
-                maxZoom: 19,
-            }).addTo(this.map);
-
-            if (hasCoords) {
-                this.marker = L.marker([lat, lng], { icon: experienceMapIcon(), draggable: true }).addTo(this.map);
-                this.marker.on('dragend', event => this.setCoords(event.target.getLatLng()));
-            }
-
-            this.map.on('click', event => {
-                this.setCoords(event.latlng);
-                if (this.marker) {
-                    this.marker.setLatLng(event.latlng);
-                    return;
-                }
-
-                this.marker = L.marker(event.latlng, { icon: experienceMapIcon(), draggable: true }).addTo(this.map);
-                this.marker.on('dragend', dragEvent => this.setCoords(dragEvent.target.getLatLng()));
-            });
-
-            setTimeout(() => this.map.invalidateSize(), 80);
-        },
-        setCoords({ lat, lng }) {
-            item.location_lat = lat.toFixed(7);
-            item.location_lng = lng.toFixed(7);
         },
     };
 }
@@ -703,6 +536,20 @@ function itineraryBuilder(initialItems) {
 
     return {
         items: Array.isArray(initialItems) ? initialItems.map(normalize) : [],
+        /* Tell the meeting-point map which stops have coordinates, so it can draw the route. */
+        init() {
+            const publish = () => this.$dispatch('xp-route-changed', this.items
+                .map((item, index) => ({
+                    number: index + 1,
+                    name: item.location_name.en || item.title.en,
+                    lat: item.location_lat === '' ? NaN : Number(item.location_lat),
+                    lng: item.location_lng === '' ? NaN : Number(item.location_lng),
+                }))
+                .filter((stop) => Number.isFinite(stop.lat) && Number.isFinite(stop.lng)));
+
+            this.$watch('items', publish);
+            this.$nextTick(publish);
+        },
         add() {
             this.items.push(normalize({ type: this.items.length === 0 ? 'start' : 'stop' }));
         },

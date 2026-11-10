@@ -104,7 +104,7 @@ return [
             'included' => 'Inbegrepen',
             'excluded' => 'Niet inbegrepen',
             'meet_host' => 'Maak kennis met je gastheer',
-            'location' => ['title' => 'Locatie & ontmoetingspunt', 'meet' => 'We ontmoeten je in :place', 'map' => 'Bekijk kaart'],
+            'location' => ['title' => 'Locatie & ontmoetingspunt', 'meet' => 'We ontmoeten je in :place', 'map' => 'Bekijk kaart', 'meeting_point' => 'Ontmoetingspunt', 'stop' => 'Stop', 'route' => 'Kaart van de route'],
             'reviews' => ['title' => 'Reviews van reizigers', 'based_on' => 'Op basis van :count review|Op basis van :count reviews', 'all' => 'Alle reviews bekijken', 'travelled' => 'Gereisd in :date'],
             'hero' => ['play' => 'Video afspelen', 'photos' => 'foto’s'],
             'booking' => [

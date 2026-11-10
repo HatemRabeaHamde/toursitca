@@ -19,7 +19,7 @@ final readonly class ExperiencePageViewModel
      * @param  array{average: string, count: int, featured: ?array<string, mixed>, href: string}|null  $reviews
      * @param  array<string, mixed>  $booking
      * @param  list<array<string, mixed>>  $related
-     * @param  array{place: string, note: ?string, mapUrl: ?string, stops: list<array{name: string, x: float, y: float}>}|null  $location
+     * @param  array{place: string, note: ?string, mapUrl: ?string, meet: array{lat: float, lng: float}|null, stops: list<array{name: string, lat: float, lng: float}>}|null  $location
      */
     public function __construct(
         public string $title,

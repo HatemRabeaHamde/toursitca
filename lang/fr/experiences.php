@@ -104,7 +104,7 @@ return [
             'included' => 'Inclus',
             'excluded' => 'Non inclus',
             'meet_host' => 'Rencontrez votre hôte',
-            'location' => ['title' => 'Lieu et point de rendez-vous', 'meet' => 'Rendez-vous à :place', 'map' => 'Voir la carte'],
+            'location' => ['title' => 'Lieu et point de rendez-vous', 'meet' => 'Rendez-vous à :place', 'map' => 'Voir la carte', 'meeting_point' => 'Point de rendez-vous', 'stop' => 'Étape', 'route' => 'Carte de l’itinéraire'],
             'reviews' => ['title' => 'Avis des voyageurs', 'based_on' => 'Basé sur :count avis|Basé sur :count avis', 'all' => 'Voir tous les avis', 'travelled' => 'Voyage en :date'],
             'hero' => ['play' => 'Lire la vidéo', 'photos' => 'photos'],
             'booking' => [

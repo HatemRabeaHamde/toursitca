@@ -71,10 +71,13 @@
 @media (max-width: 767px) { .lv-v1-host { grid-template-columns: minmax(0, 1fr); } .lv-v1-host__photo { width: 100%; height: 240px; } }
 
 /* ── Location ─────────────────────────────────────────────── */
-.lv-v1-location { display: grid; gap: 20px; }
-@media (min-width: 640px) { .lv-v1-location:not(.lv-v1-location--solo) { grid-template-columns: minmax(0, 470fr) minmax(0, 270fr); } }
-.lv-v1-map { display: block; width: 100%; height: auto; align-self: start; border-radius: var(--lv-radius); }
-.lv-v1-map__label { font-family: var(--lv-font-serif); font-size: 18px; fill: var(--lv-ink); }
+.lv-v1-location { display: grid; gap: 16px; }
+.lv-v1-map { position: relative; border-radius: var(--lv-radius); overflow: hidden; border: 1px solid var(--lv-line); background: #EFE8DC; }
+.lv-v1-map__canvas { height: 300px; }
+@media (min-width: 640px) { .lv-v1-map__canvas { height: 400px; } }
+.lv-v1-map__legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0; padding: 12px 16px; list-style: none; background: #fff; border-top: 1px solid var(--lv-line); font-size: 13px; color: var(--lv-ink); }
+.lv-v1-map__legend li { display: inline-flex; align-items: center; gap: 6px; }
+.lv-v1-map__legend span { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C45D3D; color: #fff; font-size: 11px; font-weight: 700; }
 .lv-v1-location__card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 25px; background: #fff; border: 1px solid var(--lv-line); border-radius: var(--lv-radius); }
 
 /* ── Booking card ─────────────────────────────────────────── */

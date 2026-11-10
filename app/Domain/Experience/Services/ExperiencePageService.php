@@ -165,44 +165,39 @@ final class ExperiencePageService
     }
 
     /**
-     * Location card + schematic route map: only stops with real coordinates are
-     * drawn (viewBox 470 × 270); null when there is nothing true to show.
+     * Location card + real route map: the meeting point (experience coordinates)
+     * and only the itinerary stops with real coordinates; null when there is nothing true to show.
      */
     private function location(Experience $experience, ExperienceDetailData $detail): ?array
     {
         $stops = collect($detail->itinerary['items'] ?? [])
             ->filter(fn (array $item): bool => $item['lat'] !== null && $item['lng'] !== null && filled($item['location_name']))
             ->values();
+        $meet = $experience->location_lat !== null && $experience->location_lng !== null
+            ? ['lat' => (float) $experience->location_lat, 'lng' => (float) $experience->location_lng]
+            : null;
         $note = $experience->meeting_point
             ?: ($experience->pickup_enabled ? __('experiences.detail.booking.pickup_note_generic') : null);
 
-        if ($stops->count() < 2 && ! $note) {
+        if ($stops->isEmpty() && ! $meet && ! $note) {
             return null;
         }
 
         $first = $stops->first();
-        $lat = $first['lat'] ?? ($experience->location_lat !== null ? (float) $experience->location_lat : null);
-        $lng = $first['lng'] ?? ($experience->location_lng !== null ? (float) $experience->location_lng : null);
+        $lat = $meet['lat'] ?? $first['lat'] ?? null;
+        $lng = $meet['lng'] ?? $first['lng'] ?? null;
 
         return [
             'place' => $first['location_name'] ?? $experience->location_city,
             'note' => $note,
             'mapUrl' => $lat !== null && $lng !== null ? 'https://www.google.com/maps/search/?api=1&query='.$lat.','.$lng : null,
-            'stops' => $stops->count() >= 2 ? $this->projectStops($stops) : [],
+            'meet' => $meet,
+            'stops' => $stops->map(fn (array $stop): array => [
+                'name' => (string) $stop['location_name'],
+                'lat' => (float) $stop['lat'],
+                'lng' => (float) $stop['lng'],
+            ])->all(),
         ];
-    }
-
-    /** @param Collection<int, array<string, mixed>> $stops */
-    private function projectStops(Collection $stops): array
-    {
-        [$minLat, $maxLat] = [$stops->min('lat'), $stops->max('lat')];
-        [$minLng, $maxLng] = [$stops->min('lng'), $stops->max('lng')];
-
-        return $stops->map(fn (array $stop): array => [
-            'name' => $stop['location_name'],
-            'x' => round(70 + (($stop['lng'] - $minLng) / max($maxLng - $minLng, 0.0001)) * 300),
-            'y' => round(60 + (($maxLat - $stop['lat']) / max($maxLat - $minLat, 0.0001)) * 150),
-        ])->all();
     }
 
     /**

@@ -133,6 +133,19 @@ class HostAgencyLinkTest extends TestCase
         $this->actingAs($user)->get(route('agency.experiences.create'))->assertOk()->assertSee('Host leading this experience');
     }
 
+    public function test_experience_form_offers_map_pickers_for_the_meeting_point_and_stops(): void
+    {
+        [$user] = $this->createAgencyUser('maps');
+
+        $this->actingAs($user)->get(route('agency.experiences.create'))
+            ->assertOk()
+            ->assertSee('coordinatePicker', false)
+            ->assertSee('inputs: [&#039;location_lat&#039;, &#039;location_lng&#039;]', false)
+            ->assertSee('Search a place in Morocco')
+            ->assertSee('Pick stop on map')
+            ->assertDontSee('unpkg.com/leaflet', false);
+    }
+
     public function test_only_admins_reach_the_host_review_screen(): void
     {
         [$user] = $this->createAgencyUser('one');

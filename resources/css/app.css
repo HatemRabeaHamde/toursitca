@@ -422,21 +422,6 @@
         padding-top: 8px;
     }
 
-    /* ── Map picker ─────────────────────────────────────────────── */
-    .xp-map-wrap { position: relative; }
-    .xp-map-hint { font-size: 12px; color: #A89F97; margin-bottom: 8px; }
-    .xp-map { height: 340px; border-radius: 12px; overflow: hidden; border: 1.5px solid #EDE9E4; }
-    .xp-map--compact { height: 240px; border-radius: 10px; }
-    .xp-map .leaflet-container { border-radius: 12px; }
-    .xp-map-pin {
-        width: 28px; height: 28px;
-        background: #8B5E48;
-        border: 3px solid #fff;
-        border-radius: 50% 50% 50% 0;
-        transform: rotate(-45deg);
-        box-shadow: 0 2px 8px rgba(139,94,72,.45);
-    }
-
     /* ── Photo previews ─────────────────────────────────────────── */
     .xp-file-drop--active { border-color: #8B5E48 !important; background: #FDF7F4 !important; }
     .xp-file-drop-text { font-size: 13.5px; font-weight: 500; color: #6B6259; }
@@ -670,3 +655,52 @@
 .xp-action-heart-saved {
   color: #e53935;
 }
+
+/* ── Tourstica maps (resources/js/modules/maps) ──────────────────────────
+   Warm OpenStreetMap tiles, brand pins, dashed route, quiet controls. */
+.ts-map { background: #EFE8DC; font: inherit; isolation: isolate; }
+.ts-map .leaflet-tile-pane { filter: saturate(.7) sepia(.16) brightness(1.03) contrast(.97); }
+.ts-map .leaflet-control-zoom { border: 0; box-shadow: 0 6px 18px rgba(11, 42, 34, .16); border-radius: 12px; overflow: hidden; }
+.ts-map .leaflet-control-zoom a { width: 34px; height: 34px; line-height: 34px; color: #0B2A22; border-color: #EFE8DC; font-weight: 500; }
+.ts-map .leaflet-control-zoom a:hover { background: #F8F4EC; color: #C45D3D; }
+.ts-map .leaflet-control-attribution { background: rgba(255, 255, 255, .78); border-radius: 0 8px 0 0; font-size: 10px; color: #5f6b66; }
+.ts-map .leaflet-control-attribution a { color: inherit; }
+.ts-map .leaflet-popup-content-wrapper { border-radius: 14px; box-shadow: 0 12px 30px rgba(11, 42, 34, .18); }
+.ts-map .leaflet-popup-content { margin: 12px 16px; }
+.ts-map .leaflet-popup-close-button { top: 4px !important; right: 4px !important; }
+.ts-map .leaflet-marker-icon:focus-visible { outline: 3px solid #C45D3D; outline-offset: 2px; border-radius: 50%; }
+
+.ts-popup { display: flex; flex-direction: column; gap: 2px; min-width: 120px; color: #0B2A22; }
+.ts-popup__kicker { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #C45D3D; }
+.ts-popup strong { font-size: 14px; font-weight: 600; line-height: 1.3; }
+
+.ts-pin { color: #C45D3D; filter: drop-shadow(0 4px 6px rgba(11, 42, 34, .32)); transition: transform .18s ease; }
+.ts-pin:hover { transform: translateY(-2px); }
+.ts-pin svg { display: block; width: 36px; height: 46px; }
+.ts-pin path { fill: currentColor; stroke: #fff; stroke-width: 2.5; }
+.ts-pin__label { position: absolute; top: 8px; left: 0; width: 36px; text-align: center; font: 700 13px/20px system-ui, sans-serif; color: #fff; }
+.ts-pin--meet { color: #0B2A22; }
+.ts-pin--meet .ts-pin__label:empty::before { content: ''; display: block; width: 10px; height: 10px; margin: 5px auto 0; border-radius: 50%; background: #F3C77A; }
+.ts-pin--muted { opacity: .55; filter: none; }
+
+/* Form picker (admin + agency experience form) */
+.xp-map-hint { margin: 0; font-size: 12.5px; color: #8A8078; }
+.ts-picker__body { display: grid; gap: 10px; }
+.ts-picker--compact .ts-picker__body { margin-top: 12px; }
+.ts-picker__search { position: relative; display: flex; gap: 8px; }
+.ts-picker__field { flex: 1; min-width: 0; }
+.ts-picker__input { width: 100%; }
+.ts-picker__go { flex: none; padding: 0 16px; border-radius: 10px; background: #0B2A22; color: #fff; font-size: 13px; font-weight: 600; transition: background .16s ease; }
+.ts-picker__go:hover { background: #163f34; }
+.ts-picker__go:disabled { opacity: .6; cursor: wait; }
+.ts-picker__results { position: absolute; z-index: 1001; top: calc(100% + 6px); left: 0; right: 0; margin: 0; padding: 6px; list-style: none; background: #fff; border: 1px solid #EDE9E4; border-radius: 12px; box-shadow: 0 14px 32px rgba(11, 42, 34, .14); }
+.ts-picker__results button { display: block; width: 100%; padding: 9px 10px; border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.35; color: #3D2B23; }
+.ts-picker__results button:hover, .ts-picker__results button:focus-visible { background: #F8F4EC; outline: none; }
+.ts-picker__message { margin: 0; font-size: 12.5px; color: #9a4a2f; }
+.ts-picker__canvas { height: 360px; border-radius: 14px; overflow: hidden; border: 1.5px solid #EDE9E4; cursor: crosshair; }
+.ts-picker--compact .ts-picker__canvas { height: 260px; }
+.ts-picker__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 12.5px; color: #6B6259; }
+.ts-picker__foot strong { color: #0B2A22; font-variant-numeric: tabular-nums; }
+.ts-picker__clear { margin-left: auto; font-size: 12.5px; font-weight: 600; color: #9a4a2f; text-decoration: underline; text-underline-offset: 3px; }
+.ts-picker__chip { margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #EAF1EE; color: #0B2A22; font-size: 11.5px; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .ts-picker__canvas { height: 280px; } }

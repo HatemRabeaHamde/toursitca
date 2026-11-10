@@ -89,7 +89,21 @@ class ExperienceShowTest extends TestCase
             ->assertSee('Location &amp; meeting point', false)
             ->assertSee('We’ll meet in Marrakech')
             ->assertSee('query=31.6295,-7.9811', false)
-            ->assertSee('Marrakech → Telouet');
+            ->assertSee('Marrakech → Telouet')
+            ->assertSee('experienceRouteMap', false)
+            ->assertSee('31.2889', false)
+            ->assertSee('-7.2383', false);
+    }
+
+    public function test_show_page_maps_a_meeting_point_without_itinerary_stops(): void
+    {
+        $experience = $this->createExperience(['location_lat' => 31.6258, 'location_lng' => -7.9891]);
+
+        $this->get(route('site.experiences.show', ['locale' => 'en', 'experience' => $experience->slug]))
+            ->assertOk()
+            ->assertSee('id="location"', false)
+            ->assertSee('experienceRouteMap', false)
+            ->assertSee('query=31.6258,-7.9891', false);
     }
 
     public function test_show_page_summarises_reviews_by_star_rating(): void
