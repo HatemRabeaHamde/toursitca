@@ -213,10 +213,12 @@
 .lv-cta-band__button { min-height: 60px; padding-inline: 32px; font-size: 1.0625rem; }
 @media (max-width: 639px) { .lv-cta-band__button { width: 100%; } }
 
-/* A closing CTA band runs behind the footer's rounded top so no cream shows in the corners. */
-.lv-cta-band:has(+ .lv-footer) { padding-bottom: calc(64px + 40px); margin-bottom: -40px; }
-@media (min-width: 1024px) { .lv-cta-band:has(+ .lv-footer) { padding-bottom: calc(80px + 80px); margin-bottom: -80px; } }
-.lv-cta-band + .lv-footer { z-index: 1; }
+/* The dark closing band and the footer read as one block that opens with the footer's
+   curve over the page, as on the home page: the band takes the rounded top, the footer goes flat. */
+.lv-cta-band { border-radius: 40px 40px 0 0; }
+@media (min-width: 1024px) { .lv-cta-band { border-radius: 80px 80px 0 0; } }
+.lv:has(.lv-cta-band) .lv-footer { border-radius: 0; background: var(--lv-forest); }
+.lv:has(.lv-cta-band) .lv-footer > .lv-container::before { content: ''; position: absolute; top: 0; left: 1rem; right: 1rem; height: 1px; background: rgba(246, 241, 228, .1); }
 .lv-select--pill select { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── Compact experience card (marketplace · experience detail "You may also like") ── */
