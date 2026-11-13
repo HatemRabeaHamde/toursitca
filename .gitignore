@@ -27,3 +27,5 @@ Homestead.yaml
 Thumbs.db
 .claude
 *.pdf
+# Local deploy target (server host/user), see docs/DEPLOY.md
+docs/DEPLOY.local.env

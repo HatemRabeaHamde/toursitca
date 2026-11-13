@@ -1,6 +1,10 @@
 # Deploy runbook (Hostinger shared hosting)
 
-Target: `linen-spider-307400.hostingersite.com`. SSH: `-p 65002 u383259569@194.59.166.35`. Use an SSH key, not a password.
+Target: the Hostinger test site. The server host, SSH port, account user and domain are kept out of git in `docs/DEPLOY.local.env` (git-ignored; ask the project owner for it). Load it before running the commands below, and use an SSH key, not a password.
+
+```bash
+source docs/DEPLOY.local.env   # defines DEPLOY_HOST, DEPLOY_PORT, DEPLOY_USER, DEPLOY_DOMAIN
+```
 
 The seeders create demo content and demo accounts. Fine on a test domain; do not seed a real production database with them.
 
@@ -19,25 +23,26 @@ rm -rf node_modules && npm ci && npm run build
 Keep the app *above* `public_html` and point `public_html` at `public/`.
 
 ```bash
-ssh -p 65002 u383259569@194.59.166.35
-cd domains/linen-spider-307400.hostingersite.com
+ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST"
+cd "domains/$DEPLOY_DOMAIN"
 mv public_html public_html.bak      # keep the default page, do not delete it
 mkdir -p app
 ```
 
 From your machine (no GitHub needed):
 ```bash
-rsync -az --delete -e "ssh -p 65002" \
+rsync -az --delete -e "ssh -p $DEPLOY_PORT" \
   --exclude .git --exclude node_modules --exclude vendor --exclude .env --exclude .env.production \
+  --exclude docs/DEPLOY.local.env \
   --exclude storage/logs --exclude "Claude outputs" --exclude docs/figma \
-  ./ u383259569@194.59.166.35:domains/linen-spider-307400.hostingersite.com/app/
-scp -P 65002 .env.production u383259569@194.59.166.35:domains/linen-spider-307400.hostingersite.com/app/.env
+  ./ "$DEPLOY_USER@$DEPLOY_HOST:domains/$DEPLOY_DOMAIN/app/"
+scp -P "$DEPLOY_PORT" .env.production "$DEPLOY_USER@$DEPLOY_HOST:domains/$DEPLOY_DOMAIN/app/.env"
 ```
 Fill the three `CHANGE_ME` database lines in `.env.production` first.
 
 ## 3. On the server
 ```bash
-cd domains/linen-spider-307400.hostingersite.com
+cd "domains/$DEPLOY_DOMAIN"   # the server shell does not have DEPLOY_* set: type the domain here
 ln -s app/public public_html
 cd app
 composer install --no-dev --optimize-autoloader
@@ -51,7 +56,7 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache &&
 Never run `migrate:fresh` here.
 
 ## 4. Check
-- `https://linen-spider-307400.hostingersite.com/en` loads the landing.
+- `https://$DEPLOY_DOMAIN/en` loads the landing.
 - Sign in at `/login` with each demo account:
   - admin (`admin@tourstica.test`) goes to `/admin/dashboard`
   - agency (`agency@tourstica.test`) goes to `/agency/dashboard`

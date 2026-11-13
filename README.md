@@ -1,59 +1,90 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tourstica — Morocco Experience Marketplace
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Tourstica is a multilingual marketplace where travel agencies publish experiences in Morocco (tours, activities, guided days) and travellers discover, book and review them. It is a server-rendered Laravel app with three areas:
 
-## About Laravel
+| Area | Who | What they do |
+|------|-----|--------------|
+| **Public site** (`/{locale}/…`) | Travellers | Browse destinations, interests, hosts and experiences; get a live quote; check out; leave reviews; manage a wishlist |
+| **Agency dashboard** (`/agency/…`) | Travel agencies | Register (then wait for approval), manage experiences, options, availability, hosts, bookings, payouts and reviews |
+| **Admin panel** (`/admin/…`) | Platform operator | Approve agencies and listing changes, edit site content (with revisions), oversee bookings, payouts and commission |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Key behaviour
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Instant confirmation.** An available slot is confirmed at checkout without manual approval. Capacity is checked live under a row lock, so two people cannot take the last seat.
+- **Group vs private booking.** Group: `price_per_person × participants` on a shared slot. Private: flat `private_price` that takes the whole slot.
+- **Moderated publishing.** New listings and edits to published listings are staged in `experience_change_requests` and go live only after an admin approves them. Drafts can be previewed but not booked.
+- **Snapshots.** A booking stores the package, host, time and policy as they were at checkout. Payouts are created from that snapshot, after commit.
+- **No online payment yet.** Payment status is tracked separately; the gateway layer (Stripe / PayPal / CMI) is an interface for a later phase.
+- **Commission.** Default 15% (`DEFAULT_COMMISSION_RATE`), allowed range 0–50%. Money math uses `brick/money`; currency is MAD.
+- **Languages.** English, French, Dutch (`config/locales.php`). UI strings live in `lang/`, content fields are JSON columns via `spatie/laravel-translatable`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Stack
 
-## Learning Laravel
+| Layer | Choice |
+|-------|--------|
+| Backend | PHP 8.3, Laravel 13, Breeze auth |
+| Frontend | Blade, Tailwind CSS, Alpine.js, GSAP, Lenis, Leaflet (maps), Vite |
+| Data | MySQL 8 in production, SQLite locally/tests |
+| Packages | Spatie: permission, media-library, translatable, model-states, data, settings, sitemap, sluggable, activitylog, csp · Laravel Horizon, Pennant, Scout (+ Meilisearch) |
+| Quality | PHPUnit, Larastan, Pint |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Code layout
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+app/
+  Domain/          Business modules: Agency, Booking, Checkout, Discover, Experience,
+                   Landing, Payment, Payout, Review, User, Wishlist, Shared
+                   (models, actions and view models live inside each module)
+  Http/Controllers/Admin | Agency | Auth | Site
+  Seo/  Settings/  ViewModels/  Policies/
+routes/
+  site.php     public pages under /{locale}
+  agency.php   agency registration + dashboard
+  admin.php    admin panel + site-content editor
+  auth.php     Breeze auth
+  web.php      profile
+docs/          architecture, deploy runbook, frontend contracts, SEO, TODO
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Getting started
 
-## Contributing
+Requirements: PHP 8.3+, Composer, Node 20+, and SQLite (or MySQL).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer setup          # install, copy .env, key:generate, migrate, npm install, build
+php artisan db:seed     # roles, admin, demo agency, landing/discover content, demo experiences
+composer dev            # server + queue + log tail (pail) + Vite together
+```
 
-## Code of Conduct
+Then open http://localhost:8000 (redirects to `/en`).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The seeders create accounts from the `ADMIN_*` and `DEMO_*` values in `.env`, so set those before seeding. Do not run the demo seeders against a real production database.
 
-## Security Vulnerabilities
+### Useful environment values
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Key | Purpose |
+|-----|---------|
+| `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | First admin account |
+| `DEMO_ADMIN_*`, `DEMO_AGENCY_*`, `DEMO_CLIENT_*` | Demo logins created by the seeders |
+| `DEFAULT_COMMISSION_RATE` | Platform commission (%) |
+| `APP_DEFAULT_CURRENCY` | Defaults to `MAD` |
 
-## License
+## Tests
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# v2-touristica
+```bash
+composer test            # PHPUnit feature + unit tests
+npm run test:booking     # JS tests for the booking widget (node --test)
+./vendor/bin/phpstan     # Larastan
+```
+
+## Deployment
+
+Deploys to Hostinger shared hosting. The server has no Node, so assets are built locally and uploaded. Follow [docs/DEPLOY.md](docs/DEPLOY.md) step by step.
+
+## More documentation
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): product rules, roles, booking model
+- [docs/MARKETPLACE_FLOW_PLAN.md](docs/MARKETPLACE_FLOW_PLAN.md): booking and checkout flow
+- [docs/ADMIN_DASHBOARD.md](docs/ADMIN_DASHBOARD.md): admin features
+- `docs/*_CONTRACT.md`: data contracts between controllers and Blade views
+- [docs/SEO.md](docs/SEO.md), [docs/TODO.md](docs/TODO.md), [PROJECT.md](PROJECT.md)
