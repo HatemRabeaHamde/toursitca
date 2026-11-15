@@ -1,8 +1,6 @@
 *.log
 .DS_Store
-.env
 .env.backup
-.env.production
 .phpactor.json
 .phpunit.result.cache
 /.codex
@@ -10,7 +8,6 @@
 /.idea
 /.nova
 /.phpunit.cache
-/.vscode
 /.zed
 /auth.json
 /node_modules
@@ -29,3 +26,4 @@ Thumbs.db
 *.pdf
 # Local deploy target (server host/user), see docs/DEPLOY.md
 docs/DEPLOY.local.env
+config.bat
