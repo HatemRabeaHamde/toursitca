@@ -57,9 +57,9 @@ return [
             'role' => ['en' => 'Local expert', 'fr' => 'Experte locale', 'nl' => 'Lokale expert'], 'bio' => null],
         ['slug' => 'sara', 'name' => 'Sara', 'city' => 'Essaouira', 'region' => 'atlantic-coast', 'specialty' => 'cuisine', 'licence' => 'MA-1463', 'photo' => 'https://images.unsplash.com/photo-1635355880372-96b9fd88a218?w=600&h=700&fit=crop&crop=faces&q=80&auto=format', 'avatar' => null,
             'role' => ['en' => 'Local host', 'fr' => 'Hôte locale', 'nl' => 'Lokale gastvrouw'], 'bio' => null],
-        ['slug' => 'karim', 'name' => 'Karim', 'city' => 'Taghazout', 'region' => 'atlantic-coast', 'specialty' => 'adventure', 'licence' => 'MA-1902', 'photo' => 'https://images.unsplash.com/photo-1556135063-eba17c48d523?w=600&h=700&fit=crop&crop=faces&q=80&auto=format', 'avatar' => $img('hosts/avatars/karim.png'),
+        ['slug' => 'karim', 'name' => 'Karim', 'city' => 'Taghazout', 'region' => 'atlantic-coast', 'specialty' => 'adventure', 'licence' => 'MA-1902', 'photo' => $img('hosts/karim.jpg'), 'avatar' => $img('hosts/avatars/karim.png'),
             'role' => ['en' => 'Surf instructor', 'fr' => 'Moniteur de surf', 'nl' => 'Surfinstructeur'], 'bio' => null],
-        ['slug' => 'rachid', 'name' => 'Rachid', 'city' => 'Agafay Desert', 'region' => 'marrakesh', 'specialty' => 'adventure', 'licence' => 'MA-2290', 'photo' => 'https://images.unsplash.com/photo-1614495039368-525273956716?w=600&h=700&fit=crop&crop=faces&q=80&auto=format', 'avatar' => null,
+        ['slug' => 'rachid', 'name' => 'Rachid', 'city' => 'Agafay Desert', 'region' => 'marrakesh', 'specialty' => 'adventure', 'licence' => 'MA-2290', 'photo' => $img('hosts/rachid.jpg'), 'avatar' => null,
             'role' => ['en' => 'Adventure guide', 'fr' => 'Guide d’aventure', 'nl' => 'Avonturengids'], 'bio' => null],
     ],
 
